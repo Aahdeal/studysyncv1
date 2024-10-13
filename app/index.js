@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button,ActivityIndicator } from 'react-native';
-import { database } from './firebase';
-import { ref, onValue } from 'firebase/database';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+} from "react-native";
+import { database } from "./firebase";
+import { ref, onValue } from "firebase/database";
+import { useRouter } from "expo-router";
+import Navigation from "../components/Navigation"; // Import the navigation
 
 export default function LandingPage() {
   const [data, setData] = useState(null);
@@ -10,7 +17,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     // Reference to the "landingMessage" in your Realtime Database
-    const dataRef = ref(database, 'landingMessage');
+    const dataRef = ref(database, "landingMessage");
 
     // Listen for changes in the data
     const unsubscribe = onValue(dataRef, (snapshot) => {
@@ -28,6 +35,7 @@ export default function LandingPage() {
   }
 
   return (
+    // <Navigation />
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to StudySync</Text>
       <Text style={styles.subtitle}>
@@ -40,21 +48,21 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
     padding: 20,
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#007bff',
+    fontWeight: "bold",
+    color: "#007bff",
     marginBottom: 20,
   },
   subtitle: {
     fontSize: 18,
-    color: '#6c757d',
-    textAlign: 'center',
+    color: "#6c757d",
+    textAlign: "center",
     marginBottom: 40,
   },
 });
