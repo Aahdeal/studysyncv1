@@ -20,7 +20,7 @@ export default function NavBar() {
         onPress={() => navigation.navigate("Home")}
       >
         <Icon
-          name={currentRoute === "Home" ? "pie-chart" : "pie-chart-outline"} // Filled if active
+          name={currentRoute === "Home" ? "pie-chart-outline" : "pie-chart"} // Filled if active
           size={30}
           color={Colours.darkBlue} // Always blue
         />
@@ -32,7 +32,7 @@ export default function NavBar() {
         onPress={() => navigation.navigate("Calendar")}
       >
         <Icon
-          name={currentRoute === "Calendar" ? "calendar" : "calendar-outline"} // Filled if active
+          name={currentRoute === "Calendar" ? "calendar-outline" : "calendar"} // Filled if active
           size={30}
           color={Colours.darkBlue}
         />
@@ -44,7 +44,7 @@ export default function NavBar() {
         onPress={() => navigation.navigate("Flashcards")}
       >
         <Icon
-          name={currentRoute === "Flashcards" ? "albums" : "albums-outline"} // Filled if active
+          name={currentRoute === "Flashcards" ? "albums-outline" : "albums"} // Filled if active
           size={30}
           color={Colours.darkBlue}
         />
@@ -56,7 +56,7 @@ export default function NavBar() {
         onPress={() => navigation.navigate("Account")}
       >
         <Icon
-          name={currentRoute === "Account" ? "settings" : "settings-outline"} // Filled if active
+          name={currentRoute === "Account" ? "settings-outline" : "settings"} // Filled if active
           size={30}
           color={Colours.darkBlue}
         />
