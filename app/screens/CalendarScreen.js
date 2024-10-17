@@ -8,9 +8,8 @@ export default function CalendarScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Calendar</Text>
       <Button title="Go Back" onPress={() => navigation.goBack()} />
-      <View>
-        <NavBar />
-      </View>
+
+      <NavBar />
     </View>
   );
 }

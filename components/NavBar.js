@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: "#ddd",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   navButton: {
     flex: 1,
