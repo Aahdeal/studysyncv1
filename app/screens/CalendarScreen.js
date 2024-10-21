@@ -1,14 +1,35 @@
 // screens/CalendarScreen.js
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Button, StyleSheet, FlatList } from "react-native";
 import NavBar from "../../components/NavBar";
 
 export default function CalendarScreen({ navigation }) {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const token = await signInWithGoogle();
+      if (token) {
+        const fetchedEvents = await getCalendarEvents(token);
+        setEvents(fetchedEvents);
+      }
+    }
+    fetchEvents();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Calendar</Text>
-      <Button title="Go Back" onPress={() => navigation.goBack()} />
-
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.summary}</Text>
+            <Text>{item.start.dateTime}</Text>
+          </View>
+        )}
+      />
       <NavBar />
     </View>
   );
