@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar";
 import {
   StyleSheet,
@@ -10,24 +10,16 @@ import {
   TextInput,
   Button,
   Switch,
-  BackHandler,
-  Platform,
 } from "react-native";
 import moment from "moment";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Icon } from "galio-framework";
-import { Fontisto } from "react-native-vector-icons";
+import Icon from "../../components/Icon";
 
-//import PushNotification from 'react-native-push-notification'; // Or expo-notifications
 import { Card } from "react-native-paper";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-
-//redux
+import { Agenda } from "react-native-calendars";
 
 export default function BrokerCalendar({ navigation }) {
-  //const
-  //const todaysDate = new Date();
   const [items, setItems] = useState({});
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
   const [isTaskModalVisible, setTaskModalVisible] = useState(false); // State to handle modal visibility
@@ -137,7 +129,7 @@ export default function BrokerCalendar({ navigation }) {
       description: "Writing Math Exam worth 50% sub min 45%",
       StartTime: moment(timeToString("12:00"), "HH:mm"),
       EndTime: moment(timeToString("12:00"), "HH:mm").add(1, "hour"),
-      type: "Urgent",
+      type: "Test",
     },
     {
       date: "2024-10-25",
@@ -145,7 +137,7 @@ export default function BrokerCalendar({ navigation }) {
       description: "Be ready for a day full of fun",
       StartTime: moment(timeToString("12:45"), "HH:mm"),
       EndTime: moment(timeToString("12:45"), "HH:mm").add(1, "hour"),
-      type: "Relaxing",
+      type: "Any",
     },
     {
       date: "2024-10-27",
@@ -153,7 +145,7 @@ export default function BrokerCalendar({ navigation }) {
       description: "You have a excel spreadsheet due for communiction",
       StartTime: moment(timeToString("23:45"), "HH:mm"),
       EndTime: moment(timeToString("23:45"), "HH:mm").add(1, "hour"),
-      type: "Urgent",
+      type: "Submission",
     },
     {
       date: "2024-10-29",
@@ -161,7 +153,15 @@ export default function BrokerCalendar({ navigation }) {
       description: "Small test",
       StartTime: moment("08:00").format("HH:mm"),
       EndTime: moment("08:00").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
+      type: "Test",
+    },
+    {
+      date: "2024-10-1",
+      title: "Workers Study",
+      description: "Get 35% off all food items this day",
+      StartTime: moment("09:00").format("HH:mm"),
+      EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
+      type: "Study",
     },
     {
       date: "2024-10-12",
@@ -169,7 +169,7 @@ export default function BrokerCalendar({ navigation }) {
       description: "Get 35% off all food items this day",
       StartTime: moment("09:00").format("HH:mm"),
       EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
+      type: "Any",
     },
   ];
 
@@ -177,56 +177,34 @@ export default function BrokerCalendar({ navigation }) {
     console.log("trigger items loading");
   };
 
-  const [eventss, setEvents] = useState([
-    {
-      date: "2024-10-26",
-      title: "Mathew Exam",
-      description: "Writing Math Exam worth 50% sub min 45%",
-      StartTime: moment("12:00", "HH:mm").format("HH:mm"),
-      EndTime: moment("12:00", "HH:mm").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
-    },
-    {
-      date: "2024-10-25",
-      title: "CPUT Fun Day",
-      description: "Be ready for a day full of fun",
-      StartTime: moment("12:45", "HH:mm").format("HH:mm"),
-      EndTime: moment("12:45", "HH:mm").add(1, "hour").format("HH:mm"),
-      type: "Relaxing",
-    },
-    {
-      date: "2024-10-27",
-      title: "Write Up due",
-      description: "You have an excel spreadsheet due for communication",
-      StartTime: moment("23:45", "HH:mm").format("HH:mm"),
-      EndTime: moment("23:45", "HH:mm").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
-    },
-    {
-      date: "2024-10-29",
-      title: "Physics Test",
-      description: "Small test",
-      StartTime: moment("08:00", "HH:mm").format("HH:mm"),
-      EndTime: moment("08:00", "HH:mm").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
-    },
-    {
-      date: "2024-10-12",
-      title: "Workers FavDay",
-      description: "Get 35% off all food items this day",
-      StartTime: moment("09:00", "HH:mm").format("HH:mm"),
-      EndTime: moment("09:00", "HH:mm").add(1, "hour").format("HH:mm"),
-      type: "Urgent",
-    },
-  ]);
-
-  // Ensure eventss is defined and not empty before running reduce
+  // Ensure data is defined and not empty before running reduce
   const formattedEvents =
-    eventss && Array.isArray(eventss) && eventss.length > 0
-      ? eventss.reduce((acc, current) => {
+    data && Array.isArray(data) && data.length > 0
+      ? data.reduce((acc, current) => {
+          let dotColor;
+          switch (current.type) {
+            case "Submission":
+              dotColor = "red";
+              break;
+            case "Test":
+              dotColor = "orange";
+              break;
+            case "Study":
+              dotColor = "blue";
+              break;
+            case "Birthday":
+              dotColor = "pink";
+              break;
+            case "Any":
+              dotColor = "beige";
+              break;
+            default:
+              dotColor = "gray"; // fallback color
+          }
+
           acc[current.date] = {
             marked: true,
-            dotColor: current.type === "Urgent" ? "red" : "green",
+            dotColor: dotColor,
             activeOpacity: 0.5,
             title: current.title,
             description: current.description,
@@ -235,7 +213,8 @@ export default function BrokerCalendar({ navigation }) {
           };
           return acc;
         }, {})
-      : console.log("eventss is not array"); // Return an empty object if eventss is undefined or empty
+      : console.log("data is not array");
+  // Return an empty object if data is undefined or empty
 
   // Loading items for the calendar
   const loadItems = (day) => {
@@ -251,7 +230,7 @@ export default function BrokerCalendar({ navigation }) {
           items[strTime] = [];
         }
 
-        // Add events from eventss to the items object
+        // Add events from data to the items object
         data.forEach((event) => {
           if (event.date === strTime) {
             items[strTime].push({
@@ -581,9 +560,11 @@ export default function BrokerCalendar({ navigation }) {
               })
             }
             items={[
-              { label: "Urgent", value: "Urgent" },
-              { label: "Relaxing", value: "Relaxing" },
-              { label: "Important", value: "Important" },
+              { label: "Test", value: "Test" },
+              { label: "Submission", value: "Submission" },
+              { label: "Study session", value: "Study" },
+              { label: "Birthday", value: "Birthday" },
+              { label: "Any", value: "Any" },
             ]}
           />
           {/* Repeat Options */}

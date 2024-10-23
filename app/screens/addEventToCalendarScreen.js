@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import NavBar from "../../components/NavBar";
+
 import RNCalendarEvents from "react-native-calendar-events";
 import {
   Calendar,
