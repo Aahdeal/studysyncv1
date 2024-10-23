@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import FlashcardScreen from "./screens/FlashcardScreen";
 import AccountScreen from "./screens/AccountScreen";
+import altCalendarScreen from "./screens/altCalendarScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ function AppNavigator() {
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="altCalendar" component={altCalendarScreen} />
       <Stack.Screen name="Flashcards" component={FlashcardScreen} />
       <Stack.Screen name="Account" component={AccountScreen} />
     </Stack.Navigator>
