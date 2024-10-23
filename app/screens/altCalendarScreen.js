@@ -11,6 +11,7 @@ import {
   Button,
   Switch,
 } from "react-native";
+import CheckBox from "@react-native-community/checkbox";
 import moment from "moment";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -29,6 +30,7 @@ export default function BrokerCalendar({ navigation }) {
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const [isTaskDatePickerVisible, setTaskDatePickerVisibility] =
     useState(false);
+  const [isAllDay, setIsAllDay] = useState(false);
 
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -46,6 +48,7 @@ export default function BrokerCalendar({ navigation }) {
     allDay: false,
     date: new Date(),
     repeat: "does not repeat",
+    completed: false,
   });
   const toggleAllDay = () => {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
@@ -248,19 +251,25 @@ export default function BrokerCalendar({ navigation }) {
 
   // Loading items for the calendar
   const loadItems = (day) => {
-    const items = {}; // Temporary object to hold the events
+    const items = {}; // Temporary object to hold events and tasks
+    const tasks = [
+      // Sample tasks data
+      { date: "2024-10-25", title: "Task 1", completed: false },
+      { date: "2024-10-26", title: "Task 2", completed: true },
+    ];
+
     setTimeout(() => {
-      // Loop through a range of dates (for example: -15 days to +85 days from the current date)
+      // Loop through a range of dates (-15 days to +85 days from the current date)
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000; // Calculate date offsets
         const strTime = timeToString(time); // Convert timestamp to 'YYYY-MM-DD' string
 
-        // Ensure that items[strTime] is initialized as an empty array if not already populated
+        // Ensure that items[strTime] is initialized as an empty array
         if (!items[strTime]) {
           items[strTime] = [];
         }
 
-        // Add events from data to the items object
+        // Add events from 'data' to the items object
         data.forEach((event) => {
           if (event.date === strTime) {
             items[strTime].push({
@@ -272,6 +281,17 @@ export default function BrokerCalendar({ navigation }) {
             });
           }
         });
+
+        // Add tasks to the items object
+        tasks.forEach((task) => {
+          if (task.date === strTime) {
+            items[strTime].push({
+              ...task,
+              title: `Task: ${task.title}`, // Prefix "Task" to distinguish tasks from events
+              completed: task.completed,
+            });
+          }
+        });
       }
 
       // Update the state with the newly created items object
@@ -280,50 +300,67 @@ export default function BrokerCalendar({ navigation }) {
         newItems[key] = items[key];
       });
 
-      setItems(newItems);
+      setItems(newItems); // Update the state with tasks and events
     }, 1000);
   };
 
   const renderItem = (item) => {
-    return (
-      <TouchableOpacity
-        style={{ marginRight: 10, marginTop: 17 }}
-        onPress={() =>
-          navigation.navigate("PullForwardDetails", {
-            data: item,
-          })
-        }
-      >
-        <Card>
-          <Card.Content>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View
-                style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
-              />
-              <View style={{ flex: 0.7 }}>
-                <View style={styles.Time}>
-                  <Text style={styles.timeText}>
-                    {item?.StartTime} - {item?.EndTime}
-                    {/* {item?.pullforward?.pullforward} */}
-                    {/* <Icon
+    if (item.completed !== undefined) {
+      // This is a task
+      return (
+        <View style={styles.taskContainer}>
+          <CheckBox
+            value={item.completed}
+            onValueChange={() => toggleTaskCompletion(item)}
+          />
+          <Text
+            style={item.completed ? styles.completedTask : styles.taskTitle}
+          >
+            {item.title}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          style={{ marginRight: 10, marginTop: 17 }}
+          onPress={() =>
+            navigation.navigate("PullForwardDetails", {
+              data: item,
+            })
+          }
+        >
+          <Card>
+            <Card.Content>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View
+                  style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
+                />
+                <View style={{ flex: 0.7 }}>
+                  <View style={styles.Time}>
+                    <Text style={styles.timeText}>
+                      {item?.StartTime} - {item?.EndTime}
+                      {/* {item?.pullforward?.pullforward} */}
+                      {/* <Icon
                       size={20}
                       name="forwardburger"
                       family="MaterialCommunityIcons"
                       // style={styles.inputIcons}
                     />
                     {item?.pullforward?.pullDate} */}
+                    </Text>
+                  </View>
+                  <Text style={styles.BookingNameText}>{item.title}</Text>
+                  <Text style={styles.BookingDescriptionText}>
+                    {item.description}
                   </Text>
                 </View>
-                <Text style={styles.BookingNameText}>{item.title}</Text>
-                <Text style={styles.BookingDescriptionText}>
-                  {item.description}
-                </Text>
               </View>
-            </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
-    );
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+      );
+    }
   };
 
   const closeModal = () => {
@@ -440,26 +477,52 @@ export default function BrokerCalendar({ navigation }) {
   };
 
   const saveTask = () => {
-    const dateKey = timeToString(newTask.date);
-    if (items[dateKey]) {
-      items[dateKey].push({
-        title: newTask.title,
-        description: newTask.description,
-        StartTime: moment(newTask.date).format("HH:mm"),
-        type: "Task",
-      });
-    } else {
-      items[dateKey] = [
-        {
-          title: newTask.title,
-          description: newTask.description,
-          StartTime: moment(newTask.date).format("HH:mm"),
-          type: "Task",
-        },
-      ];
-    }
-    setItems({ ...items });
+    const newTaskEntry = {
+      title: newTask.title,
+      description: newTask.description,
+      startDate: newTask.startDate,
+      repeat: newTask.repeat,
+      completed: newTask.completed, // Save the completed state
+    };
+    setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
     setTaskModalVisible(false);
+  };
+
+  const renderTask = (task) => {
+    return (
+      <TouchableOpacity
+        style={{ marginRight: 10, marginTop: 17 }}
+        onPress={() => navigation.navigate("TaskDetails", { data: item })}
+      >
+        <Card>
+          <Card.Content>
+            <View style={{ flexDirection: "row" }}>
+              <CheckBox
+                value={item.completed}
+                onValueChange={() => toggleTaskCompletion(item)}
+              />
+              <View>
+                <Text
+                  style={
+                    item.completed ? styles.completedTask : styles.taskTitle
+                  }
+                >
+                  {item.title}
+                </Text>
+                <Text>{item.description}</Text>
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    );
+  };
+
+  const toggleTaskCompletion = (task) => {
+    const updatedTasks = tasks.map((t) =>
+      t.title === task.title ? { ...t, completed: !t.completed } : t
+    );
+    setTasks(updatedTasks);
   };
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -517,6 +580,7 @@ export default function BrokerCalendar({ navigation }) {
       <Modal visible={isEventModalVisible} animationType="slide">
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add New Event</Text>
+
           {/* Title Input */}
           <TextInput
             placeholder="Title"
@@ -524,6 +588,7 @@ export default function BrokerCalendar({ navigation }) {
             onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
             style={styles.input}
           />
+
           {/* Description Input */}
           <TextInput
             placeholder="Description"
@@ -533,7 +598,7 @@ export default function BrokerCalendar({ navigation }) {
             }
             style={styles.input}
           />
-          {/* Date Input */}
+
           {/* Select From Date and Time Input */}
           <TouchableOpacity onPress={showFromDatePicker}>
             <TextInput
@@ -545,7 +610,7 @@ export default function BrokerCalendar({ navigation }) {
               }
               style={styles.input}
               editable={false} // To prevent direct editing
-              onFocus={showFromDatePicker} // Show picker when TextInput gains focus
+              //onFocus={showFromDatePicker} // Show picker when TextInput gains focus
             />
           </TouchableOpacity>
           <DateTimePickerModal
@@ -554,8 +619,9 @@ export default function BrokerCalendar({ navigation }) {
             onConfirm={handleConfirmFrom}
             onCancel={hideFromDatePicker}
           />
+
           {/* Select To Date and Time Input */}
-          <TouchableOpacity onPress={showToDatePicker}>
+          <TouchableOpacity onPress={!isAllDay ? showToDatePicker : null}>
             <TextInput
               placeholder="Select To Date and Time"
               value={
@@ -564,16 +630,34 @@ export default function BrokerCalendar({ navigation }) {
                   : ""
               }
               style={styles.input}
-              editable={false} // To prevent direct editing
-              onFocus={showToDatePicker} // Show picker when TextInput gains focus
+              editable={false}
+              //editable={!isAllDay} // Disable when All Day is active
             />
           </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isToDatePickerVisible}
-            mode="datetime"
-            onConfirm={handleConfirmTo}
-            onCancel={hideToDatePicker}
-          />
+          {!isAllDay && (
+            <DateTimePickerModal
+              isVisible={isToDatePickerVisible}
+              mode="datetime"
+              onConfirm={handleConfirmTo}
+              onCancel={hideToDatePicker}
+            />
+          )}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Switch
+              value={isAllDay}
+              onValueChange={(value) => {
+                setIsAllDay(value);
+                if (value && newEvent.startDate) {
+                  // Set the To date to the end of the selected From date
+                  setNewEvent((prevEvent) => ({
+                    ...prevEvent,
+                    endDate: moment(prevEvent.startDate).endOf("day").toDate(),
+                  }));
+                }
+              }}
+            />
+            <Text>All Day</Text>
+          </View>
           {/* Type of Property (info) */}
           <Text style={styles.label}>Type of Event</Text>
           <RNPickerSelect
@@ -702,6 +786,20 @@ export default function BrokerCalendar({ navigation }) {
               { label: "Monthly", value: "monthly" },
             ]}
           />
+          {newTask.repeat !== "does not repeat" && (
+            <>
+              <Text style={styles.label}>Repetition Count</Text>
+              <TextInput
+                placeholder="Number of repetitions"
+                value={newEvent.repeatCount?.toString() || ""}
+                onChangeText={(text) =>
+                  setNewEvent({ ...newEvent, repeatCount: parseInt(text) })
+                }
+                keyboardType="numeric"
+                style={styles.input}
+              />
+            </>
+          )}
           <Button title="Save Task" onPress={saveTask} />
           <Button title="Close" onPress={() => setTaskModalVisible(false)} />
         </View>
