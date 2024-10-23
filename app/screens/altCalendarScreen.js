@@ -27,6 +27,8 @@ export default function BrokerCalendar({ navigation }) {
   const [isFromDatePickerVisible, setFromDatePickerVisibility] =
     useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
+  const [isTaskDatePickerVisible, setTaskDatePickerVisibility] =
+    useState(false);
 
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -47,6 +49,34 @@ export default function BrokerCalendar({ navigation }) {
   });
   const toggleAllDay = () => {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
+  };
+  const showTaskDatePicker = () => {
+    setTaskDatePickerVisibility(true);
+  };
+
+  const hideTaskDatePicker = () => {
+    setTaskDatePickerVisibility(false);
+  };
+
+  const handleConfirmTask = (date) => {
+    setNewEvent({
+      ...newEvent,
+      startDate: date,
+      // Ensure end date is after start date
+      endDate:
+        newEvent.endDate && date > newEvent.endDate
+          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
+              "MMMM Do YYYY, h:mm A"
+            ) // Add 1 hour default
+          : newEvent.endDate,
+    });
+    console.warn(
+      "A From date has been picked: ",
+      moment(date).format("MMMM Do YYYY, h:mm A")
+    );
+    console.log("new date: ", newEvent.startDate);
+    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
+      hideFromDatePicker();
   };
 
   const showFromDatePicker = () => {
@@ -628,25 +658,28 @@ export default function BrokerCalendar({ navigation }) {
             }
             style={styles.input}
           />
-          {/* All Day Toggle */}
-          <View style={styles.row}>
-            <Text>All Day</Text>
-            <Switch
-              value={newTask.allDay}
-              onValueChange={() =>
-                setNewTask((prev) => ({ ...prev, allDay: !prev.allDay }))
+          {/* Select From Date and Time Input */}
+          <TouchableOpacity onPress={showTaskDatePicker}>
+            <TextInput
+              placeholder="Select From Date and Time"
+              value={
+                newTask.startDate
+                  ? moment(newTask.startDate).format("MMMM Do YYYY, h:mm A")
+                  : ""
               }
+              style={styles.input}
+              editable={false} // To prevent direct editing
+              onFocus={showTaskDatePicker} // Show picker when TextInput gains focus
             />
-          </View>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isTaskDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleConfirmTask}
+            onCancel={hideTaskDatePicker}
+          />
           {/* Date and Time Picker */}
-          {/* !newTask.allDay && ( */}
-          {/* <DateTimePicker
-            date={new Date(newTask.date)}
-            mode="single"
-            is24Hour={true}
-            display="default"
-            onChange={(date) => setNewTask({ ...newTask, date })}
-          /> */}
+
           {/* )Repeat Options */}
           <RNPickerSelect
             value={newTask.repeat}
