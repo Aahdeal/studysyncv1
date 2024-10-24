@@ -257,6 +257,9 @@ export default function BrokerCalendar({ navigation }) {
     const tasks = [
       // Sample tasks data
       { date: "2024-10-25", title: "Task 1", completed: false },
+      { date: "2024-10-25", title: "Eat", completed: false },
+      { date: "2024-10-25", title: "Sleep", completed: false },
+      { date: "2024-10-25", title: "Code", completed: false },
       { date: "2024-10-26", title: "Task 2", completed: true },
     ];
 
@@ -504,14 +507,14 @@ export default function BrokerCalendar({ navigation }) {
                 onValueChange={() => toggleTaskCompletion(item)}
               /> */}
               <View>
-                <Text
+                {/* <Text
                   style={
                     item.completed ? styles.completedTask : styles.taskTitle
                   }
                 >
                   {item.title}
                 </Text>
-                <Text>{item.description}</Text>
+                <Text>{item.description}</Text> */}
               </View>
             </View>
           </Card.Content>
