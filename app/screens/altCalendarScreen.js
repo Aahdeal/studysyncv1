@@ -11,7 +11,7 @@ import {
   Button,
   Switch,
 } from "react-native";
-import CheckBox from "@react-native-community/checkbox";
+//import CheckBox from "@react-native-community/checkbox";
 import moment from "moment";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -40,6 +40,7 @@ export default function BrokerCalendar({ navigation }) {
     endDate: moment().add(1, "hour").toDate(),
     type: "Relaxing",
     repeat: "does not repeat",
+    repeatCount: 1,
   });
 
   const [newTask, setNewTask] = useState({
@@ -48,6 +49,7 @@ export default function BrokerCalendar({ navigation }) {
     allDay: false,
     date: new Date(),
     repeat: "does not repeat",
+    repeatCount: 1,
     completed: false,
   });
   const toggleAllDay = () => {
@@ -309,10 +311,10 @@ export default function BrokerCalendar({ navigation }) {
       // This is a task
       return (
         <View style={styles.taskContainer}>
-          <CheckBox
+          {/* <CheckBox
             value={item.completed}
             onValueChange={() => toggleTaskCompletion(item)}
-          />
+          /> */}
           <Text
             style={item.completed ? styles.completedTask : styles.taskTitle}
           >
@@ -497,10 +499,10 @@ export default function BrokerCalendar({ navigation }) {
         <Card>
           <Card.Content>
             <View style={{ flexDirection: "row" }}>
-              <CheckBox
+              {/* <CheckBox
                 value={item.completed}
                 onValueChange={() => toggleTaskCompletion(item)}
-              />
+              /> */}
               <View>
                 <Text
                   style={
