@@ -21,6 +21,7 @@ import Icon from "../../components/Icon";
 
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({});
@@ -36,13 +37,13 @@ export default function BrokerCalendar({ navigation, user }) {
   const [showHomework, setShowHomework] = useState(false);
 
   // Sample data for homework
-  const homeworkData = [
-    { id: '1', title: 'Math Assignment', dueDate: 'Oct 25' },
-    { id: '2', title: 'Science Project', dueDate: 'Oct 27' },
-    { id: '3', title: 'History Essay', dueDate: 'Oct 28' },
-    { id: '4', title: 'History Essay', dueDate: 'Oct 28' },
-    { id: '5', title: 'History Essay', dueDate: 'Oct 28' },
-  ];
+  const [tasks, setTasks] = useState([
+    { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
+    { id: "2", title: "Science Project", dueDate: "Oct 27" },
+    { id: "3", title: "History Essay", dueDate: "Oct 28" },
+    { id: "4", title: "History Essay", dueDate: "Oct 28" },
+    { id: "5", title: "History Essay", dueDate: "Oct 28" },
+  ]);
 
   const toggleHomeworkVisibility = () => {
     setShowHomework(!showHomework);
@@ -60,6 +61,7 @@ export default function BrokerCalendar({ navigation, user }) {
   });
 
   const [newTask, setNewTask] = useState({
+    id: 1,
     title: "",
     description: "",
     allDay: false,
@@ -270,14 +272,6 @@ export default function BrokerCalendar({ navigation, user }) {
   // Loading items for the calendar
   const loadItems = (day) => {
     const items = {}; // Temporary object to hold events and tasks
-    const tasks = [
-      // Sample tasks data
-      { date: "2024-10-25", title: "Task 1", completed: false },
-      { date: "2024-10-25", title: "Eat", completed: false },
-      { date: "2024-10-25", title: "Sleep", completed: false },
-      { date: "2024-10-25", title: "Code", completed: false },
-      { date: "2024-10-26", title: "Task 2", completed: true },
-    ];
 
     setTimeout(() => {
       // Loop through a range of dates (-15 days to +85 days from the current date)
@@ -541,7 +535,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   const toggleTaskCompletion = (task) => {
     const updatedTasks = tasks.map((t) =>
-      t.title === task.title ? { ...t, completed: !t.completed } : t
+      t.id === task.id ? { ...t, completed: !t.completed } : t
     );
     setTasks(updatedTasks);
   };
@@ -567,19 +561,26 @@ export default function BrokerCalendar({ navigation, user }) {
 
       <View>
         <Text style={styles.title}>TO DO LIST</Text>
-      <ScrollView style={styles.scrollView} 
-      nestedScrollEnabled = {true}>
-        <FlatList
-          data={homeworkData}
-          keyExtractor={(item) => item.id}
+        <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
+          <FlatList
+            data={tasks}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text style={styles.itemText}>{item.title}</Text>
-              <Text style={styles.itemText}>{item.dueDate}</Text>
-            </View>
-          )}
-        />
-      </ScrollView>
+              <View style={styles.checkboxContainer}>
+                <BouncyCheckbox
+                  isChecked={item.completed} // Use isChecked instead of value
+                  fillColor={item.completed ? "blue" : "#FF6347"} // Green when checked, red when unchecked
+                  unfillColor="#FFFFFF" // Background color when unchecked
+                  onPress={() => toggleTaskCompletion(item)} // Call toggle function
+                />
+                <View style={styles.item}>
+                  <Text style={styles.itemText}>{item.title}</Text>
+                  <Text style={styles.itemText}>{item.dueDate}</Text>
+                </View>
+              </View>
+            )}
+          />
+        </ScrollView>
       </View>
 
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
@@ -868,17 +869,20 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   calendarContainer: {
-    height: '50%',
+    height: "50%",
     borderWidth: 1,
-    borderColor: 'cyan',
+    borderColor: "cyan",
     margin: 10,
     marginTop: 0,
   },
+  checkboxContainer: {
+    flexDirection: "row", // Align items in a row
+  },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   Imagecon: {
     alignContent: "flex-end",
@@ -984,14 +988,14 @@ const styles = StyleSheet.create({
   //styles for displaying todo lists
   scrollView: {
     height: 250,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 5,
     padding: 10,
   },
   item: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   itemText: {
     fontSize: 16,
