@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, FlatList } from "react-native";
 import NavBar from "../../components/NavBar";
 
-export default function CalendarScreen({ navigation }) {
+export default function CalendarScreen({ navigation, user }) {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {

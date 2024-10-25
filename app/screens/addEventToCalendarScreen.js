@@ -20,7 +20,7 @@ import {
 } from "react-native-calendars";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function FlashcardsScreen({ navigation }) {
+export default function FlashcardsScreen({ navigation, user }) {
   // State variables for event data
   const [eventTitle, setEventTitle] = useState("Gym Workout");
   const [eventLocation, setEventLocation] = useState("New Delhi");
