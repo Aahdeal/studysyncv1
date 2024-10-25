@@ -1,7 +1,6 @@
 // Navigation.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native"; // Only one NavigationContainer
 
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -9,20 +8,40 @@ import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import FlashcardScreen from "./screens/FlashcardScreen";
 import AccountScreen from "./screens/AccountScreen";
-import altCalendarScreen from "./screens/altCalendarScreen";
+import AltCalendarScreen from "./screens/altCalendarScreen";
 
 const Stack = createStackNavigator();
 
-function AppNavigator() {
+function AppNavigator({ user }) {
   return (
-    <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
-      <Stack.Screen name="altCalendar" component={altCalendarScreen} />
-      <Stack.Screen name="Flashcards" component={FlashcardScreen} />
-      <Stack.Screen name="Account" component={AccountScreen} />
+    <Stack.Navigator
+      initialRouteName={user ? "Home" : "Login"} // Redirect to Home if user is logged in
+      screenOptions={{ headerShown: false }}    // Hide the header for all screens
+    >
+      {!user ? (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Home">
+            {props => <HomeScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen name="Calendar">
+            {props => <CalendarScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen name="altCalendar">
+            {props => <AltCalendarScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen name="Flashcards">
+            {props => <FlashcardScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen name="Account">
+            {props => <AccountScreen {...props} user={user} />}
+          </Stack.Screen>
+        </>
+      )}
     </Stack.Navigator>
   );
 }

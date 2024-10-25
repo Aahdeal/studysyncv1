@@ -22,7 +22,7 @@ import Icon from "../../components/Icon";
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
 
-export default function BrokerCalendar({ navigation }) {
+export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({});
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
   const [isTaskModalVisible, setTaskModalVisible] = useState(false); // State to handle modal visibility
