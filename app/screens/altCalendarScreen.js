@@ -10,6 +10,8 @@ import {
   TextInput,
   Button,
   Switch,
+  ScrollView,
+  FlatList,
 } from "react-native";
 //import CheckBox from "@react-native-community/checkbox";
 import moment from "moment";
@@ -31,6 +33,20 @@ export default function BrokerCalendar({ navigation }) {
   const [isTaskDatePickerVisible, setTaskDatePickerVisibility] =
     useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
+  const [showHomework, setShowHomework] = useState(false);
+
+  // Sample data for homework
+  const homeworkData = [
+    { id: '1', title: 'Math Assignment', dueDate: 'Oct 25' },
+    { id: '2', title: 'Science Project', dueDate: 'Oct 27' },
+    { id: '3', title: 'History Essay', dueDate: 'Oct 28' },
+    { id: '4', title: 'History Essay', dueDate: 'Oct 28' },
+    { id: '5', title: 'History Essay', dueDate: 'Oct 28' },
+  ];
+
+  const toggleHomeworkVisibility = () => {
+    setShowHomework(!showHomework);
+  };
 
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -529,21 +545,42 @@ export default function BrokerCalendar({ navigation }) {
     );
     setTasks(updatedTasks);
   };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Agenda
-        items={items}
-        loadItemsForMonth={loadItems}
-        selected={new Date()}
-        renderItem={renderItem}
-        markedDates={formattedEvents}
-        onDayPress={(day) => {
-          const event = data.find((event) => event.date === day.dateString);
-          if (event) {
-            alert(`${event.title}: ${event.type}`);
-          }
-        }}
-      />
+      <Text style={styles.title}>CALENDAR</Text>
+      <View style={styles.calendarContainer}>
+        <Agenda
+          items={items}
+          loadItemsForMonth={loadItems}
+          selected={new Date()}
+          renderItem={renderItem}
+          markedDates={formattedEvents}
+          onDayPress={(day) => {
+            const event = data.find((event) => event.date === day.dateString);
+            if (event) {
+              alert(`${event.title}: ${event.type}`);
+            }
+          }}
+        />
+      </View>
+
+      <View>
+        <Text style={styles.title}>TO DO LIST</Text>
+      <ScrollView style={styles.scrollView} 
+      nestedScrollEnabled = {true}>
+        <FlatList
+          data={homeworkData}
+          keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+            <View style={styles.item}>
+              <Text style={styles.itemText}>{item.title}</Text>
+              <Text style={styles.itemText}>{item.dueDate}</Text>
+            </View>
+          )}
+        />
+      </ScrollView>
+      </View>
 
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackground}>
@@ -828,6 +865,20 @@ export default function BrokerCalendar({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+  },
+  calendarContainer: {
+    height: '50%',
+    borderWidth: 1,
+    borderColor: 'cyan',
+    margin: 10,
+    marginTop: 0,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
   Imagecon: {
     alignContent: "flex-end",
@@ -929,5 +980,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     elevation: 5,
     zIndex: 999,
+  },
+  //styles for displaying todo lists
+  scrollView: {
+    height: 250,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    padding: 10,
+  },
+  item: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  itemText: {
+    fontSize: 16,
   },
 });
