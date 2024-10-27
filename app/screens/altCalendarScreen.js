@@ -13,8 +13,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-//import CheckBox from "@react-native-community/checkbox";
-import moment from "moment";
+import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "../../components/Icon";
@@ -24,19 +23,19 @@ import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export default function BrokerCalendar({ navigation, user }) {
-  const [items, setItems] = useState({});
+  const [items, setItems] = useState({}); //state for tasks and events to be loaded within selected date range
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
-  const [isTaskModalVisible, setTaskModalVisible] = useState(false); // State to handle modal visibility
-  const [isEventModalVisible, setEventModalVisible] = useState(false); // State to handle modal visibility
+  const [isTaskModalVisible, setTaskModalVisible] = useState(false); // State to handle task modal visibility
+  const [isEventModalVisible, setEventModalVisible] = useState(false); // State to handle event modal visibility
   const [isFromDatePickerVisible, setFromDatePickerVisibility] =
-    useState(false);
-  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
+    useState(false); // State to handle start date picker visibility
+  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false); // State to handle end date picker visibility
   const [isTaskDatePickerVisible, setTaskDatePickerVisibility] =
-    useState(false);
-  const [isAllDay, setIsAllDay] = useState(false);
+    useState(false); // State to handle task date picker visibility
+  const [isAllDay, setIsAllDay] = useState(false); //state to mark events as all day
   const [showHomework, setShowHomework] = useState(false);
 
-  // Sample data for homework
+  // Sample data for homework/tasks
   const [tasks, setTasks] = useState([
     { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
     { id: "2", title: "Science Project", dueDate: "Oct 27" },
@@ -49,30 +48,34 @@ export default function BrokerCalendar({ navigation, user }) {
     setShowHomework(!showHomework);
   };
 
+  //state for adding a new event to calendar, these are the default settings
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
     allDay: false,
-    startDate: new Date(),
-    endDate: moment().add(1, "hour").toDate(),
+    startDate: new Date(), //current date
+    endDate: moment().add(1, "hour").toDate(), //current date +1h
     type: "Relaxing",
     repeat: "does not repeat",
     repeatCount: 1,
   });
-
+  //state for adding a new task to calendar, these are the default settings
   const [newTask, setNewTask] = useState({
-    id: 1,
+    id: 1, //ID is required to check task as complete which ticking checkbox
     title: "",
     description: "",
     allDay: false,
-    date: new Date(),
+    date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
     repeat: "does not repeat",
     repeatCount: 1,
     completed: false,
   });
+
+  //once all day is toggled, add event's end date should be set to end of that day and input field should set to not editable
   const toggleAllDay = () => {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
   };
+
   const showTaskDatePicker = () => {
     setTaskDatePickerVisibility(true);
   };
@@ -110,11 +113,13 @@ export default function BrokerCalendar({ navigation, user }) {
     setFromDatePickerVisibility(false);
   };
 
+  //once start date is entered, set newEvent state's startDate
   const handleConfirmFrom = (date) => {
+    // "...newEvent" carries all the already stored info and sets "startDate" to "date"
     setNewEvent({
       ...newEvent,
       startDate: date,
-      // Ensure end date is after start date
+      // Automatically Ensure end date is after start date by making enddate = startdate +1h, user can change end date afterwards
       endDate:
         newEvent.endDate && date > newEvent.endDate
           ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
@@ -140,6 +145,7 @@ export default function BrokerCalendar({ navigation, user }) {
     setToDatePickerVisibility(false);
   };
 
+  //set events end date
   const handleConfirmTo = (date) => {
     setNewEvent({
       ...newEvent,
@@ -154,6 +160,7 @@ export default function BrokerCalendar({ navigation, user }) {
   };
   //functions
 
+  //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
     const timePattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -175,14 +182,19 @@ export default function BrokerCalendar({ navigation, user }) {
     return date.toISOString().split("T")[0];
   };
 
+  //said fake data
   let data = [
     {
+      //our events won't have date. startdate & enddate both carrt time with them. see the event const line 56
       date: "2024-10-26",
       title: "Mathhhh Exam",
       description: "Writing Math Exam worth 50% sub min 45%",
+      allDay: false,
       StartTime: moment(timeToString("12:00"), "HH:mm"),
       EndTime: moment(timeToString("12:00"), "HH:mm").add(1, "hour"),
       type: "Test",
+      repeat: "does not repeat",
+      repeatCount: 1,
     },
     {
       date: "2024-10-25",
@@ -226,14 +238,18 @@ export default function BrokerCalendar({ navigation, user }) {
     },
   ];
 
+  //i think this was supposed to load the events & tasks in the month being shown on calendar,
+  //so when you move to new month new events and tasks display
   loadItemsForMonth = (month) => {
     console.log("trigger items loading");
   };
 
-  // Ensure data is defined and not empty before running reduce
+  // set dotmarking on calendar
   const formattedEvents =
+    //if data is true and data is an array and data array>0
     data && Array.isArray(data) && data.length > 0
-      ? data.reduce((acc, current) => {
+      ? //run through all of it and set dot colour according to the type of event
+        data.reduce((acc, current) => {
           let dotColor;
           switch (current.type) {
             case "Submission":
@@ -254,11 +270,12 @@ export default function BrokerCalendar({ navigation, user }) {
             default:
               dotColor = "gray"; // fallback color
           }
-
+          //settings to display the dots on calendar for each date
           acc[current.date] = {
             marked: true,
             dotColor: dotColor,
             activeOpacity: 0.5,
+            //next 4 props are probably not necessary here
             title: current.title,
             description: current.description,
             StartTime: current.StartTime,
@@ -267,10 +284,10 @@ export default function BrokerCalendar({ navigation, user }) {
           return acc;
         }, {})
       : console.log("data is not array");
-  // Return an empty object if data is undefined or empty
 
   // Loading items for the calendar
   const loadItems = (day) => {
+    //day is either current day or day selected on calendar
     const items = {}; // Temporary object to hold events and tasks
 
     setTimeout(() => {
@@ -284,7 +301,7 @@ export default function BrokerCalendar({ navigation, user }) {
           items[strTime] = [];
         }
 
-        // Add events from 'data' to the items object
+        // Add events from 'data' to the items object if it is within date range
         data.forEach((event) => {
           if (event.date === strTime) {
             items[strTime].push({
@@ -297,12 +314,13 @@ export default function BrokerCalendar({ navigation, user }) {
           }
         });
 
-        // Add tasks to the items object
+        // Add tasks to the items object if it is within date range
         tasks.forEach((task) => {
           if (task.date === strTime) {
             items[strTime].push({
               ...task,
-              title: `Task: ${task.title}`, // Prefix "Task" to distinguish tasks from events
+              title: task.title,
+              //title: `Task: ${task.title}`, // Prefix "Task" to distinguish tasks from events
               completed: task.completed,
             });
           }
@@ -319,9 +337,10 @@ export default function BrokerCalendar({ navigation, user }) {
     }, 1000);
   };
 
+  //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
   const renderItem = (item) => {
     if (item.completed !== undefined) {
-      // This is a task
+      // This is a task, events dont have completed field
       return (
         <View style={styles.taskContainer}>
           {/* <CheckBox
@@ -336,10 +355,14 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       );
     } else {
+      //display event card
       return (
+        //allow it to be clickable, once clicked it can pop up to editable mode maybe?
         <TouchableOpacity
           style={{ marginRight: 10, marginTop: 17 }}
           onPress={() =>
+            //we dont have this navigation, maybe we can set add event modal to display
+            //but then we need event id's as well to pull the specific events info
             navigation.navigate("PullForwardDetails", {
               data: item,
             })
@@ -349,20 +372,14 @@ export default function BrokerCalendar({ navigation, user }) {
             <Card.Content>
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <View
+                  //statusStrip = that colour line on the side. can me set to same colour as dot marking
                   style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
                 />
                 <View style={{ flex: 0.7 }}>
                   <View style={styles.Time}>
                     <Text style={styles.timeText}>
+                      {/* display start and end time */}
                       {item?.StartTime} - {item?.EndTime}
-                      {/* {item?.pullforward?.pullforward} */}
-                      {/* <Icon
-                      size={20}
-                      name="forwardburger"
-                      family="MaterialCommunityIcons"
-                      // style={styles.inputIcons}
-                    />
-                    {item?.pullforward?.pullDate} */}
                     </Text>
                   </View>
                   <Text style={styles.BookingNameText}>{item.title}</Text>
@@ -377,7 +394,7 @@ export default function BrokerCalendar({ navigation, user }) {
       );
     }
   };
-
+  //close modal that gives you the option to add event/task
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -395,20 +412,12 @@ export default function BrokerCalendar({ navigation, user }) {
   // Function to generate repeated events
   function generateRepeatedEvents(newEvent) {
     const events = [];
-    const startDate = moment(newEvent.startDate); // Use startDate for initial date
+    const startDate = moment(newEvent.startDate); // Use startDate for initial date of event
     let repeatCount = 1;
 
     if (newEvent.repeat === "does not repeat") {
-      events.push(newEvent); // Push the event as-is
+      events.push(newEvent); // Push the event as-is to array
       return events;
-    }
-
-    if (newEvent.repeat === "daily") {
-      repeatCount = 14;
-    } else if (newEvent.repeat === "weekly") {
-      repeatCount = 4;
-    } else if (newEvent.repeat === "monthly") {
-      repeatCount = 3;
     }
 
     // Use the user-defined repetition count if available
@@ -422,13 +431,18 @@ export default function BrokerCalendar({ navigation, user }) {
       repeatCount = 3; // Default count if no user input (optional)
     }
 
+    //add events to array according to repeat count
     for (let i = 0; i < repeatCount; i++) {
+      //get current event info and set to nextEvent var
       let nextEvent = { ...newEvent };
       let nextDate;
+      //let nextEnd
 
       switch (newEvent.repeat) {
+        //if daily then add repeat count number to days etc.
         case "daily":
           nextDate = startDate.clone().add(i, "days");
+          //nextEnd = startDate.clone().add(i, "days");
           break;
         case "weekly":
           nextDate = startDate.clone().add(i, "weeks");
@@ -439,8 +453,10 @@ export default function BrokerCalendar({ navigation, user }) {
         default:
           nextDate = startDate;
       }
-
+      //change next event startDate to new date set by repeat count, this should be formatted with time as well "format("YYYY-MM-DD HH:mm")"
       nextEvent.startDate = nextDate.format("YYYY-MM-DD");
+      //end date should be set to prev endDate + same amo of repeat count just to keep enddate time spacing as well.
+      //nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm")
       nextEvent.endDate = nextEvent.startDate; // Keep this for simplicity, adjust as needed
       events.push(nextEvent);
     }
@@ -449,12 +465,13 @@ export default function BrokerCalendar({ navigation, user }) {
   }
 
   const handleAddEvent = (newEvent) => {
-    const repeatedEvents = generateRepeatedEvents(newEvent);
+    const repeatedEvents = generateRepeatedEvents(newEvent); //returns array of events
     console.log("repeated events list: ", repeatedEvents);
     // Update state only once with new events
-    setEvents((prevEvents) => [...prevEvents, ...repeatedEvents]);
+    //setEvents((prevEvents) => [...prevEvents, ...repeatedEvents]);
+    data.push(repeatedEvents); //add array of new events to current array
 
-    // Update items for calendar rendering
+    // Update items for calendar rendering to display new events to calendar
     const updatedItems = { ...items };
     repeatedEvents.forEach((event) => {
       const dateKey = event.startDate; // Ensure this matches your calendar's expected format
@@ -466,7 +483,7 @@ export default function BrokerCalendar({ navigation, user }) {
         description: event.description,
         StartTime: event.StartTime,
         EndTime: event.EndTime,
-        info: event.type,
+        type: event.type,
       });
     });
 
@@ -474,7 +491,7 @@ export default function BrokerCalendar({ navigation, user }) {
     data.push(updatedItems);
   };
 
-  // Function to save new events
+  // Function to save new events to events array
   const saveEvent = () => {
     const newEventEntry = {
       title: newEvent.title,
@@ -487,7 +504,7 @@ export default function BrokerCalendar({ navigation, user }) {
     };
 
     console.log("Saving new event:", newEventEntry); // Debug log
-    handleAddEvent(newEventEntry);
+    handleAddEvent(newEventEntry); // renders events to calendar and generates repeated events
     setEventModalVisible(false); // Close modal after saving
   };
 
