@@ -36,6 +36,8 @@ export default function BrokerCalendar({ navigation, user }) {
     useState(false); // State to handle task date picker visibility
   const [isAllDay, setIsAllDay] = useState(false); //state to mark events as all day
   const [showHomework, setShowHomework] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   /*----------------------DATA ACCESSOR METHODS----------------------- */
   const handleEventUpload = async () => {
@@ -81,7 +83,7 @@ export default function BrokerCalendar({ navigation, user }) {
     try {
       let uploadEvent = taskData[taskData.length - 1];
       let taskID = uploadEvent.taskId.replace(".", "");
-      console.log("T ", taskID);
+      console.log("T ", taskID, " date ", uploadEvent.startDate);
       await set(
         ref(database, "users/" + userId + "/calendar/tasks/" + taskID),
         uploadEvent
@@ -132,10 +134,11 @@ export default function BrokerCalendar({ navigation, user }) {
       if (snapshot.exists()) {
         // Convert the snapshot data to an array of events
         const tasks = Object.values(snapshot.val());
-        //console.log("Fetched tasks:", tasks);
 
         // Set the fetched data to array
         taskData = tasks;
+        setTasks(tasks);
+        //console.log("Fetched tasks:", tasks);
       } else {
         console.log("No tasks found for user.");
       }
@@ -151,18 +154,10 @@ export default function BrokerCalendar({ navigation, user }) {
   fetchEvents();
   let taskData = [];
   fetchTasks();
-  const [tasks, setTasks] = useState(taskData);
 
-  //homework/tasks
-  //   const [tasks, setTasks] = useState([
-  //     { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
-  //     { id: "2", title: "Science Project", dueDate: "Oct 27" },
-  //     { id: "3", title: "History Essay", dueDate: "Oct 28" },
-  //     { id: "4", title: "History Essay", dueDate: "Oct 28" },
-  //     { id: "5", title: "History Essay", dueDate: "Oct 28" },
-  //   ]);
-  //>>>>>>> a4ef6dcbb82d2fe5958603ef522842ded176f10c
-  //i don't think this is necessary, it is mainly used for the fake data set on this page
+  const [tasks, setTasks] = useState([]);
+  //console.log("taskData ", tasks);
+
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
     const timePattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -203,7 +198,6 @@ export default function BrokerCalendar({ navigation, user }) {
     setFromDatePickerVisibility(false);
   };
   const showToDatePicker = () => {
-    console.log("from date: ", newEvent.startDate);
     setToDatePickerVisibility(true);
   };
   const hideToDatePicker = () => {
@@ -529,7 +523,22 @@ export default function BrokerCalendar({ navigation, user }) {
 
     return events;
   }
+  // Function to handle date selection
+  const handleDateSelect = (date) => {
+    console.log("clicked: ", date);
+    setSelectedDate(date);
+    filterTasksByDate(date);
+  };
 
+  // Filter tasks by selected date
+  const filterTasksByDate = (date) => {
+    const filtered = tasks.filter(
+      (task) =>
+        task.startDate &&
+        task.startDate.substring(0, 10) === date.substring(0, 10)
+    );
+    setFilteredTasks(filtered);
+  };
   /*-------------------------------------SAVE EVENTS/TASKS------------------------------------------ */
   //handles repeated events
   const handleAddEvent = (newEvent) => {
@@ -592,11 +601,11 @@ export default function BrokerCalendar({ navigation, user }) {
       taskId: new Date().toISOString(),
       title: newTask.title,
       description: newTask.description,
-      startDate: newTask.startDate,
+      startDate: moment(newTask.startDate).format("YYYY-MM-DD HH:mm"),
       completed: newTask.completed, // Save the completed state
     };
     taskData.push(newTaskEntry);
-    console.log("tasks: ", taskData);
+    console.log("taskData: ", taskData);
     handleTaskUpload();
     setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
     setTaskModalVisible(false);
@@ -636,7 +645,7 @@ export default function BrokerCalendar({ navigation, user }) {
   /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
   const toggleTaskCompletion = (task) => {
     const updatedTasks = tasks.map((t) =>
-      t.id === task.id ? { ...t, completed: !t.completed } : t
+      t.taskId === task.taskId ? { ...t, completed: !t.completed } : t
     );
     setTasks(updatedTasks);
   };
@@ -655,9 +664,10 @@ export default function BrokerCalendar({ navigation, user }) {
           markedDates={formattedEvents}
           onDayPress={(day) => {
             const event = data.find((event) => event.date === day.dateString);
-            if (event) {
-              alert(`${event.title}: ${event.type}`);
-            }
+            // if (event) {
+            //   alert(`${event.title}: ${event.type}`);
+            //   },
+            handleDateSelect(day.dateString);
           }}
         />
       </View>
@@ -667,8 +677,8 @@ export default function BrokerCalendar({ navigation, user }) {
         <Text style={styles.title}>TO DO LIST</Text>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
           <FlatList
-            data={tasks}
-            keyExtractor={(item) => item.id}
+            data={filteredTasks}
+            keyExtractor={(item) => item.taskId}
             renderItem={({ item }) => (
               <View style={styles.checkboxContainer}>
                 <BouncyCheckbox
@@ -677,10 +687,14 @@ export default function BrokerCalendar({ navigation, user }) {
                   unfillColor="#FFFFFF" // Background color when unchecked
                   onPress={() => toggleTaskCompletion(item)} // Call toggle function
                 />
-                <View style={styles.item}>
-                  <Text style={styles.itemText}>{item.title}</Text>
-                  <Text style={styles.itemText}>{item.dueDate}</Text>
-                </View>
+                <Text
+                  style={[
+                    styles.taskTitle,
+                    item.completed && styles.completedTask,
+                  ]}
+                >
+                  {item.title}
+                </Text>
               </View>
             )}
           />
@@ -924,7 +938,7 @@ export default function BrokerCalendar({ navigation, user }) {
           {/* Date and Time Picker */}
 
           {/* )Repeat Options */}
-          <RNPickerSelect
+          {/* <RNPickerSelect
             value={newTask.repeat}
             useNativeAndroidPickerStyle={false}
             //placeholderTextColor={colors.BLACK}
@@ -958,7 +972,7 @@ export default function BrokerCalendar({ navigation, user }) {
                 style={styles.input}
               />
             </>
-          )}
+          )} */}
           <Button title="Save Task" onPress={saveTask} />
           <Button title="Close" onPress={() => setTaskModalVisible(false)} />
         </View>
