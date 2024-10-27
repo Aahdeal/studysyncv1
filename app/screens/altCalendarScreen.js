@@ -43,17 +43,30 @@ export default function BrokerCalendar({ navigation, user }) {
     console.log(data.length);
 
     let event = data.slice(-1);
+    let repeat = event[0].repeatCount;
     console.log("event.eventId : ", event[0].eventId, " event: ", { event });
-    await set(
-      ref(database, "users/" + userId + "/calendar/events/" + event[0].eventId),
-      event[0]
-    )
-      .then(() => {
-        console.log("Event uploaded successfully!");
-      })
-      .catch((error) => {
-        console.error("Error uploading event:", error);
-      });
+
+    try{
+    for (i = 1; i <= repeat; i++){
+      let uploadEvent = data[data.length - i];
+      let eventID = (uploadEvent.eventId).replace(".", "");
+      await set(
+        ref(database, "users/" + userId + "/calendar/events/" + eventID),
+        uploadEvent
+      )
+        .then(() => {
+          console.log("Event uploaded successfully!");
+        })
+        .catch((error) => {
+          console.error("Error uploading event:", error);
+        });
+    }
+  }
+  catch(error){
+    console.error("Loop Error uploading event:", error);
+  }
+    
+    
   };
 
   // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0
@@ -239,7 +252,7 @@ export default function BrokerCalendar({ navigation, user }) {
   const formattedEvents =
     //if data is true and data is an array and data array>0
     data && Array.isArray(data) && data.length > 0
-      ? //run through all of it and set dot colour according to the type of event
+       //run through all of it and set dot colour according to the type of event
         data.reduce((acc, current) => {
           let dotColor;
           switch (current.type) {
@@ -273,8 +286,7 @@ export default function BrokerCalendar({ navigation, user }) {
             EndTime: current.EndTime,
           };
           return acc;
-        }, {})
-      : console.log("data is not array");
+        }, {});
 
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
@@ -443,7 +455,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
       nextEvent.eventId = newEvent.eventId + i; // adjusting ID for repeated events
       events.push(nextEvent);
-      data.push(newEvent);
+      data.push(nextEvent);
     }
 
     return events;
@@ -486,7 +498,7 @@ export default function BrokerCalendar({ navigation, user }) {
   // Function to save new events to events array
   const saveEvent = () => {
     const newEventEntry = {
-      eventId: new Date(),
+      eventId: new Date().toISOString(),
       title: newEvent.title,
       description: newEvent.description,
       startDate: moment(newEvent.startDate).format("YYYY-MM-DD HH:mm"),
