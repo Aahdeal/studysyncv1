@@ -46,10 +46,10 @@ export default function BrokerCalendar({ navigation, user }) {
     let repeat = event[0].repeatCount;
     console.log("event.eventId : ", event[0].eventId, " event: ", { event });
 
-    try{
-      for (i = 1; i <= repeat; i++){
+    try {
+      for (i = 1; i <= repeat; i++) {
         let uploadEvent = data[data.length - i];
-        let eventID = (uploadEvent.eventId).replace(".", "");
+        let eventID = uploadEvent.eventId.replace(".", "");
         await set(
           ref(database, "users/" + userId + "/calendar/events/" + eventID),
           uploadEvent
@@ -61,8 +61,38 @@ export default function BrokerCalendar({ navigation, user }) {
             console.error("Error uploading event:", error);
           });
       }
+    } catch (error) {
+      console.error("Loop Error uploading event:", error);
     }
-    catch(error){
+  };
+  const handleTaskUpload = async () => {
+    let userId = user.uid;
+    //console.log(data.length);
+    let event = taskData.slice(-1);
+    console.log(
+      "task.Id : ",
+      event[0].taskId,
+      " task: ",
+      event[0],
+      " start: ",
+      event[0].startDate
+    );
+
+    try {
+      let uploadEvent = taskData[taskData.length - 1];
+      let taskID = uploadEvent.taskId.replace(".", "");
+      console.log("T ", taskID);
+      await set(
+        ref(database, "users/" + userId + "/calendar/tasks/" + taskID),
+        uploadEvent
+      )
+        .then(() => {
+          console.log("Task uploaded successfully!");
+        })
+        .catch((error) => {
+          console.error("Error uploading event:", error);
+        });
+    } catch (error) {
       console.error("Loop Error uploading event:", error);
     }
   };
@@ -71,16 +101,16 @@ export default function BrokerCalendar({ navigation, user }) {
   const fetchEvents = async () => {
     let userId = user.uid;
     const eventsRef = ref(database, `users/${userId}/calendar/events`);
-  
+
     try {
       // Retrieve data from Firebase
       const snapshot = await get(eventsRef);
-      
+
       if (snapshot.exists()) {
         // Convert the snapshot data to an array of events
         const events = Object.values(snapshot.val());
-        console.log("Fetched events:", events);
-  
+        //console.log("Fetched events:", events);
+
         // Set the fetched data to array
         data = events;
       } else {
@@ -91,6 +121,28 @@ export default function BrokerCalendar({ navigation, user }) {
     }
   };
 
+  const fetchTasks = async () => {
+    let userId = user.uid;
+    const eventsRef = ref(database, `users/${userId}/calendar/tasks`);
+
+    try {
+      // Retrieve data from Firebase
+      const snapshot = await get(eventsRef);
+
+      if (snapshot.exists()) {
+        // Convert the snapshot data to an array of events
+        const tasks = Object.values(snapshot.val());
+        //console.log("Fetched tasks:", tasks);
+
+        // Set the fetched data to array
+        taskData = tasks;
+      } else {
+        console.log("No tasks found for user.");
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   /*--------------------------Sample Data--------------------------------*/
 
@@ -98,6 +150,7 @@ export default function BrokerCalendar({ navigation, user }) {
   let data = [];
   fetchEvents();
   let taskData = [];
+  fetchTasks();
   const [tasks, setTasks] = useState(taskData);
 
   //homework/tasks
@@ -190,7 +243,7 @@ export default function BrokerCalendar({ navigation, user }) {
     title: "",
     description: "",
     allDay: false,
-    date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
+    startDate: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
     completed: false,
   });
 
@@ -203,24 +256,16 @@ export default function BrokerCalendar({ navigation, user }) {
 
   /*-------------------------------------Handles Task Date Confirmation------------------------------------------ */
   const handleConfirmTask = (date) => {
-    setNewEvent({
-      ...newEvent,
+    setNewTask({
+      ...newTask,
       startDate: date,
-      // Ensure end date is after start date
-      endDate:
-        newEvent.endDate && date > newEvent.endDate
-          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
-              "MMMM Do YYYY, h:mm A"
-            ) // Add 1 hour default
-          : newEvent.endDate,
     });
     console.warn(
-      "A From date has been picked: ",
+      "A Task date has been picked: ",
       moment(date).format("MMMM Do YYYY, h:mm A")
     );
-    console.log("new date: ", newEvent.startDate);
-    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
-      hideFromDatePicker();
+    console.log("task date: ", newTask.startDate);
+    hideTaskDatePicker();
   };
 
   /*-------------------------------------Updates newEvent start------------------------------------------ */
@@ -273,47 +318,47 @@ export default function BrokerCalendar({ navigation, user }) {
   /*----------------------------Sets dot color on events------------------------------------ */
   const formattedEvents =
     //if data is true and data is an array and data array>0
-    data && Array.isArray(data) && data.length > 0
-       //run through all of it and set dot colour according to the type of event
-        data.reduce((acc, current) => {
-          let dotColor;
-          switch (current.type) {
-            case "Submission":
-              dotColor = "red";
-              break;
-            case "Test":
-              dotColor = "orange";
-              break;
-            case "Study":
-              dotColor = "blue";
-              break;
-            case "Birthday":
-              dotColor = "pink";
-              break;
-            case "Any":
-              dotColor = "beige";
-              break;
-            default:
-              dotColor = "gray"; // fallback color
-          }
-          //settings to display the dots on calendar for each date
-          acc[current.date] = {
-            marked: true,
-            dotColor: dotColor,
-            activeOpacity: 0.5,
-            //next 4 props are probably not necessary here
-            title: current.title,
-            description: current.description,
-            StartTime: current.StartTime,
-            EndTime: current.EndTime,
-          };
-          return acc;
-        }, {});
+    data && Array.isArray(data) && data.length > 0;
+  //run through all of it and set dot colour according to the type of event
+  data.reduce((acc, current) => {
+    let dotColor;
+    switch (current.type) {
+      case "Submission":
+        dotColor = "red";
+        break;
+      case "Test":
+        dotColor = "orange";
+        break;
+      case "Study":
+        dotColor = "blue";
+        break;
+      case "Birthday":
+        dotColor = "pink";
+        break;
+      case "Any":
+        dotColor = "beige";
+        break;
+      default:
+        dotColor = "gray"; // fallback color
+    }
+    //settings to display the dots on calendar for each date
+    acc[current.date] = {
+      marked: true,
+      dotColor: dotColor,
+      activeOpacity: 0.5,
+      //next 4 props are probably not necessary here
+      title: current.title,
+      description: current.description,
+      StartTime: current.StartTime,
+      EndTime: current.EndTime,
+    };
+    return acc;
+  }, {});
 
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
-    //fetch data from db 
+    //fetch data from db
     const items = {}; // Temporary object to hold events and tasks
 
     setTimeout(() => {
@@ -331,7 +376,7 @@ export default function BrokerCalendar({ navigation, user }) {
         data.forEach((event) => {
           if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
             items[strTime].push({
-              eventId: event.eventId,              
+              eventId: event.eventId,
               title: event.title,
               description: event.description,
               StartTime: moment(event.startDate).format("HH:mm"),
@@ -544,12 +589,15 @@ export default function BrokerCalendar({ navigation, user }) {
 
   const saveTask = () => {
     const newTaskEntry = {
-      id: new Date(),
+      taskId: new Date().toISOString(),
       title: newTask.title,
       description: newTask.description,
       startDate: newTask.startDate,
       completed: newTask.completed, // Save the completed state
     };
+    taskData.push(newTaskEntry);
+    console.log("tasks: ", taskData);
+    handleTaskUpload();
     setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
     setTaskModalVisible(false);
   };
