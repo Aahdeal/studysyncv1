@@ -368,28 +368,28 @@ export default function BrokerCalendar({ navigation, user }) {
             })
           }
         >
-          <Card>
-            <Card.Content>
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View
-                  //statusStrip = that colour line on the side. can me set to same colour as dot marking
-                  style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
-                />
-                <View style={{ flex: 0.7 }}>
-                  <View style={styles.Time}>
-                    <Text style={styles.timeText}>
-                      {/* display start and end time */}
-                      {item?.StartTime} - {item?.EndTime}
-                    </Text>
-                  </View>
-                  <Text style={styles.BookingNameText}>{item.title}</Text>
-                  <Text style={styles.BookingDescriptionText}>
-                    {item.description}
-                  </Text>
-                </View>
+          {/* <Card>
+            <Card.Content> */}
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View
+              //statusStrip = that colour line on the side. can me set to same colour as dot marking
+              style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
+            />
+            <View style={{ flex: 0.7 }}>
+              <View style={styles.Time}>
+                <Text style={styles.timeText}>
+                  {/* display start and end time */}
+                  {item?.StartTime} - {item?.EndTime}
+                </Text>
               </View>
-            </Card.Content>
-          </Card>
+              <Text style={styles.BookingNameText}>{item.title}</Text>
+              <Text style={styles.BookingDescriptionText}>
+                {item.description}
+              </Text>
+            </View>
+          </View>
+          {/* </Card.Content>
+          </Card> */}
         </TouchableOpacity>
       );
     }
@@ -559,7 +559,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Text style={styles.title}>CALENDAR</Text>
+      {/* <Text style={styles.title}>CALENDAR</Text> */}
       <View style={styles.calendarContainer}>
         <Agenda
           items={items}
@@ -883,10 +883,10 @@ export default function BrokerCalendar({ navigation, user }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 12,
   },
   calendarContainer: {
-    height: "50%",
+    height: "60%",
     borderWidth: 1,
     borderColor: "cyan",
     margin: 10,
