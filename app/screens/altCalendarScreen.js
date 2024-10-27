@@ -59,6 +59,16 @@ export default function BrokerCalendar({ navigation, user }) {
   let data = [];
   let taskData = []
   const [tasks, setTasks] = useState(taskData);
+=======
+  //homework/tasks
+  const [tasks, setTasks] = useState([
+    { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
+    { id: "2", title: "Science Project", dueDate: "Oct 27" },
+    { id: "3", title: "History Essay", dueDate: "Oct 28" },
+    { id: "4", title: "History Essay", dueDate: "Oct 28" },
+    { id: "5", title: "History Essay", dueDate: "Oct 28" },
+  ]);
+>>>>>>> a4ef6dcbb82d2fe5958603ef522842ded176f10c
   //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
