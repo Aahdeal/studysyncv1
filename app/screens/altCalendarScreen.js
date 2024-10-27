@@ -35,131 +35,17 @@ export default function BrokerCalendar({ navigation, user }) {
   const [isAllDay, setIsAllDay] = useState(false); //state to mark events as all day
   const [showHomework, setShowHomework] = useState(false);
 
-  // Sample data for homework/tasks
+  /*--------------------------Sample Data--------------------------------*/
+
+  //homework/tasks
   const [tasks, setTasks] = useState([
     { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
     { id: "2", title: "Science Project", dueDate: "Oct 27" },
     { id: "3", title: "History Essay", dueDate: "Oct 28" },
     { id: "4", title: "History Essay", dueDate: "Oct 28" },
     { id: "5", title: "History Essay", dueDate: "Oct 28" },
+
   ]);
-
-  const toggleHomeworkVisibility = () => {
-    setShowHomework(!showHomework);
-  };
-
-  //state for adding a new event to calendar, these are the default settings
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    allDay: false,
-    startDate: new Date(), //current date
-    endDate: moment().add(1, "hour").toDate(), //current date +1h
-    type: "Relaxing",
-    repeat: "does not repeat",
-    repeatCount: 1,
-  });
-  //state for adding a new task to calendar, these are the default settings
-  const [newTask, setNewTask] = useState({
-    id: 1, //ID is required to check task as complete which ticking checkbox
-    title: "",
-    description: "",
-    allDay: false,
-    date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
-    repeat: "does not repeat",
-    repeatCount: 1,
-    completed: false,
-  });
-
-  //once all day is toggled, add event's end date should be set to end of that day and input field should set to not editable
-  const toggleAllDay = () => {
-    setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
-  };
-
-  const showTaskDatePicker = () => {
-    setTaskDatePickerVisibility(true);
-  };
-
-  const hideTaskDatePicker = () => {
-    setTaskDatePickerVisibility(false);
-  };
-
-  const handleConfirmTask = (date) => {
-    setNewEvent({
-      ...newEvent,
-      startDate: date,
-      // Ensure end date is after start date
-      endDate:
-        newEvent.endDate && date > newEvent.endDate
-          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
-              "MMMM Do YYYY, h:mm A"
-            ) // Add 1 hour default
-          : newEvent.endDate,
-    });
-    console.warn(
-      "A From date has been picked: ",
-      moment(date).format("MMMM Do YYYY, h:mm A")
-    );
-    console.log("new date: ", newEvent.startDate);
-    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
-      hideFromDatePicker();
-  };
-
-  const showFromDatePicker = () => {
-    setFromDatePickerVisibility(true);
-  };
-
-  const hideFromDatePicker = () => {
-    setFromDatePickerVisibility(false);
-  };
-
-  //once start date is entered, set newEvent state's startDate
-  const handleConfirmFrom = (date) => {
-    // "...newEvent" carries all the already stored info and sets "startDate" to "date"
-    setNewEvent({
-      ...newEvent,
-      startDate: date,
-      // Automatically Ensure end date is after start date by making enddate = startdate +1h, user can change end date afterwards
-      endDate:
-        newEvent.endDate && date > newEvent.endDate
-          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
-              "MMMM Do YYYY, h:mm A"
-            ) // Add 1 hour default
-          : newEvent.endDate,
-    });
-    console.warn(
-      "A From date has been picked: ",
-      moment(date).format("MMMM Do YYYY, h:mm A")
-    );
-    console.log("new date: ", newEvent.startDate);
-    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
-      hideFromDatePicker();
-  };
-
-  const showToDatePicker = () => {
-    console.log("from date: ", newEvent.startDate);
-    setToDatePickerVisibility(true);
-  };
-
-  const hideToDatePicker = () => {
-    setToDatePickerVisibility(false);
-  };
-
-  //set events end date
-  const handleConfirmTo = (date) => {
-    setNewEvent({
-      ...newEvent,
-      endDate: date,
-    });
-    console.warn(
-      "A To date has been picked: ",
-      moment(date).format("MMMM Do YYYY, h:mm A")
-    );
-    g;
-    hideToDatePicker();
-  };
-  //functions
-
   //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
@@ -181,7 +67,6 @@ export default function BrokerCalendar({ navigation, user }) {
     // Format date to 'YYYY-MM-DD'
     return date.toISOString().split("T")[0];
   };
-
   //said fake data
   let data = [
     {
@@ -238,14 +123,150 @@ export default function BrokerCalendar({ navigation, user }) {
     },
   ];
 
+  /*-----------------------------Modal Visibility Functions----------------------------------*/
+
+  const toggleHomeworkVisibility = () => {
+    setShowHomework(!showHomework);
+  };
+  const showTaskDatePicker = () => {
+    setTaskDatePickerVisibility(true);
+  };
+  const hideTaskDatePicker = () => {
+    setTaskDatePickerVisibility(false);
+  };
+  const showFromDatePicker = () => {
+    setFromDatePickerVisibility(true);
+  };
+  const hideFromDatePicker = () => {
+    setFromDatePickerVisibility(false);
+  };
+  const showToDatePicker = () => {
+    console.log("from date: ", newEvent.startDate);
+    setToDatePickerVisibility(true);
+  };
+  const hideToDatePicker = () => {
+    setToDatePickerVisibility(false);
+  };
+
+  //close modal that gives you the option to add event/task
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const openEventModal = () => {
+    setEventModalVisible(true);
+    closeModal();
+  };
+  const openTaskModal = () => {
+    setTaskModalVisible(true);
+    closeModal();
+  };
+
+  /*--------------------------------------Event and Task Creation-----------------------------------------------*/
+
+  //state for adding a new event to calendar, these are the default settings
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    allDay: false,
+    startDate: new Date(), //current date
+    endDate: moment().add(1, "hour").toDate(), //current date +1h
+    type: "Relaxing",
+    repeat: "does not repeat",
+    repeatCount: 1,
+  });
+  //state for adding a new task to calendar, these are the default settings
+  const [newTask, setNewTask] = useState({
+    id: 1, //ID is required to check task as complete which ticking checkbox
+    title: "",
+    description: "",
+    allDay: false,
+    date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
+    repeat: "does not repeat",
+    repeatCount: 1,
+    completed: false,
+  });
+
+  //once all day is toggled, add event's end date should be set to end of that day and input field should set to not editable
+  const toggleAllDay = () => {
+    setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
+  };
+  
+ /*-------------------------------------Handles Task Confirmation------------------------------------------ */
+  const handleConfirmTask = (date) => {
+    setNewEvent({
+      ...newEvent,
+      startDate: date,
+      // Ensure end date is after start date
+      endDate:
+        newEvent.endDate && date > newEvent.endDate
+          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
+              "MMMM Do YYYY, h:mm A"
+            ) // Add 1 hour default
+          : newEvent.endDate,
+    });
+    console.warn(
+      "A From date has been picked: ",
+      moment(date).format("MMMM Do YYYY, h:mm A")
+    );
+    console.log("new date: ", newEvent.startDate);
+    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
+      hideFromDatePicker();
+  };
+
+  
+  /*-------------------------------------Updates newEvent start------------------------------------------ */
+  //once start date is entered, set newEvent state's startDate
+  const handleConfirmFrom = (date) => {
+    // "...newEvent" carries all the already stored info and sets "startDate" to "date"
+    setNewEvent({
+      ...newEvent,
+      startDate: date,
+      // Automatically Ensure end date is after start date by making enddate = startdate +1h, user can change end date afterwards
+      endDate:
+        newEvent.endDate && date > newEvent.endDate
+          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
+              "MMMM Do YYYY, h:mm A"
+            ) // Add 1 hour default
+          : newEvent.endDate,
+    });
+    console.warn(
+      "A From date has been picked: ",
+      moment(date).format("MMMM Do YYYY, h:mm A")
+    );
+    console.log("new date: ", newEvent.startDate);
+    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
+      hideFromDatePicker();
+  };
+
+  
+
+  /*-------------------------------------updates new event end------------------------------------------ */
+
+  const handleConfirmTo = (date) => {
+    setNewEvent({
+      ...newEvent,
+      endDate: date,
+    });
+    console.warn(
+      "A To date has been picked: ",
+      moment(date).format("MMMM Do YYYY, h:mm A")
+    );
+    g;
+    hideToDatePicker();
+  };
+
+  
+  /*-------------------------------------FUNCTIONS------------------------------------------ */
+
   //i think this was supposed to load the events & tasks in the month being shown on calendar,
   //so when you move to new month new events and tasks display
   loadItemsForMonth = (month) => {
     console.log("trigger items loading");
   };
 
-  // set dotmarking on calendar
-  const formattedEvents =
+  
+  /*----------------------------Sets dot color on events------------------------------------ */
+  const formattedEvents = 
     //if data is true and data is an array and data array>0
     data && Array.isArray(data) && data.length > 0
       ? //run through all of it and set dot colour according to the type of event
@@ -285,14 +306,15 @@ export default function BrokerCalendar({ navigation, user }) {
         }, {})
       : console.log("data is not array");
 
-  // Loading items for the calendar
+  
+  /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
     const items = {}; // Temporary object to hold events and tasks
 
     setTimeout(() => {
-      // Loop through a range of dates (-15 days to +85 days from the current date)
-      for (let i = -15; i < 85; i++) {
+      // Loop through a range of dates (-15 days to +60 days from the current date)
+      for (let i = -15; i < 60; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000; // Calculate date offsets
         const strTime = timeToString(time); // Convert timestamp to 'YYYY-MM-DD' string
 
@@ -337,6 +359,8 @@ export default function BrokerCalendar({ navigation, user }) {
     }, 1000);
   };
 
+  
+  /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
   const renderItem = (item) => {
     if (item.completed !== undefined) {
@@ -394,21 +418,9 @@ export default function BrokerCalendar({ navigation, user }) {
       );
     }
   };
-  //close modal that gives you the option to add event/task
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  
 
-  const openEventModal = () => {
-    setEventModalVisible(true);
-    closeModal();
-  };
-
-  const openTaskModal = () => {
-    setTaskModalVisible(true);
-    closeModal();
-  };
-
+  /*-------------------------------------GENERATE REPEATED EVENTS------------------------------------------ */
   // Function to generate repeated events
   function generateRepeatedEvents(newEvent) {
     const events = [];
@@ -464,6 +476,8 @@ export default function BrokerCalendar({ navigation, user }) {
     return events;
   }
 
+  /*-------------------------------------SAVE EVENTS/TASKS------------------------------------------ */
+  //handles repeated events
   const handleAddEvent = (newEvent) => {
     const repeatedEvents = generateRepeatedEvents(newEvent); //returns array of events
     console.log("repeated events list: ", repeatedEvents);
@@ -520,6 +534,7 @@ export default function BrokerCalendar({ navigation, user }) {
     setTaskModalVisible(false);
   };
 
+  /*-------------------------------------DISPLAYS TASKS IDK YET JAILYNN EXPLAIN------------------------------------------ */
   const renderTask = (task) => {
     return (
       <TouchableOpacity
@@ -550,6 +565,7 @@ export default function BrokerCalendar({ navigation, user }) {
     );
   };
 
+  /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
   const toggleTaskCompletion = (task) => {
     const updatedTasks = tasks.map((t) =>
       t.id === task.id ? { ...t, completed: !t.completed } : t
@@ -557,9 +573,11 @@ export default function BrokerCalendar({ navigation, user }) {
     setTasks(updatedTasks);
   };
 
+  /*-------------------------------------USER INTERFACE------------------------------------------ */
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Text style={styles.title}>CALENDAR</Text>
+      {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda
           items={items}
@@ -576,6 +594,7 @@ export default function BrokerCalendar({ navigation, user }) {
         />
       </View>
 
+      {/*-------------------------------------TO DO LIST------------------------------------------ */}
       <View>
         <Text style={styles.title}>TO DO LIST</Text>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
@@ -600,6 +619,18 @@ export default function BrokerCalendar({ navigation, user }) {
         </ScrollView>
       </View>
 
+      {/*-------------------------------------PLUS ICON------------------------------------------ */}
+      <TouchableOpacity
+        style={styles.viewTask}
+        onPress={() => {
+          setModalVisible(true);
+          //console.log(items);
+        }}
+      >
+        <Icon name="plus" size={30} color="white" family="FontAwesome" />
+      </TouchableOpacity>
+      
+      {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackground}>
           <View style={styles.iconContainer}>
@@ -636,7 +667,7 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       </Modal>
 
-      {/* Add Event Modal */}
+      {/*-------------------------------------EVENT CREATOR MODAL------------------------------------------ */}
       <Modal visible={isEventModalVisible} animationType="slide">
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add New Event</Text>
@@ -784,7 +815,7 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       </Modal>
 
-      {/* Task Modal */}
+      {/* ------------------------------Task Creator Modal ------------------------------------ */}
       <Modal visible={isTaskModalVisible} animationType="slide">
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add New Task</Text>
@@ -865,21 +896,13 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       </Modal>
 
-      {/* Plus Button to Open Modal */}
-      <TouchableOpacity
-        style={styles.viewTask}
-        onPress={() => {
-          setModalVisible(true);
-          //console.log(items);
-        }}
-      >
-        <Icon name="plus" size={30} color="white" family="FontAwesome" />
-      </TouchableOpacity>
+      
       <NavBar />
     </KeyboardAvoidingView>
   );
 }
 
+/*-------------------------------------STYLING------------------------------------------ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
