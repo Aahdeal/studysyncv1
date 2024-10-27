@@ -13,8 +13,8 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import {set, ref, onValue} from 'firebase/database';
-import {database} from '../firebase';
+import { set, ref, onValue } from "firebase/database";
+import { database } from "../firebase";
 import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -41,34 +41,39 @@ export default function BrokerCalendar({ navigation, user }) {
   const handleEventUpload = async () => {
     let userId = user.uid;
     console.log(data.length);
+
     let event = data.slice(-1);
-    console.log(event.id)
-    await set(ref(database, "users/" + userId + "/calendar/events/" + "2"), data[0]).then(() => {
-          console.log('Event uploaded successfully!');
+    console.log("event.eventId : ", event[0].eventId, " event: ", { event });
+    await set(
+      ref(database, "users/" + userId + "/calendar/events/" + event[0].eventId),
+      event[0]
+    )
+      .then(() => {
+        console.log("Event uploaded successfully!");
       })
       .catch((error) => {
-          console.error('Error uploading event:', error);
+        console.error("Error uploading event:", error);
       });
-  }
+  };
 
-  // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0 
+  // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0
 
   /*--------------------------Sample Data--------------------------------*/
 
   //data variables
   let data = [];
-  let taskData = []
+  let taskData = [];
   const [tasks, setTasks] = useState(taskData);
-=======
+
   //homework/tasks
-  const [tasks, setTasks] = useState([
-    { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
-    { id: "2", title: "Science Project", dueDate: "Oct 27" },
-    { id: "3", title: "History Essay", dueDate: "Oct 28" },
-    { id: "4", title: "History Essay", dueDate: "Oct 28" },
-    { id: "5", title: "History Essay", dueDate: "Oct 28" },
-  ]);
->>>>>>> a4ef6dcbb82d2fe5958603ef522842ded176f10c
+  //   const [tasks, setTasks] = useState([
+  //     { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
+  //     { id: "2", title: "Science Project", dueDate: "Oct 27" },
+  //     { id: "3", title: "History Essay", dueDate: "Oct 28" },
+  //     { id: "4", title: "History Essay", dueDate: "Oct 28" },
+  //     { id: "5", title: "History Essay", dueDate: "Oct 28" },
+  //   ]);
+  //>>>>>>> a4ef6dcbb82d2fe5958603ef522842ded176f10c
   //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
@@ -91,7 +96,6 @@ export default function BrokerCalendar({ navigation, user }) {
     return date.toISOString().split("T")[0];
   };
   //said fake data
-  
 
   /*-----------------------------Modal Visibility Functions----------------------------------*/
 
@@ -135,7 +139,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   //state for adding a new event to calendar, these are the default settings
   const [newEvent, setNewEvent] = useState({
-    id: "",
+    eventId: "",
     title: "",
     description: "",
     allDay: false,
@@ -159,8 +163,8 @@ export default function BrokerCalendar({ navigation, user }) {
   const toggleAllDay = () => {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
   };
-  
- /*-------------------------------------Handles Task Confirmation------------------------------------------ */
+
+  /*-------------------------------------Handles Task Confirmation------------------------------------------ */
 
   /*-------------------------------------Handles Task Date Confirmation------------------------------------------ */
   const handleConfirmTask = (date) => {
@@ -184,7 +188,6 @@ export default function BrokerCalendar({ navigation, user }) {
       hideFromDatePicker();
   };
 
-  
   /*-------------------------------------Updates newEvent start------------------------------------------ */
   //once start date is entered, set newEvent state's startDate
   const handleConfirmFrom = (date) => {
@@ -209,8 +212,6 @@ export default function BrokerCalendar({ navigation, user }) {
       hideFromDatePicker();
   };
 
-  
-
   /*-------------------------------------updates new event end------------------------------------------ */
 
   const handleConfirmTo = (date) => {
@@ -226,7 +227,6 @@ export default function BrokerCalendar({ navigation, user }) {
     hideToDatePicker();
   };
 
-  
   /*-------------------------------------FUNCTIONS------------------------------------------ */
 
   //i think this was supposed to load the events & tasks in the month being shown on calendar,
@@ -235,9 +235,8 @@ export default function BrokerCalendar({ navigation, user }) {
     console.log("trigger items loading");
   };
 
-  
   /*----------------------------Sets dot color on events------------------------------------ */
-  const formattedEvents = 
+  const formattedEvents =
     //if data is true and data is an array and data array>0
     data && Array.isArray(data) && data.length > 0
       ? //run through all of it and set dot colour according to the type of event
@@ -277,7 +276,6 @@ export default function BrokerCalendar({ navigation, user }) {
         }, {})
       : console.log("data is not array");
 
-  
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
@@ -330,7 +328,6 @@ export default function BrokerCalendar({ navigation, user }) {
     }, 1000);
   };
 
-  
   /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
   const renderItem = (item) => {
@@ -389,7 +386,6 @@ export default function BrokerCalendar({ navigation, user }) {
       );
     }
   };
-  
 
   /*-------------------------------------GENERATE REPEATED EVENTS------------------------------------------ */
   // Function to generate repeated events
@@ -402,6 +398,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
     if (newEvent.repeat === "does not repeat") {
       events.push(newEvent); // Push the event as-is to array
+      data.push(newEvent);
       return events;
     }
 
@@ -426,8 +423,6 @@ export default function BrokerCalendar({ navigation, user }) {
       switch (newEvent.repeat) {
         //if daily then add repeat count number to days etc.
         case "daily":
-          nextDate = startDate.clone().add(i, "days");        
-          //nextEnd = startDate.clone().add(i, "days");
           nextDate = moment(startDate).add(i, "days");
           nextEnd = moment(endDate).add(i, "days");
           break;
@@ -446,8 +441,9 @@ export default function BrokerCalendar({ navigation, user }) {
       nextEvent.startDate = nextDate.format("YYYY-MM-DD HH:mm");
       nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm");
 
-      nextEvent.id = newEvent.id + "i"; // adjusting ID for repeated events
+      nextEvent.eventId = newEvent.eventId + i; // adjusting ID for repeated events
       events.push(nextEvent);
+      data.push(newEvent);
     }
 
     return events;
@@ -457,10 +453,10 @@ export default function BrokerCalendar({ navigation, user }) {
   //handles repeated events
   const handleAddEvent = (newEvent) => {
     const repeatedEvents = generateRepeatedEvents(newEvent); //returns array of events
-    console.log("repeated events list: ", repeatedEvents);
+    console.log("repeated events list data: ", data);
     // Update state only once with new events
     //setEvents((prevEvents) => [...prevEvents, ...repeatedEvents]);
-    data.push(repeatedEvents); //add array of new events to current array
+    //data.push(repeatedEvents); //add array of new events to current array
 
     // Update items for calendar rendering to display new events to calendar
     const updatedItems = { ...items };
@@ -484,13 +480,13 @@ export default function BrokerCalendar({ navigation, user }) {
 
     setItems(updatedItems); // Set the updated items once
     handleEventUpload();
-    console.log("data: ", data);
+    console.log("data: ", data, "data 0: ", data[0]);
   };
 
   // Function to save new events to events array
   const saveEvent = () => {
     const newEventEntry = {
-      id: new Date(),
+      eventId: new Date(),
       title: newEvent.title,
       description: newEvent.description,
       startDate: moment(newEvent.startDate).format("YYYY-MM-DD HH:mm"),
@@ -617,7 +613,7 @@ export default function BrokerCalendar({ navigation, user }) {
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
-      
+
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackground}>
@@ -884,7 +880,6 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       </Modal>
 
-      
       <NavBar />
     </KeyboardAvoidingView>
   );
