@@ -190,7 +190,7 @@ export default function BrokerCalendar({ navigation, user }) {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
   };
 
-  /*-------------------------------------Handles Task Confirmation------------------------------------------ */
+  /*-------------------------------------Handles Task Date Confirmation------------------------------------------ */
   const handleConfirmTask = (date) => {
     setNewEvent({
       ...newEvent,
@@ -415,7 +415,9 @@ export default function BrokerCalendar({ navigation, user }) {
   // Function to generate repeated events
   function generateRepeatedEvents(newEvent) {
     const events = [];
-    const startDate = moment(newEvent.startDate); // Use startDate for initial date of event
+    const startDate = newEvent.startDate;
+    const endDate = newEvent.endDate; // Use startDate for initial date of event
+
     let repeatCount = 1;
 
     if (newEvent.repeat === "does not repeat") {
@@ -439,28 +441,29 @@ export default function BrokerCalendar({ navigation, user }) {
       //get current event info and set to nextEvent var
       let nextEvent = { ...newEvent };
       let nextDate;
-      //let nextEnd
+      let nextEnd;
 
       switch (newEvent.repeat) {
         //if daily then add repeat count number to days etc.
         case "daily":
-          nextDate = startDate.clone().add(i, "days");
-          //nextEnd = startDate.clone().add(i, "days");
+          nextDate = moment(startDate).add(i, "days");
+          nextEnd = moment(endDate).add(i, "days");
           break;
         case "weekly":
-          nextDate = startDate.clone().add(i, "weeks");
+          nextDate = moment(startDate).add(i, "weeks");
+          nextEnd = moment(endDate).add(i, "weeks");
           break;
         case "monthly":
-          nextDate = startDate.clone().add(i, "months");
+          nextDate = moment(startDate).add(i, "months");
+          nextEnd = moment(endDate).add(i, "months");
           break;
         default:
           nextDate = startDate;
       }
       //change next event startDate to new date set by repeat count, this should be formatted with time as well "format("YYYY-MM-DD HH:mm")"
-      nextEvent.startDate = nextDate.format("YYYY-MM-DD");
-      //end date should be set to prev endDate + same amo of repeat count just to keep enddate time spacing as well.
-      //nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm")
-      nextEvent.endDate = nextEvent.startDate; // Keep this for simplicity, adjust as needed
+      nextEvent.startDate = nextDate.format("YYYY-MM-DD HH:mm");
+      nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm");
+
       events.push(nextEvent);
     }
 
@@ -479,6 +482,10 @@ export default function BrokerCalendar({ navigation, user }) {
     // Update items for calendar rendering to display new events to calendar
     const updatedItems = { ...items };
     repeatedEvents.forEach((event) => {
+      console.log(
+        "event starts: ",
+        moment(event.startDate).format("YYYY-MM-DD HH:mm")
+      );
       const dateKey = event.startDate; // Ensure this matches your calendar's expected format
       if (!updatedItems[dateKey]) {
         updatedItems[dateKey] = [];
@@ -486,14 +493,14 @@ export default function BrokerCalendar({ navigation, user }) {
       updatedItems[dateKey].push({
         title: event.title,
         description: event.description,
-        StartTime: event.StartTime,
-        EndTime: event.EndTime,
+        StartTime: event.startDate,
+        EndTime: event.endDate,
         type: event.type,
       });
     });
 
     setItems(updatedItems); // Set the updated items once
-    data.push(updatedItems);
+    console.log("data: ", data);
   };
 
   // Function to save new events to events array
@@ -501,14 +508,19 @@ export default function BrokerCalendar({ navigation, user }) {
     const newEventEntry = {
       title: newEvent.title,
       description: newEvent.description,
-      startDate: moment(newEvent.startDate).format("YYYY-MM-DD"),
-      endDate: moment(newEvent.endDate).format("YYYY-MM-DD"),
+      startDate: moment(newEvent.startDate).format("YYYY-MM-DD HH:mm"),
+      endDate: moment(newEvent.endDate).format("YYYY-MM-DD HH:mm"),
       type: newEvent.type,
       repeat: newEvent.repeat,
       repeatCount: newEvent.repeatCount || 1,
     };
 
-    console.log("Saving new event:", newEventEntry); // Debug log
+    console.log(
+      "Saving new event:",
+      newEventEntry,
+      " ",
+      newEventEntry.startDate
+    ); // Debug log
     handleAddEvent(newEventEntry); // renders events to calendar and generates repeated events
     setEventModalVisible(false); // Close modal after saving
   };
@@ -688,7 +700,7 @@ export default function BrokerCalendar({ navigation, user }) {
               value={
                 newEvent.startDate
                   ? moment(newEvent.startDate).format("MMMM Do YYYY, h:mm A")
-                  : ""
+                  : "bla"
               }
               style={styles.input}
               editable={false} // To prevent direct editing
@@ -790,7 +802,7 @@ export default function BrokerCalendar({ navigation, user }) {
               <Text style={styles.label}>Repetition Count</Text>
               <TextInput
                 placeholder="Number of repetitions"
-                value={newEvent.repeatCount?.toString() || ""}
+                value={newEvent.repeatCount}
                 onChangeText={(text) =>
                   setNewEvent({ ...newEvent, repeatCount: parseInt(text) })
                 }
