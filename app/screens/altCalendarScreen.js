@@ -51,6 +51,8 @@ export default function BrokerCalendar({ navigation, user }) {
       });
   }
 
+  // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0 
+
   /*--------------------------Sample Data--------------------------------*/
 
   //data variables
