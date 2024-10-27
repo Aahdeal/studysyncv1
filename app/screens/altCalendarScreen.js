@@ -13,6 +13,8 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
+import {set, ref, onValue} from 'firebase/database';
+import {database} from '../firebase';
 import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -35,17 +37,26 @@ export default function BrokerCalendar({ navigation, user }) {
   const [isAllDay, setIsAllDay] = useState(false); //state to mark events as all day
   const [showHomework, setShowHomework] = useState(false);
 
+  /*----------------------DATA ACCESSOR METHODS----------------------- */
+  const handleEventUpload = async () => {
+    let userId = user.uid;
+    console.log(data.length);
+    let event = data.slice(-1);
+    console.log(event.id)
+    await set(ref(database, "users/" + userId + "/calendar/events/" + "2"), data[0]).then(() => {
+          console.log('Event uploaded successfully!');
+      })
+      .catch((error) => {
+          console.error('Error uploading event:', error);
+      });
+  }
+
   /*--------------------------Sample Data--------------------------------*/
 
-  //homework/tasks
-  const [tasks, setTasks] = useState([
-    { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
-    { id: "2", title: "Science Project", dueDate: "Oct 27" },
-    { id: "3", title: "History Essay", dueDate: "Oct 28" },
-    { id: "4", title: "History Essay", dueDate: "Oct 28" },
-    { id: "5", title: "History Essay", dueDate: "Oct 28" },
-
-  ]);
+  //data variables
+  let data = [];
+  let taskData = []
+  const [tasks, setTasks] = useState(taskData);
   //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
@@ -68,60 +79,7 @@ export default function BrokerCalendar({ navigation, user }) {
     return date.toISOString().split("T")[0];
   };
   //said fake data
-  let data = [
-    {
-      //our events won't have date. startdate & enddate both carrt time with them. see the event const line 56
-      date: "2024-10-26",
-      title: "Mathhhh Exam",
-      description: "Writing Math Exam worth 50% sub min 45%",
-      allDay: false,
-      StartTime: moment(timeToString("12:00"), "HH:mm"),
-      EndTime: moment(timeToString("12:00"), "HH:mm").add(1, "hour"),
-      type: "Test",
-      repeat: "does not repeat",
-      repeatCount: 1,
-    },
-    {
-      date: "2024-10-25",
-      title: "CPUT Fun Day",
-      description: "Be ready for a day full of fun",
-      StartTime: moment(timeToString("12:45"), "HH:mm"),
-      EndTime: moment(timeToString("12:45"), "HH:mm").add(1, "hour"),
-      type: "Any",
-    },
-    {
-      date: "2024-10-27",
-      title: "Write Up due",
-      description: "You have a excel spreadsheet due for communiction",
-      StartTime: moment(timeToString("23:45"), "HH:mm"),
-      EndTime: moment(timeToString("23:45"), "HH:mm").add(1, "hour"),
-      type: "Submission",
-    },
-    {
-      date: "2024-10-29",
-      title: "Physics Test",
-      description: "Small test",
-      StartTime: moment("08:00").format("HH:mm"),
-      EndTime: moment("08:00").add(1, "hour").format("HH:mm"),
-      type: "Test",
-    },
-    {
-      date: "2024-10-1",
-      title: "Workers Study",
-      description: "Get 35% off all food items this day",
-      StartTime: moment("09:00").format("HH:mm"),
-      EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
-      type: "Study",
-    },
-    {
-      date: "2024-10-12",
-      title: "Workers FavDay",
-      description: "Get 35% off all food items this day",
-      StartTime: moment("09:00").format("HH:mm"),
-      EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
-      type: "Any",
-    },
-  ];
+  
 
   /*-----------------------------Modal Visibility Functions----------------------------------*/
 
@@ -165,6 +123,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   //state for adding a new event to calendar, these are the default settings
   const [newEvent, setNewEvent] = useState({
+    id: "",
     title: "",
     description: "",
     allDay: false,
@@ -176,13 +135,11 @@ export default function BrokerCalendar({ navigation, user }) {
   });
   //state for adding a new task to calendar, these are the default settings
   const [newTask, setNewTask] = useState({
-    id: 1, //ID is required to check task as complete which ticking checkbox
+    id: "", //ID is required to check task as complete which ticking checkbox
     title: "",
     description: "",
     allDay: false,
     date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
-    repeat: "does not repeat",
-    repeatCount: 1,
     completed: false,
   });
 
@@ -453,7 +410,7 @@ export default function BrokerCalendar({ navigation, user }) {
       switch (newEvent.repeat) {
         //if daily then add repeat count number to days etc.
         case "daily":
-          nextDate = startDate.clone().add(i, "days");
+          nextDate = startDate.clone().add(i, "days");        
           //nextEnd = startDate.clone().add(i, "days");
           break;
         case "weekly":
@@ -467,6 +424,7 @@ export default function BrokerCalendar({ navigation, user }) {
       }
       //change next event startDate to new date set by repeat count, this should be formatted with time as well "format("YYYY-MM-DD HH:mm")"
       nextEvent.startDate = nextDate.format("YYYY-MM-DD");
+      nextEvent.id = newEvent.id + "i"; // adjusting ID for repeated events
       //end date should be set to prev endDate + same amo of repeat count just to keep enddate time spacing as well.
       //nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm")
       nextEvent.endDate = nextEvent.startDate; // Keep this for simplicity, adjust as needed
@@ -502,12 +460,13 @@ export default function BrokerCalendar({ navigation, user }) {
     });
 
     setItems(updatedItems); // Set the updated items once
-    data.push(updatedItems);
+    handleEventUpload();
   };
 
   // Function to save new events to events array
   const saveEvent = () => {
     const newEventEntry = {
+      id: new Date(),
       title: newEvent.title,
       description: newEvent.description,
       startDate: moment(newEvent.startDate).format("YYYY-MM-DD"),
@@ -524,10 +483,10 @@ export default function BrokerCalendar({ navigation, user }) {
 
   const saveTask = () => {
     const newTaskEntry = {
+      id: new Date(),
       title: newTask.title,
       description: newTask.description,
       startDate: newTask.startDate,
-      repeat: newTask.repeat,
       completed: newTask.completed, // Save the completed state
     };
     setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
