@@ -13,6 +13,8 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
+import {set, ref, onValue} from 'firebase/database';
+import {database} from '../firebase';
 import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -35,8 +37,29 @@ export default function BrokerCalendar({ navigation, user }) {
   const [isAllDay, setIsAllDay] = useState(false); //state to mark events as all day
   const [showHomework, setShowHomework] = useState(false);
 
+  /*----------------------DATA ACCESSOR METHODS----------------------- */
+  const handleEventUpload = async () => {
+    let userId = user.uid;
+    console.log(data.length);
+    let event = data.slice(-1);
+    console.log(event.id)
+    await set(ref(database, "users/" + userId + "/calendar/events/" + "2"), data[0]).then(() => {
+          console.log('Event uploaded successfully!');
+      })
+      .catch((error) => {
+          console.error('Error uploading event:', error);
+      });
+  }
+
+  // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0 
+
   /*--------------------------Sample Data--------------------------------*/
 
+  //data variables
+  let data = [];
+  let taskData = []
+  const [tasks, setTasks] = useState(taskData);
+=======
   //homework/tasks
   const [tasks, setTasks] = useState([
     { id: "1", title: "Math Assignment", dueDate: "Oct 25", completed: true },
@@ -45,6 +68,7 @@ export default function BrokerCalendar({ navigation, user }) {
     { id: "4", title: "History Essay", dueDate: "Oct 28" },
     { id: "5", title: "History Essay", dueDate: "Oct 28" },
   ]);
+>>>>>>> a4ef6dcbb82d2fe5958603ef522842ded176f10c
   //i don't think this is necessary, it is mainly used for the fake data set on this page
   const timeToString = (time) => {
     // Check if the input is a time string (e.g., "12:00")
@@ -67,60 +91,7 @@ export default function BrokerCalendar({ navigation, user }) {
     return date.toISOString().split("T")[0];
   };
   //said fake data
-  let data = [
-    {
-      //our events won't have date. startdate & enddate both carrt time with them. see the event const line 56
-      date: "2024-10-26",
-      title: "Mathhhh Exam",
-      description: "Writing Math Exam worth 50% sub min 45%",
-      allDay: false,
-      StartTime: moment(timeToString("12:00"), "HH:mm"),
-      EndTime: moment(timeToString("12:00"), "HH:mm").add(1, "hour"),
-      type: "Test",
-      repeat: "does not repeat",
-      repeatCount: 1,
-    },
-    {
-      date: "2024-10-25",
-      title: "CPUT Fun Day",
-      description: "Be ready for a day full of fun",
-      StartTime: moment(timeToString("12:45"), "HH:mm"),
-      EndTime: moment(timeToString("12:45"), "HH:mm").add(1, "hour"),
-      type: "Any",
-    },
-    {
-      date: "2024-10-27",
-      title: "Write Up due",
-      description: "You have a excel spreadsheet due for communiction",
-      StartTime: moment(timeToString("23:45"), "HH:mm"),
-      EndTime: moment(timeToString("23:45"), "HH:mm").add(1, "hour"),
-      type: "Submission",
-    },
-    {
-      date: "2024-10-29",
-      title: "Physics Test",
-      description: "Small test",
-      StartTime: moment("08:00").format("HH:mm"),
-      EndTime: moment("08:00").add(1, "hour").format("HH:mm"),
-      type: "Test",
-    },
-    {
-      date: "2024-10-1",
-      title: "Workers Study",
-      description: "Get 35% off all food items this day",
-      StartTime: moment("09:00").format("HH:mm"),
-      EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
-      type: "Study",
-    },
-    {
-      date: "2024-10-12",
-      title: "Workers FavDay",
-      description: "Get 35% off all food items this day",
-      StartTime: moment("09:00").format("HH:mm"),
-      EndTime: moment("09:00").add(1, "hour").format("HH:mm"),
-      type: "Any",
-    },
-  ];
+  
 
   /*-----------------------------Modal Visibility Functions----------------------------------*/
 
@@ -164,6 +135,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   //state for adding a new event to calendar, these are the default settings
   const [newEvent, setNewEvent] = useState({
+    id: "",
     title: "",
     description: "",
     allDay: false,
@@ -175,13 +147,11 @@ export default function BrokerCalendar({ navigation, user }) {
   });
   //state for adding a new task to calendar, these are the default settings
   const [newTask, setNewTask] = useState({
-    id: 1, //ID is required to check task as complete which ticking checkbox
+    id: "", //ID is required to check task as complete which ticking checkbox
     title: "",
     description: "",
     allDay: false,
     date: new Date(), //task only has a start date. it doesnt span accross a time period. like todo list
-    repeat: "does not repeat",
-    repeatCount: 1,
     completed: false,
   });
 
@@ -189,6 +159,8 @@ export default function BrokerCalendar({ navigation, user }) {
   const toggleAllDay = () => {
     setNewEvent((prev) => ({ ...prev, allDay: !prev.allDay }));
   };
+  
+ /*-------------------------------------Handles Task Confirmation------------------------------------------ */
 
   /*-------------------------------------Handles Task Date Confirmation------------------------------------------ */
   const handleConfirmTask = (date) => {
@@ -212,6 +184,7 @@ export default function BrokerCalendar({ navigation, user }) {
       hideFromDatePicker();
   };
 
+  
   /*-------------------------------------Updates newEvent start------------------------------------------ */
   //once start date is entered, set newEvent state's startDate
   const handleConfirmFrom = (date) => {
@@ -236,6 +209,8 @@ export default function BrokerCalendar({ navigation, user }) {
       hideFromDatePicker();
   };
 
+  
+
   /*-------------------------------------updates new event end------------------------------------------ */
 
   const handleConfirmTo = (date) => {
@@ -251,6 +226,7 @@ export default function BrokerCalendar({ navigation, user }) {
     hideToDatePicker();
   };
 
+  
   /*-------------------------------------FUNCTIONS------------------------------------------ */
 
   //i think this was supposed to load the events & tasks in the month being shown on calendar,
@@ -259,8 +235,9 @@ export default function BrokerCalendar({ navigation, user }) {
     console.log("trigger items loading");
   };
 
+  
   /*----------------------------Sets dot color on events------------------------------------ */
-  const formattedEvents =
+  const formattedEvents = 
     //if data is true and data is an array and data array>0
     data && Array.isArray(data) && data.length > 0
       ? //run through all of it and set dot colour according to the type of event
@@ -300,6 +277,7 @@ export default function BrokerCalendar({ navigation, user }) {
         }, {})
       : console.log("data is not array");
 
+  
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
@@ -352,6 +330,7 @@ export default function BrokerCalendar({ navigation, user }) {
     }, 1000);
   };
 
+  
   /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
   const renderItem = (item) => {
@@ -384,32 +363,33 @@ export default function BrokerCalendar({ navigation, user }) {
             })
           }
         >
-          {/* <Card>
-            <Card.Content> */}
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <View
-              //statusStrip = that colour line on the side. can me set to same colour as dot marking
-              style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
-            />
-            <View style={{ flex: 0.7 }}>
-              <View style={styles.Time}>
-                <Text style={styles.timeText}>
-                  {/* display start and end time */}
-                  {item?.StartTime} - {item?.EndTime}
-                </Text>
+          <Card>
+            <Card.Content>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View
+                  //statusStrip = that colour line on the side. can me set to same colour as dot marking
+                  style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
+                />
+                <View style={{ flex: 0.7 }}>
+                  <View style={styles.Time}>
+                    <Text style={styles.timeText}>
+                      {/* display start and end time */}
+                      {item?.StartTime} - {item?.EndTime}
+                    </Text>
+                  </View>
+                  <Text style={styles.BookingNameText}>{item.title}</Text>
+                  <Text style={styles.BookingDescriptionText}>
+                    {item.description}
+                  </Text>
+                </View>
               </View>
-              <Text style={styles.BookingNameText}>{item.title}</Text>
-              <Text style={styles.BookingDescriptionText}>
-                {item.description}
-              </Text>
-            </View>
-          </View>
-          {/* </Card.Content>
-          </Card> */}
+            </Card.Content>
+          </Card>
         </TouchableOpacity>
       );
     }
   };
+  
 
   /*-------------------------------------GENERATE REPEATED EVENTS------------------------------------------ */
   // Function to generate repeated events
@@ -446,6 +426,8 @@ export default function BrokerCalendar({ navigation, user }) {
       switch (newEvent.repeat) {
         //if daily then add repeat count number to days etc.
         case "daily":
+          nextDate = startDate.clone().add(i, "days");        
+          //nextEnd = startDate.clone().add(i, "days");
           nextDate = moment(startDate).add(i, "days");
           nextEnd = moment(endDate).add(i, "days");
           break;
@@ -464,6 +446,7 @@ export default function BrokerCalendar({ navigation, user }) {
       nextEvent.startDate = nextDate.format("YYYY-MM-DD HH:mm");
       nextEvent.endDate = nextEnd.format("YYYY-MM-DD HH:mm");
 
+      nextEvent.id = newEvent.id + "i"; // adjusting ID for repeated events
       events.push(nextEvent);
     }
 
@@ -500,12 +483,14 @@ export default function BrokerCalendar({ navigation, user }) {
     });
 
     setItems(updatedItems); // Set the updated items once
+    handleEventUpload();
     console.log("data: ", data);
   };
 
   // Function to save new events to events array
   const saveEvent = () => {
     const newEventEntry = {
+      id: new Date(),
       title: newEvent.title,
       description: newEvent.description,
       startDate: moment(newEvent.startDate).format("YYYY-MM-DD HH:mm"),
@@ -527,10 +512,10 @@ export default function BrokerCalendar({ navigation, user }) {
 
   const saveTask = () => {
     const newTaskEntry = {
+      id: new Date(),
       title: newTask.title,
       description: newTask.description,
       startDate: newTask.startDate,
-      repeat: newTask.repeat,
       completed: newTask.completed, // Save the completed state
     };
     setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
@@ -632,7 +617,7 @@ export default function BrokerCalendar({ navigation, user }) {
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
-
+      
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackground}>
@@ -899,6 +884,7 @@ export default function BrokerCalendar({ navigation, user }) {
         </View>
       </Modal>
 
+      
       <NavBar />
     </KeyboardAvoidingView>
   );
@@ -908,10 +894,10 @@ export default function BrokerCalendar({ navigation, user }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
+    padding: 20,
   },
   calendarContainer: {
-    height: "60%",
+    height: "50%",
     borderWidth: 1,
     borderColor: "cyan",
     margin: 10,
