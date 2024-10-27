@@ -13,7 +13,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { set, ref, onValue } from "firebase/database";
+import { set, ref, get } from "firebase/database";
 import { database } from "../firebase";
 import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
@@ -47,34 +47,56 @@ export default function BrokerCalendar({ navigation, user }) {
     console.log("event.eventId : ", event[0].eventId, " event: ", { event });
 
     try{
-    for (i = 1; i <= repeat; i++){
-      let uploadEvent = data[data.length - i];
-      let eventID = (uploadEvent.eventId).replace(".", "");
-      await set(
-        ref(database, "users/" + userId + "/calendar/events/" + eventID),
-        uploadEvent
-      )
-        .then(() => {
-          console.log("Event uploaded successfully!");
-        })
-        .catch((error) => {
-          console.error("Error uploading event:", error);
-        });
+      for (i = 1; i <= repeat; i++){
+        let uploadEvent = data[data.length - i];
+        let eventID = (uploadEvent.eventId).replace(".", "");
+        await set(
+          ref(database, "users/" + userId + "/calendar/events/" + eventID),
+          uploadEvent
+        )
+          .then(() => {
+            console.log("Event uploaded successfully!");
+          })
+          .catch((error) => {
+            console.error("Error uploading event:", error);
+          });
+      }
     }
-  }
-  catch(error){
-    console.error("Loop Error uploading event:", error);
-  }
-    
-    
+    catch(error){
+      console.error("Loop Error uploading event:", error);
+    }
   };
 
-  // ref(database, "users/" + userId + "/calender/events/ " + eventid + "/0") try with and without the 0
+  // ref(database, "users/" + userId + "/calender/events) try with and without the 0
+  const fetchEvents = async () => {
+    let userId = user.uid;
+    const eventsRef = ref(database, `users/${userId}/calendar/events`);
+  
+    try {
+      // Retrieve data from Firebase
+      const snapshot = await get(eventsRef);
+      
+      if (snapshot.exists()) {
+        // Convert the snapshot data to an array of events
+        const events = Object.values(snapshot.val());
+        console.log("Fetched events:", events);
+  
+        // Set the fetched data to array
+        data = events;
+      } else {
+        console.log("No events found for user.");
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
 
   /*--------------------------Sample Data--------------------------------*/
 
   //data variables
   let data = [];
+  fetchEvents();
   let taskData = [];
   const [tasks, setTasks] = useState(taskData);
 
@@ -164,7 +186,7 @@ export default function BrokerCalendar({ navigation, user }) {
   });
   //state for adding a new task to calendar, these are the default settings
   const [newTask, setNewTask] = useState({
-    id: "", //ID is required to check task as complete which ticking checkbox
+    taskId: "", //ID is required to check task as complete which ticking checkbox
     title: "",
     description: "",
     allDay: false,
@@ -291,6 +313,7 @@ export default function BrokerCalendar({ navigation, user }) {
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
+    //fetch data from db 
     const items = {}; // Temporary object to hold events and tasks
 
     setTimeout(() => {
@@ -306,8 +329,9 @@ export default function BrokerCalendar({ navigation, user }) {
 
         // Add events from 'data' to the items object if it is within date range
         data.forEach((event) => {
-          if (event.date === strTime) {
+          if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
             items[strTime].push({
+              eventId: event.eventId,              
               title: event.title,
               description: event.description,
               StartTime: moment(event.startDate).format("HH:mm"),
