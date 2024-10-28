@@ -1,10 +1,20 @@
 // screens/RegisterScreen.js
 import React, { useState } from "react";
-import { View, Text, Button, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
-import { createUserWithEmailAndPassword  } from "firebase/auth";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import { auth } from "../firebase";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { useCustomFonts, titleFont } from "../../constants/fonts";
+import colours from "../../constants/Colours";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -32,7 +42,9 @@ export default function RegisterScreen({ navigation }) {
     // Check password length and complexity
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(password)) {
-      setErrorMessage("Password must be at least 8 characters long and include letters and numbers.");
+      setErrorMessage(
+        "Password must be at least 8 characters long and include letters and numbers."
+      );
       return false;
     }
 
@@ -52,15 +64,19 @@ export default function RegisterScreen({ navigation }) {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const userId = userCredential.user.uid;
 
       // Store user data in Firebase Realtime Database
       const db = getDatabase();
-      await set(ref(db, 'users/' + userId + '/userDetails'), {
+      await set(ref(db, "users/" + userId + "/userDetails"), {
         name: name,
         surname: surname,
-        email: email
+        email: email,
       });
 
       navigation.navigate("Home");
@@ -75,10 +91,12 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <Text style={styles.heading}>Create your account</Text>
-      
-      <View>
+      <View style={styles.header}>
+        <Text style={titleFont}>Sign Up</Text>
+        <Text style={styles.heading}>Create your account</Text>
+      </View>
+
+      <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="Name"
@@ -98,27 +116,41 @@ export default function RegisterScreen({ navigation }) {
           onChangeText={setEmail}
           keyboardType="email-address"
         />
-        
-        <View  style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!isPasswordVisible}
-          />
-          <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
-            <Ionicons
-              name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on password visibility
-              size={24}
-              color="gray"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => Alert.alert("Password Info", "Password must be at least 8 characters long and contain both letters and numbers.")}>
-            <Text style={styles.infoIcon}>ℹ️</Text>
-          </TouchableOpacity>
-        </View>
 
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+        />
+        {/* <View style={{ zIndex: 1 }}> */}
+        <TouchableOpacity
+          onPress={togglePasswordVisibility}
+          style={styles.eyeIcon}
+        >
+          <Ionicons
+            name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on password visibility
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert(
+              "Password Info",
+              "Password must be at least 8 characters long and contain both letters and numbers."
+            )
+          }
+          style={styles.infoIcon}
+        >
+          <Ionicons
+            name={"information-circle-outline"} // Change icon based on password visibility
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+        {/* </View> */}
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
@@ -127,13 +159,19 @@ export default function RegisterScreen({ navigation }) {
           secureTextEntry={!isPasswordVisible}
         />
       </View>
-      
-      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-      <Button title="Register" onPress={handleRegister} />
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
+
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
 
       <View style={styles.linkContainer}>
-        <Text>Already have an account? </Text>
+        <Text style={{ color: colours.blushPink, fontSize: 15 }}>
+          Already have an account?{" "}
+        </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.linkText}>Login</Text>
         </TouchableOpacity>
@@ -143,28 +181,55 @@ export default function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: colours.lightPink,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 30,
+    alignItems: "center",
+    width: "50%",
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "black", // Set text color here
+    fontSize: 20,
+    //fontWeight: "bold",
+  },
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
-  heading: { fontSize: 18, marginBottom: 20, textAlign: "center" },
-  inputContainer: {flexDirection: 'row', position: 'relative', width: '100%'},
+  heading: {
+    fontSize: 37,
+    marginBottom: 20,
+    textAlign: "center",
+    color: colours.blushPink,
+  },
+  header: { top: -50, width: "100%", padding: 5 },
+  inputContainer: {
+    flexDirection: "column",
+    position: "relative",
+    width: "70%",
+    alignSelf: "center",
+  },
   input: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingHorizontal: 10,
-    width: '100%'
+    width: "100%",
+    borderRadius: 8,
+    fontSize: 15,
   },
   infoIcon: {
     fontSize: 18,
-    right: 65,
+    right: -255,
     color: "blue",
-    top: 6,
+    bottom: 77,
   },
   eyeIcon: {
-    padding: 5, // Spacing around the eye icon
-    right: 65,
-    top: 2,
+    //padding: 5, // Spacing around the eye icon
+    right: -215,
+    bottom: 53,
   },
   errorText: {
     color: "red",
@@ -177,7 +242,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   linkText: {
-    color: "blue",
+    color: colours.paleBlue,
     textDecorationLine: "underline",
+    fontSize: 15,
   },
 });
