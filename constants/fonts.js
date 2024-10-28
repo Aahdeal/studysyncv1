@@ -1,7 +1,7 @@
 // fonts.js
 import { useFonts, Graduate_400Regular } from "@expo-google-fonts/graduate";
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+//import * as Font from "expo-font";
+//import AppLoading from "expo-app-loading";
 import colours from "./Colours";
 
 // Custom hook to load fonts
@@ -17,7 +17,7 @@ export const useCustomFonts = () => {
 // Style object for titles
 export const titleFont = {
   fontFamily: "Graduate_400Regular",
-  fontSize: 24,
-  fontWeight: "normal",
+  fontSize: 40,
+  textAlign: "center",
   color: colours.darkBlue, // Change this color to suit your app
 };
