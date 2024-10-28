@@ -1,8 +1,21 @@
-import React, { useState } from "react";
-import { View, Text, Button, TextInput, Modal, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  Modal,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { auth, signInWithEmailAndPassword } from "../firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import * as Font from "expo-font";
+import { Graduate_400Regular } from "@expo-google-fonts/graduate";
+import { useCustomFonts, titleFont } from "../../constants/fonts";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -11,9 +24,23 @@ export default function LoginScreen({ navigation }) {
   const [resetEmail, setResetEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await Font.loadAsync({
+        Graduate_400Regular,
+      });
+      setFontsLoaded(true);
+    })();
+  }, []);
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   const validateInput = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setErrorMessage("Please enter a valid email address.");
       return false;
@@ -24,7 +51,7 @@ export default function LoginScreen({ navigation }) {
     }
     setErrorMessage("");
     return true;
-  }
+  };
 
   // Handle Forgot Password
   const handleForgotPassword = async () => {
@@ -42,7 +69,10 @@ export default function LoginScreen({ navigation }) {
 
     try {
       await sendPasswordResetEmail(auth, resetEmail);
-      Alert.alert("Success", "A password reset link has been sent to your email.");
+      Alert.alert(
+        "Success",
+        "A password reset link has been sent to your email."
+      );
       setModalVisible(false); // Close the modal on success
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -51,7 +81,7 @@ export default function LoginScreen({ navigation }) {
 
   // Function to handle email/password login
   const handleLogin = async () => {
-    if(!validateInput()){
+    if (!validateInput()) {
       return;
     }
     try {
@@ -59,8 +89,8 @@ export default function LoginScreen({ navigation }) {
       await signInWithEmailAndPassword(auth, email, password);
       navigation.navigate("Home");
     } catch (error) {
-      var eMessage = "Please check your credentials and try again"
-      Alert.alert("Failed to login",eMessage);
+      var eMessage = "Please check your credentials and try again";
+      Alert.alert("Failed to login", eMessage);
     }
   };
 
@@ -70,9 +100,10 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.header}>
-        <Text style={styles.title}>STUDYSYNC{"\n"}YOUR MOBILE STUDYING PARTNER</Text>
+        <Text style={styles.title}>
+          STUDYSYNC{"\n"}YOUR MOBILE STUDYING PARTNER
+        </Text>
       </View>
 
       <View style={styles.containerLogin}>
@@ -85,24 +116,28 @@ export default function LoginScreen({ navigation }) {
           keyboardType="email-address"
         />
         <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!isPasswordVisible} // Toggle secureTextEntry based on state
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
-          <Ionicons
-            name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on password visibility
-            size={24}
-            color="gray"
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!isPasswordVisible} // Toggle secureTextEntry based on state
           />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={styles.eyeIcon}
+          >
+            <Ionicons
+              name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on password visibility
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
         <Button title="Login" onPress={handleLogin} />
-        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-        
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
@@ -115,7 +150,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      
+
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -145,18 +180,23 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20},
-  containerLogin: { top: -50, flex: 1, justifyContent: "center", padding: 20},
-  inputContainer: {flexDirection: 'row', position: 'relative', width: '100%'},
-  header: {top: 0, width: '100%', padding: 5},
-  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },  // Text styling
+  container: { flex: 1, justifyContent: "center", padding: 20 },
+  containerLogin: { top: -50, flex: 1, justifyContent: "center", padding: 20 },
+  inputContainer: { flexDirection: "row", position: "relative", width: "100%" },
+  header: { top: 0, width: "100%", padding: 5 },
+  title: {
+    fontFamily: "Graduate_400Regular",
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: "center",
+  }, // Text styling
   input: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
-    width: '100%'
+    width: "100%",
   },
   eyeIcon: {
     padding: 5, // Spacing around the eye icon
