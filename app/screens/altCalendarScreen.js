@@ -600,6 +600,17 @@ export default function BrokerCalendar({ navigation, user }) {
       newEventEntry.startDate
     ); // Debug log
     handleAddEvent(newEventEntry); // renders events to calendar and generates repeated events
+
+    //resets fields
+    setNewEvent({
+      title: '',
+      description: '',
+      startDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
+      endDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
+      type: '',
+      repeat: 'does not repeat',
+      repeatCount: '',
+    });
     setEventModalVisible(false); // Close modal after saving
   };
 
@@ -615,6 +626,14 @@ export default function BrokerCalendar({ navigation, user }) {
     console.log("taskData: ", taskData);
     handleTaskUpload();
     setTasks((prevTasks) => [...prevTasks, newTaskEntry]);
+
+    setNewTask({
+      taskId: new Date().toISOString(),
+      title: "",
+      description: "",
+      startDate: moment(new Date()).format("YYYY-MM-DD HH:mm"),
+      completed: "",
+    })
     setTaskModalVisible(false);
   };
 
