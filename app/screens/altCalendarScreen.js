@@ -114,7 +114,6 @@ export default function BrokerCalendar({ navigation, user }) {
         // Convert the snapshot data to an array of events
         const events = Object.values(snapshot.val());
         //console.log("Fetched events:", events);
-
         // Set the fetched data to array
         data = events;
       } else {
@@ -147,6 +146,16 @@ export default function BrokerCalendar({ navigation, user }) {
     } catch (error) {
       console.error("Error fetching events:", error);
     }
+  };
+
+  const deleteEventFromDatabase = (eventId) => {
+    let userId = user.uid;
+    firebase.database().ref(`users/${userId}/calendar/events/${eventId}`).remove();
+  };
+  
+  const deleteTaskFromDatabase = (taskId) => {
+    let userId = user.uid;
+    firebase.database().ref(`users/${userId}/calendar/tasks/${eventId}`).remove();
   };
 
   /*--------------------------Sample Data--------------------------------*/
@@ -360,10 +369,11 @@ export default function BrokerCalendar({ navigation, user }) {
     //day is either current day or day selected on calendar
     //fetch data from db
     const items = {}; // Temporary object to hold events and tasks
+    const fourteenDaysAgo = moment().subtract(14, 'days');
 
     setTimeout(() => {
-      // Loop through a range of dates (-15 days to +60 days from the current date)
-      for (let i = -15; i < 60; i++) {
+      // Loop through a range of dates (-14 days to +30 days from the current date)
+      for (let i = -14; i < 30; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000; // Calculate date offsets
         const strTime = timeToString(time); // Convert timestamp to 'YYYY-MM-DD' string
 
@@ -374,7 +384,12 @@ export default function BrokerCalendar({ navigation, user }) {
 
         // Add events from 'data' to the items object if it is within date range
         data.forEach((event) => {
-          if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
+          const eventStartDate = moment(event.startDate);
+          if (eventStartDate.isBefore(fourteenDaysAgo)) {
+            // Assuming you have a function to delete from the database
+            deleteEventFromDatabase(event.eventId); // Replace with your deletion method
+          }
+          else if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
             items[strTime].push({
               eventId: event.eventId,
               title: event.title,
@@ -388,7 +403,11 @@ export default function BrokerCalendar({ navigation, user }) {
 
         // Add tasks to the items object if it is within date range
         tasks.forEach((task) => {
-          if (task.date === strTime) {
+          const taskDate = moment(task.date);
+          // Delete task if older than 14 days
+          if (taskDate.isBefore(fourteenDaysAgo)) {
+            deleteTaskFromDatabase(task.taskId); // Replace with your deletion method
+          } else if (task.date === strTime) {
             items[strTime].push({
               ...task,
               title: task.title,
