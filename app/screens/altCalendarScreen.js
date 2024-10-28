@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import NavBar from "../../components/NavBar";
 import {
   StyleSheet,
@@ -38,6 +39,7 @@ export default function BrokerCalendar({ navigation, user }) {
   const [showHomework, setShowHomework] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  let userId = user.uid;
 
   /*----------------------DATA ACCESSOR METHODS----------------------- */
   const handleEventUpload = async () => {
@@ -68,7 +70,7 @@ export default function BrokerCalendar({ navigation, user }) {
     }
   };
   const handleTaskUpload = async () => {
-    let userId = user.uid;
+    console.log("uid: ", userId);
     //console.log(data.length);
     let event = taskData.slice(-1);
     console.log(
@@ -153,7 +155,11 @@ export default function BrokerCalendar({ navigation, user }) {
   let data = [];
   fetchEvents();
   let taskData = [];
-  fetchTasks();
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
 
   const [tasks, setTasks] = useState([]);
   //console.log("taskData ", tasks);
@@ -537,6 +543,7 @@ export default function BrokerCalendar({ navigation, user }) {
         task.startDate &&
         task.startDate.substring(0, 10) === date.substring(0, 10)
     );
+
     setFilteredTasks(filtered);
   };
   /*-------------------------------------SAVE EVENTS/TASKS------------------------------------------ */
@@ -643,11 +650,35 @@ export default function BrokerCalendar({ navigation, user }) {
   };
 
   /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
-  const toggleTaskCompletion = (task) => {
+  const toggleTaskCompletion = async (task) => {
     const updatedTasks = tasks.map((t) =>
       t.taskId === task.taskId ? { ...t, completed: !t.completed } : t
     );
     setTasks(updatedTasks);
+
+    console.log("uid: ", userId);
+
+    try {
+      let taskID = task.taskId.replace(".", "");
+      const newCompletedStatus = !task.completed; // Toggle completed status
+      console.log("T ", taskID, " complete? ", task.completed);
+      await set(
+        ref(database, "users/" + userId + "/calendar/tasks/" + taskID),
+        // ref(database, "users/" + userId + "/calendar/tasks/" + taskID),
+        {
+          ...task,
+          completed: newCompletedStatus,
+        }
+      )
+        .then(() => {
+          console.log("Task updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error uploading event:", error);
+        });
+    } catch (error) {
+      console.error("Loop Error uploading event:", error);
+    }
   };
 
   /*-------------------------------------USER INTERFACE------------------------------------------ */
@@ -687,6 +718,7 @@ export default function BrokerCalendar({ navigation, user }) {
                   unfillColor="#FFFFFF" // Background color when unchecked
                   onPress={() => toggleTaskCompletion(item)} // Call toggle function
                 />
+
                 <Text
                   style={[
                     styles.taskTitle,
