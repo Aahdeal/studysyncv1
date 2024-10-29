@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react"; 
 import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from "react-native";
 import { LineChart, ProgressChart } from 'react-native-chart-kit';
 import NavBar from "../../components/NavBar";
@@ -7,7 +7,6 @@ import { database } from '../firebase';
 import moment from 'moment';
 import colors from '../../constants/Colours';
 import * as Font from 'expo-font';
-import { LinearGradient } from 'expo-linear-gradient'; 
 
 const HomeScreen = ({ navigation, user }) => {
   const [motivationalMessage, setMotivationalMessage] = useState({ message: '', author: '' });
@@ -93,7 +92,7 @@ const HomeScreen = ({ navigation, user }) => {
   }
 
   return (
-    <LinearGradient colors={[colors.lightPink, colors.paleBlue]} style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Progress Tracker</Text>
         <View style={styles.motivationalMessage}>
@@ -117,9 +116,9 @@ const HomeScreen = ({ navigation, user }) => {
               radius={32}
               hideLegend={false}
               chartConfig={{
-                backgroundColor: "transparent",
-                backgroundGradientFrom: "transparent",
-                backgroundGradientTo: "transparent",
+                backgroundColor: "yellow", // Set the background color to yellow
+                backgroundGradientFrom: "lightblue",
+                backgroundGradientTo: "white",
                 decimalPlaces: 2,
                 color: (opacity = 1) => colors.blushPink,
                 labelColor: (opacity = 1) => colors.darkBlue,
@@ -143,9 +142,9 @@ const HomeScreen = ({ navigation, user }) => {
               yAxisSuffix="h"
               bezier
               chartConfig={{
-                backgroundColor: "transparent",
-                backgroundGradientFrom: "transparent",
-                backgroundGradientTo: "transparent",
+                backgroundColor: "yellow", // Set the background color to yellow
+                backgroundGradientFrom: "lightblue",
+                backgroundGradientTo: "white",
                 decimalPlaces: 2,
                 color: (opacity = 1) => colors.lightPink,
                 labelColor: (opacity = 1) => colors.darkBlue,
@@ -175,7 +174,7 @@ const HomeScreen = ({ navigation, user }) => {
         </View>
       </ScrollView>
       <NavBar navigation={navigation} user={user} />
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: colors.lightGray,
+    backgroundColor: 'white', // Set the background color to white
   },
   scrollContainer: {
     paddingBottom: 100,
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     padding: 10,
     borderRadius: 8,
-    backgroundColor: colors.lightPink,
+    backgroundColor: colors.lightgrey,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
@@ -209,7 +208,6 @@ const styles = StyleSheet.create({
   },
   motivation: {
     fontSize: 16,
-    fontFamily: 'Graduate',
     textAlign: 'center',
     color: colors.darkBlue,
   },
@@ -258,11 +256,12 @@ const styles = StyleSheet.create({
   },
   taskTitle: {
     fontSize: 16,
+    fontFamily: 'Graduate',
     color: colors.darkBlue,
   },
   taskDueDate: {
     fontSize: 14,
-    color: colors.darkGray,
+    color: colors.darkBlue,
   },
 });
 
