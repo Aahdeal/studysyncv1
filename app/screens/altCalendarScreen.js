@@ -1061,8 +1061,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f0f4ff', // Light background color
   },
+  year: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4a4a4a',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
   calendarContainer: {
-    height: "50%",
+    width: '100%',
+    height: '40%',
+    backgroundColor: '#d0e4ff', // Light blue background color
     borderWidth: 1,
     borderColor: "black",
     margin: 10,
