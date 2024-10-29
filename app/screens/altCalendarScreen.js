@@ -24,7 +24,6 @@ import Icon from "../../components/Icon";
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({}); //state for tasks and events to be loaded within selected date range
@@ -1060,8 +1059,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: 'white', 
   },
+  calendarContainer: {
+    width: '90%',
+    height: '50%',
+    backgroundColor: '#add8e6', // Light blue background for the calendar box
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 10,
+    padding: 10,
+    
+  },
+
   year: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -1069,15 +1078,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
   },
-  calendarContainer: {
-    width: '100%',
-    height: '40%',
-    backgroundColor: '#6A5ACD', // Light blue background color
-    borderRadius: 10,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+ 
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
   },
@@ -1098,7 +1099,9 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    height: '50%',
+    height: '50%',
+    backgroundColor: '#add8e6', // Light blue background for the calendar box
     justifyContent: "flex-end",
     padding: 20,
   },
@@ -1144,7 +1147,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "300",
     marginBottom: 10,
-    color: "grey",
+    color: '#add8e6',
   },
   BookingNameText: {
     fontSize: 22,
@@ -1196,11 +1199,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   item: {
-    padding: 20,
+    padding: 30,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#FFB6C1",
   },
   itemText: {
     fontSize: 16,
   },
+  
 });
