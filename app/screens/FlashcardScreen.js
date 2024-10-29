@@ -9,91 +9,180 @@ import {
   Modal, 
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
 import Icon from "../../components/Icon";
+import {ref, get, set, remove, update} from "firebase/database";
+import { database } from "../firebase";
+
 
 export default function FlashcardsScreen({ navigation, user }) {
-  const [decks, setDecks] = useState([]); // State for managing flashcard decks
+  
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility for creating/editing deck
-  const [newDeckTitle, setNewDeckTitle] = useState(""); // Title of the new or edited deck
+  const [questionModalVisible, setQuestionModalVisible] = useState(false);
+  const [testModalVisible, setTestModalVisible] = useState(false);
+  const [startTestModalVisible, setStartTestModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // Flag for editing mode
   const [editingDeckId, setEditingDeckId] = useState(null); // Track which deck is being edited
   const [selectedDeckId, setSelectedDeckId] = useState(null); // Track which deck's menu is open
 
+  
+/*--------------------------- OBJECTS ----------------------------------------- */
+const [decks, setDecks] = useState([]); // State for managing flashcard decks
+const [questionList, setQuestionList] = useState([]);
+
+const [newDeck, setNewDeck] = useState({
+  deckId: "",
+  title: "",
+  description: "",
+  category: "",
+  questionList: [],
+  lastScore: 0,
+})
+
+const [newQuestion, setNewQuestion] = useState({
+  qNum: 0,
+  List: "",
+  answer: "",
+})
+
 /* --------------------------DATA ACCESSOR METHODS----------------------------- */
 
 //get
+const handleDeckDownload = async () => {
+  let userId = user.uid;
+  const decksRef = ref(database, `users/${userId}/flashcards/decks`)
+
+  try{
+    const snapshot = await get(decksRef);
+    if (snapshot.exists()){
+      const fetchedDecks = Object.values(snapshot.val());
+      setDecks(fetchedDecks);
+    }
+    else {
+      console.log("No decks found for user.");
+    }
+  } catch (error) {
+    console.error("Error fetching decks:", error);
+  }
+};
 
 //set
+const handleDeckUpload = async (deck) => {
+  let userId = user.uid;
+  let deckID = deck["deckId"].replace(".","");
+  console.log(deckID);
+  console.log("deckID: " + deckID + " contents: " + deck);
+
+  await set(
+    ref(database, "users/" + userId + "/flashcards/decks/" + deckID),deck)
+    .then(()=>{console.log("deck added successfully")}
+  ).catch((error) =>{
+    console.error("error uploading class");
+  });
+}
+
+
 
 //update
+const handleUpdateDeck= async (updatedDeck) =>{
+  const userId = user.uid;
+    const deckId = updatedDeck.deckId.replace(".", ""); // Ensure valid Firebase path
+    const deckRef = ref(database, `users/${userId}/flashcards/decks/${deckId}`);
+
+    try {
+        await update(deckRef, {
+            title: updatedDeck.title,
+            description: updatedDeck.description,
+            category: updatedDeck.category,
+            questionList: updatedDeck.questionList,
+            lastScore: updatedDeck.lastScore,
+        });
+        console.log("Deck updated successfully");
+    } catch (error) {
+        console.error("Error updating deck:", error);
+    }
+};
+
+//delete
+const handleDeleteDeck = async (deckId) => {
+  const userId = user.uid;
+  const deckRef = ref(database, `users/${userId}/flashcards/decks/${deckId}`);
+
+  try {
+      await remove(deckRef);
+      console.log("Deck deleted successfully");
+  } catch (error) {
+      console.error("Error deleting deck:", error);
+  }
+};
 
 /* --------------------------SAVING----------------------------- */
 
-// flashcardManagerModal
+// Function to add a new deck or update an existing one
+const saveDeck = () => {
+  const newDeckEntry = {
+    deckId: isEditing ? editingDeckId : new Date().toISOString(),
+    title: newDeck.title,
+    description: newDeck.description,
+    category: newDeck.category,
+    questionList: questionList,
+    lastScore: 0,
+  };
 
-// save deck
+  if (newDeckEntry.title.trim()) {
+    if (isEditing) {
+      // Update the deck in Firebase
+      handleUpdateDeck(newDeckEntry);
+      // Update locally
+      const updatedDecks = decks.map((deck) =>
+        deck.deckId === editingDeckId ? newDeckEntry : deck
+      );
+      setDecks(updatedDecks);
+      setIsEditing(false);
+      setEditingDeckId(null);     
+    } else {
+      // Add new deck to Firebase
+      handleDeckUpload(newDeckEntry);
+      // Add locally
+      setDecks([...decks, newDeckEntry]);
+    }
+    setQuestionList([]);
+    setModalVisible(false); // Close the modal
+  }
+};
 
-// save question list
+const saveQuestion = () => {
+  const newQuestionEntry = {
+    qNum: questionList.length,
+    List: newQuestion.List,
+    answer: newQuestion.answer,
+  }
+  //console.log("list before:", questionList);
+  setQuestionList([...questionList, newQuestionEntry]);
+  setModalVisible(true);
+  setQuestionModalVisible(false);
+}
 
 /* --------------------------UPDATING----------------------------- */
 
-// flashcardManagerModal
-
-// update deck
-
-// update question list
-
-// delete deck
-
-/* -------------------------LOADING----------------------------- */
-
-// load Items same as on calendar or use the display method from dashboard
-
-/* --------------------------TESTING----------------------------- */
-
-//testingModal
-
-//load specific deck
-
-//test functionality
-
-//ending screen and button to retry or return
-
-/* --------------------------UserInterface----------------------------- */
-
-//main page
-  //display decks
-  //flashcardManagerModal
-  //testingModal
-
-  // Function to add a new deck or update an existing one
-  const saveDeck = () => {
-    if (newDeckTitle.trim()) {
-      if (isEditing) {
-        // Update the existing deck
-        const updatedDecks = decks.map((deck) =>
-          deck.id === editingDeckId ? { ...deck, title: newDeckTitle } : deck
-        );
-        setDecks(updatedDecks);
-        setIsEditing(false);
-        setEditingDeckId(null);
-      } else {
-        // Add a new deck with a unique id using Date.now()
-        setDecks([...decks, { id: Date.now(), title: newDeckTitle }]);
-      }
-      setNewDeckTitle(""); // Clear the input after saving
-      setModalVisible(false); // Close the modal
-    }
-  };
-
-  // Function to start editing a deck
+// Function to start editing a deck
   const editDeck = (deckId) => {
-    const deckToEdit = decks.find((deck) => deck.id === deckId);
+   //console.log(deckId);
+    const deckToEdit = decks.find((deck) => deck.deckId === deckId);
     if (deckToEdit) {
-      setNewDeckTitle(deckToEdit.title);
+      setQuestionList(deckToEdit.questionList);
+      setQuestionList(deckToEdit.questionList); // Set the question list for editing
+      setNewDeck({
+        deckId: deckToEdit.deckId,
+        title: deckToEdit.title,
+        description: deckToEdit.description,
+        category: deckToEdit.category,
+        questionList: deckToEdit.questionList,
+        lastScore: deckToEdit.lastScore || 0, // Preserves lastScore if it exists
+      });
       setIsEditing(true);
       setEditingDeckId(deckId);
       setModalVisible(true);
@@ -110,13 +199,67 @@ export default function FlashcardsScreen({ navigation, user }) {
         {
           text: "Delete",
           onPress: () => {
-            const updatedDecks = decks.filter((deck) => deck.id !== deckId);
+            let id = deckId.replace(".","")
+            const updatedDecks = decks.filter((deck) => deck.deckId !== deckId);
             setDecks(updatedDecks);
+            handleDeleteDeck(id);
           },
         },
       ]
     );
   };
+
+/* -------------------------LOADING----------------------------- */
+
+useEffect(() => {
+  handleDeckDownload();
+}, []);
+
+/* --------------------------TESTING----------------------------- */
+
+//testingModal
+const [startQuiz, setStartQuiz] = useState(false);
+
+const quizQuestions = (deckId) => {
+
+}
+
+const closeQuiz = () => {
+  setTestModalVisible(false);
+  setStartTestModalVisible(false);
+  setStartQuiz(false);
+}
+
+const iKnow = () => {
+  if(!startQuiz){
+    setStartQuiz(true);
+    setTestModalVisible(true);
+  }
+  else{
+    //i know functionality
+  }
+};
+
+const iDontKnow = () => {
+  //iDontKNow functionality
+}
+
+//load specific deck
+
+//test functionality
+
+//ending screen and button to retry or return
+
+/* --------------------------UserInterface----------------------------- */
+
+//main page
+  //display decks
+  //flashcardManagerModal
+  //testingModal
+
+  const openModel = () => {
+    setModalVisible(true);
+  }
 
   // Render the options (Edit, Delete) under the three dots
   const renderOptions = (deckId) => {
@@ -136,13 +279,23 @@ export default function FlashcardsScreen({ navigation, user }) {
   };
 
   // Render each deck with the three-dots menu
+  {/* ... is icon to edit */}
   const renderDeck = ({ item }) => (
+    
+    <TouchableOpacity style={styles.deckContainer} onPress={()=>setStartTestModalVisible(true)}>
+        <Text style={styles.deckTitle}>{item.title}</Text>
+        <TouchableOpacity onPress={() => setSelectedDeckId(item.deckId === selectedDeckId ? null : item.deckId)}>
+          <Text style={styles.optionsIcon}>⋮</Text>
+        </TouchableOpacity> 
+        {renderOptions(item.deckId)}
+    </TouchableOpacity>
+  );
+
+  const renderQuestions = ({ item }) => (
     <View style={styles.deckContainer}>
-      <Text style={styles.deckTitle}>{item.title}</Text>
-      <TouchableOpacity onPress={() => setSelectedDeckId(item.id === selectedDeckId ? null : item.id)}>
-        <MaterialIcons name="more-vert" size={24} color="black" />
-      </TouchableOpacity>
-      {renderOptions(item.id)}
+      <Text style={styles.deckTitle}>{item.qNum+1}. Question: {item.List}</Text>
+      <Text style={styles.deckTitle}>     Answer:   {item.answer}</Text>
+      {renderOptions(item.deckId)}
     </View>
   );
 
@@ -152,41 +305,113 @@ export default function FlashcardsScreen({ navigation, user }) {
 
       {/* add deck button */}
       <TouchableOpacity
-        style={styles.viewTask}
-        onPress={() => {
-          setModalVisible(true);
-          //console.log(items);
-        }}
+        style={styles.addDeckModal}
+        onPress={openModel}
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
 
       {/* List of flashcard decks */}
-      <FlatList
-        data={decks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderDeck}
-        ListEmptyComponent={<Text style={styles.emptyText}>No decks available. Add one by click the plus on the bottom right!</Text>}
-      />
+      
+        <FlatList
+          data={decks}
+          keyExtractor={(item) => item.deckId.toString()}
+          renderItem={renderDeck}
+          ListEmptyComponent={<Text style={styles.emptyText}>No decks available. Add one by click the plus on the bottom right!</Text>}
+        />
+      
 
       {/* Modal for creating/editing a deck */}
-      <Modal animationType="slide" visible={modalVisible} transparent={true}>
+      <Modal animationType="slide" visible={modalVisible} transparent={false}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{isEditing ? "Edit Deck" : "Create New Deck"}</Text>
             <TextInput
               style={styles.input}
               placeholder="Deck Title"
-              value={newDeckTitle}
-              onChangeText={(text) => setNewDeckTitle(text)}
+              value={newDeck.title}
+              onChangeText={(text) => setNewDeck({...newDeck, title: text})}
             />
+            <TextInput
+              style={styles.input}
+              placeholder="Deck Category"
+              value={newDeck.category}
+              onChangeText={(text) => setNewDeck({...newDeck, category: text})}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Deck Description"
+              value={newDeck.description}
+              onChangeText={(text) => setNewDeck({...newDeck, description: text})}
+            />
+
+            <FlatList
+              data={questionList}
+              keyExtractor={(item) => item.qNum.toString()}
+              renderItem={renderQuestions}
+              ListEmptyComponent={<Text style={styles.emptyText}>No questions yet</Text>}
+            />
+
+            <TouchableOpacity style={styles.addQuestionButton} onPress={()=>setQuestionModalVisible(true)}>
+              <Text style={styles.addButtonText}>Add Question</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.addButton} onPress={saveDeck}>
               <Text style={styles.addButtonText}>{isEditing ? "Update Deck" : "Add Deck"}</Text>
             </TouchableOpacity>
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+            <Button title="Close" onPress={() => {setModalVisible(false); setIsEditing(false);}} />
           </View>
         </View>
       </Modal>
+
+      {/* Modal for creating questions */}
+      <Modal animationType="slide" visible={questionModalVisible} transparent={false}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{isEditing ? "Edit Deck" : "Create New Deck"}</Text>
+              <TextInput
+              style={styles.input}
+              placeholder="Question"
+              value={newQuestion.List}
+              onChangeText={(text) => setNewQuestion({...newQuestion, List: text})}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Answer"
+              value={newQuestion.answer}
+              onChangeText={(text) => setNewQuestion({...newQuestion, answer: text})}
+            />
+            <TouchableOpacity style={styles.addButton} onPress={saveQuestion}>
+              <Text style={styles.addButtonText}>Save Question</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ----------------------------QUIZ MODALS-------------------------------------- */}
+
+      {/* Modal for TEST START 
+      <Modal animationType="slide" visible={startTestModalVisible} transparent={false}>  
+
+          <View id="card" style={styles.modalContainer}>
+            {renderInstruction}
+            {renderQuiz}
+            {renderScore}
+          </View>
+        
+
+        <TouchableOpacity onPress={iKnow()}>
+          <Text>I Know</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={iDontKnow()}>
+          <Text>I Don't Know</Text>
+        </TouchableOpacity>
+
+        <Button title="Close" onPress={closeQuiz()}/>
+      </Modal>*/}
+
+
+
 
       {/* Fixed navigation bar at the bottom */}
       <View style={styles.navbarContainer}>
@@ -197,7 +422,14 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
-  viewTask: {
+  optionsIcon: {
+    fontSize: 20,
+    color: "#4B4B4B",
+    position: "relative",
+    left: 330,
+    bottom: 35,
+  },
+  addDeckModal: {
     position: "absolute",
     bottom: 40,
     right: 17,
@@ -212,7 +444,9 @@ const styles = StyleSheet.create({
     shadowRadius: 30,
     shadowOpacity: 0.5,
     elevation: 5,
-    zIndex: 999,},
+    zIndex: 999,
+  },
+  modalContainer: {backgroundColor: 'white'},
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
   navbarContainer: {
@@ -220,5 +454,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  deckContainer: {
+    backgroundColor: "#D2B48C", // Light tan/beige color
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5, // Android shadow
+  },
+  deckTitle: {
+    position: "relative",
+    top: 10,
+    fontSize: 18,
+    color: "#4B4B4B", // Darker gray for text
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
