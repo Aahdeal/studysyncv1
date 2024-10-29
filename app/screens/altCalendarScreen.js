@@ -24,6 +24,7 @@ import Icon from "../../components/Icon";
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({}); //state for tasks and events to be loaded within selected date range
@@ -1059,7 +1060,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#f0f4ff', // Light background color
+    backgroundColor: white, 
   },
   year: {
     fontSize: 18,
@@ -1071,11 +1072,11 @@ const styles = StyleSheet.create({
   calendarContainer: {
     width: '100%',
     height: '40%',
-    backgroundColor: '#d0e4ff', // Light blue background color
-    borderWidth: 1,
-    borderColor: "black",
-    margin: 10,
-    marginTop: 0,
+    backgroundColor: '#6A5ACD', // Light blue background color
+    borderRadius: 10,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
