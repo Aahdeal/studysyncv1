@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, Modal, TextInput, TouchableOpacity, FlatList, Alert } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons'; // Import icons from expo/vector-icons
+// screens/FlashcardsScreen.js
+import React from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 import NavBar from "../../components/NavBar";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function FlashcardsScreen({ navigation, user }) {
   const [decks, setDecks] = useState([]); // State for managing flashcard decks
@@ -178,67 +179,12 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#f7f7f7" },
+  container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
-  deckContainer: {
-    backgroundColor: "#D2B48C",
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  deckTitle: { fontSize: 18, fontWeight: "bold", color: "#333" },
-  emptyText: { textAlign: "center", marginVertical: 20, color: "#666" },
   navbarContainer: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 10, textAlign: "center" },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-  },
-  addButton: {
-    backgroundColor: "#3498db",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  addButtonText: { color: "white", fontWeight: "bold", textAlign: "center" },
-  optionsMenu: {
-    position: 'absolute',
-    top: 50, // Adjusted to provide space below the icon
-    right: 0,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 10,
-    elevation: 4,
-    zIndex: 10, // Ensure it appears above other components
-    width: 100, // Optional: Set a fixed width to avoid resizing issues
-  },
-  
-  optionText: { paddingVertical: 5, fontSize: 16, textAlign: 'center' },
 });
