@@ -1060,7 +1060,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: white, 
+    backgroundColor: 'white', 
   },
   year: {
     fontSize: 18,
