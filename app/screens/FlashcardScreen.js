@@ -3,13 +3,60 @@ import { View, Text, Button, StyleSheet, Modal, TextInput, TouchableOpacity, Fla
 import { MaterialIcons } from '@expo/vector-icons'; // Import icons from expo/vector-icons
 import NavBar from "../../components/NavBar";
 
-export default function FlashcardsScreen({ navigation }) {
+export default function FlashcardsScreen({ navigation, user }) {
   const [decks, setDecks] = useState([]); // State for managing flashcard decks
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility for creating/editing deck
   const [newDeckTitle, setNewDeckTitle] = useState(""); // Title of the new or edited deck
   const [isEditing, setIsEditing] = useState(false); // Flag for editing mode
   const [editingDeckId, setEditingDeckId] = useState(null); // Track which deck is being edited
   const [selectedDeckId, setSelectedDeckId] = useState(null); // Track which deck's menu is open
+
+/* --------------------------DATA ACCESSOR METHODS----------------------------- */
+
+//get
+
+//set
+
+//update
+
+/* --------------------------SAVING----------------------------- */
+
+// flashcardManagerModal
+
+// save deck
+
+// save question list
+
+/* --------------------------UPDATING----------------------------- */
+
+// flashcardManagerModal
+
+// update deck
+
+// update question list
+
+// delete deck
+
+/* -------------------------LOADING----------------------------- */
+
+// load Items same as on calendar or use the display method from dashboard
+
+/* --------------------------TESTING----------------------------- */
+
+//testingModal
+
+//load specific deck
+
+//test functionality
+
+//ending screen and button to retry or return
+
+/* --------------------------UserInterface----------------------------- */
+
+//main page
+  //display decks
+  //flashcardManagerModal
+  //testingModal
 
   // Function to add a new deck or update an existing one
   const saveDeck = () => {
@@ -93,7 +140,7 @@ export default function FlashcardsScreen({ navigation }) {
       <Text style={styles.title}>Flashcards</Text>
 
       {/* Button to open the modal to add a deck */}
-      <Button title="Add Deck" onPress={() => navigation.navigate("FlashCardCreator")} />
+      <Button title="Add Deck" onPress={() => navigation.navigate("FlashCardCreator")}/>
 
       {/* List of flashcard decks */}
       <FlatList
