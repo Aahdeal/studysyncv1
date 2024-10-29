@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { auth } from "../firebase"; // Import auth from firebase
 import { signOut } from "firebase/auth"; // Import signOut function
 
-export default function AccountScreen({ navigation }) {
+export default function AccountScreen({ navigation, user }) {
   // Function to handle logout
   const handleLogout = async () => {
     try {

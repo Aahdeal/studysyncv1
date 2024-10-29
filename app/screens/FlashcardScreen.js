@@ -1,6 +1,15 @@
 // screens/FlashcardsScreen.js
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import React, {useState, useEffect} from "react";
+import { 
+  View, 
+  Text, 
+  Button, 
+  StyleSheet, 
+  FlatList, 
+  Modal, 
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
 
