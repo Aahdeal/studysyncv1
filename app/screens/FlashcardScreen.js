@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
+import Icon from "../../components/Icon";
 
 export default function FlashcardsScreen({ navigation, user }) {
   const [decks, setDecks] = useState([]); // State for managing flashcard decks
@@ -149,15 +150,23 @@ export default function FlashcardsScreen({ navigation, user }) {
     <View style={styles.container}>
       <Text style={styles.title}>Flashcards</Text>
 
-      {/* Button to open the modal to add a deck */}
-      <Button title="Add Deck" onPress={() => navigation.navigate("FlashCardCreator")}/>
+      {/* add deck button */}
+      <TouchableOpacity
+        style={styles.viewTask}
+        onPress={() => {
+          setModalVisible(true);
+          //console.log(items);
+        }}
+      >
+        <Icon name="plus" size={30} color="white" family="FontAwesome" />
+      </TouchableOpacity>
 
       {/* List of flashcard decks */}
       <FlatList
         data={decks}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderDeck}
-        ListEmptyComponent={<Text style={styles.emptyText}>No decks available. Add one!</Text>}
+        ListEmptyComponent={<Text style={styles.emptyText}>No decks available. Add one by click the plus on the bottom right!</Text>}
       />
 
       {/* Modal for creating/editing a deck */}
@@ -188,6 +197,22 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
+  viewTask: {
+    position: "absolute",
+    bottom: 40,
+    right: 17,
+    height: 60,
+    width: 60,
+    backgroundColor: "#009ad8",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#009ad8",
+    shadowOffset: { width: 0, height: 9 },
+    shadowRadius: 30,
+    shadowOpacity: 0.5,
+    elevation: 5,
+    zIndex: 999,},
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
   navbarContainer: {
