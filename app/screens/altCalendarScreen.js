@@ -1058,6 +1058,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#f0f4ff', // Light background color
   },
   calendarContainer: {
     height: "50%",
