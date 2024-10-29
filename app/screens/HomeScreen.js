@@ -23,7 +23,7 @@ const getRandomMotivationalMessage = async () => {
   }
 };
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, user }) {
   const [motivationalMessage, setMotivationalMessage] = useState({ message: '', author: '' });
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <View id="progressView">
-        {/* Progress view content here */}
+        <Text>Hello {user.uid}</Text>
       </View>
 
       <NavBar/>
