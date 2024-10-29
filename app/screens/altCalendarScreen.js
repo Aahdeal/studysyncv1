@@ -1062,7 +1062,7 @@ const styles = StyleSheet.create({
   calendarContainer: {
     height: "50%",
     borderWidth: 1,
-    borderColor: "cyan",
+    borderColor: "black",
     margin: 10,
     marginTop: 0,
   },
