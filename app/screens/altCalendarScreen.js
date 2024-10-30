@@ -151,12 +151,18 @@ export default function BrokerCalendar({ navigation, user }) {
 
   const deleteEventFromDatabase = (eventId) => {
     let userId = user.uid;
-    firebase.database().ref(`users/${userId}/calendar/events/${eventId}`).remove();
+    firebase
+      .database()
+      .ref(`users/${userId}/calendar/events/${eventId}`)
+      .remove();
   };
-  
+
   const deleteTaskFromDatabase = (taskId) => {
     let userId = user.uid;
-    firebase.database().ref(`users/${userId}/calendar/tasks/${eventId}`).remove();
+    firebase
+      .database()
+      .ref(`users/${userId}/calendar/tasks/${eventId}`)
+      .remove();
   };
 
   /*--------------------------Sample Data--------------------------------*/
@@ -370,7 +376,7 @@ export default function BrokerCalendar({ navigation, user }) {
     //day is either current day or day selected on calendar
     //fetch data from db
     const items = {}; // Temporary object to hold events and tasks
-    const fourteenDaysAgo = moment().subtract(14, 'days');
+    const fourteenDaysAgo = moment().subtract(14, "days");
 
     setTimeout(() => {
       // Loop through a range of dates (-14 days to +30 days from the current date)
@@ -389,8 +395,7 @@ export default function BrokerCalendar({ navigation, user }) {
           if (eventStartDate.isBefore(fourteenDaysAgo)) {
             // Assuming you have a function to delete from the database
             deleteEventFromDatabase(event.eventId); // Replace with your deletion method
-          }
-          else if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
+          } else if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
             items[strTime].push({
               eventId: event.eventId,
               title: event.title,
@@ -623,13 +628,13 @@ export default function BrokerCalendar({ navigation, user }) {
 
     //resets fields
     setNewEvent({
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       startDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
       endDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
-      type: '',
-      repeat: 'does not repeat',
-      repeatCount: '',
+      type: "",
+      repeat: "does not repeat",
+      repeatCount: "",
     });
     setEventModalVisible(false); // Close modal after saving
   };
@@ -653,7 +658,7 @@ export default function BrokerCalendar({ navigation, user }) {
       description: "",
       startDate: moment(new Date()).format("YYYY-MM-DD HH:mm"),
       completed: "",
-    })
+    });
     setTaskModalVisible(false);
   };
 
@@ -727,6 +732,17 @@ export default function BrokerCalendar({ navigation, user }) {
       {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda
+          //   style={{ backgroundColor: "#add8e6" }}
+          //   theme={{
+          //     backgroundColor: "#ffffff",
+          //     calendarBackground: "#ffffff",
+          //     textSectionTitleColor: "#b6c1cd",
+          //     selectedDayBackgroundColor: "#00adf5",
+          //     selectedDayTextColor: "#ffffff",
+          //     todayTextColor: "#00adf5",
+          //     dayTextColor: "#2d4150",
+          //     textDisabledColor: "#dd99ee",
+          //   }}
           items={items}
           loadItemsForMonth={loadItems}
           selected={new Date()}
@@ -785,231 +801,254 @@ export default function BrokerCalendar({ navigation, user }) {
 
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
-        <View style={styles.modalBackground}>
-          <View style={styles.iconContainer}>
-            <TouchableOpacity style={styles.exitButton} onPress={closeModal}>
-              <Icon name="close" size={30} color="#fff" family="FontAwesome" />
-            </TouchableOpacity>
-            {/* Event Icon */}
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={openEventModal}
-            >
-              <Icon
-                name="calendar"
-                type="material"
-                size={40}
-                color="#aac3e8"
-                family="FontAwesome"
-              />
-              <Text style={styles.iconLabel}>Event</Text>
-            </TouchableOpacity>
+        <View style={styles.modalBackgroundA}>
+          <View style={styles.modalContentA}>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity style={styles.exitButton} onPress={closeModal}>
+                <Icon
+                  name="close"
+                  size={30}
+                  color="#fff"
+                  family="FontAwesome"
+                />
+              </TouchableOpacity>
+              {/* Event Icon */}
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={openEventModal}
+              >
+                <Icon
+                  name="calendar"
+                  type="material"
+                  size={40}
+                  color="#fff"
+                  family="FontAwesome"
+                />
+                <Text style={styles.iconLabel}>Event</Text>
+              </TouchableOpacity>
 
-            {/* Task Icon */}
-            <TouchableOpacity style={styles.iconButton} onPress={openTaskModal}>
-              <Icon
-                name="check-circle-o"
-                type="material"
-                size={40}
-                color="#aac3e8"
-                family="FontAwesome"
-              />
-              <Text style={styles.iconLabel}>Task</Text>
-            </TouchableOpacity>
+              {/* Task Icon */}
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={openTaskModal}
+              >
+                <Icon
+                  name="check-circle-o"
+                  type="material"
+                  size={40}
+                  color="#fff"
+                  family="FontAwesome"
+                />
+                <Text style={styles.iconLabel}>Task</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
 
       {/*-------------------------------------EVENT CREATOR MODAL------------------------------------------ */}
-      <Modal visible={isEventModalVisible} animationType="slide">
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Add New Event</Text>
+      <Modal
+        visible={isEventModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Event</Text>
 
-          {/* Title Input */}
-          <TextInput
-            placeholder="Title"
-            value={newEvent.title}
-            onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
-            style={styles.input}
-          />
-
-          {/* Description Input */}
-          <TextInput
-            placeholder="Description"
-            value={newEvent.description}
-            onChangeText={(text) =>
-              setNewEvent({ ...newEvent, description: text })
-            }
-            style={styles.input}
-          />
-
-          {/* Select From Date and Time Input */}
-          <TouchableOpacity onPress={showFromDatePicker}>
+            {/* Title Input */}
             <TextInput
-              placeholder="Select From Date and Time"
-              value={
-                newEvent.startDate
-                  ? moment(newEvent.startDate).format("MMMM Do YYYY, h:mm A")
-                  : "bla"
+              placeholder="Title"
+              value={newEvent.title}
+              onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
+              style={styles.input}
+            />
+
+            {/* Description Input */}
+            <TextInput
+              placeholder="Description"
+              value={newEvent.description}
+              onChangeText={(text) =>
+                setNewEvent({ ...newEvent, description: text })
               }
               style={styles.input}
-              editable={false} // To prevent direct editing
-              //onFocus={showFromDatePicker} // Show picker when TextInput gains focus
             />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isFromDatePickerVisible}
-            mode="datetime"
-            onConfirm={handleConfirmFrom}
-            onCancel={hideFromDatePicker}
-          />
 
-          {/* Select To Date and Time Input */}
-          <TouchableOpacity onPress={!isAllDay ? showToDatePicker : null}>
-            <TextInput
-              placeholder="Select To Date and Time"
-              value={
-                newEvent.endDate
-                  ? moment(newEvent.endDate).format("MMMM Do YYYY, h:mm A")
-                  : ""
-              }
-              style={styles.input}
-              editable={false}
-              //editable={!isAllDay} // Disable when All Day is active
-            />
-          </TouchableOpacity>
-          {!isAllDay && (
-            <DateTimePickerModal
-              isVisible={isToDatePickerVisible}
-              mode="datetime"
-              onConfirm={handleConfirmTo}
-              onCancel={hideToDatePicker}
-            />
-          )}
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Switch
-              value={isAllDay}
-              onValueChange={(value) => {
-                setIsAllDay(value);
-                if (value && newEvent.startDate) {
-                  // Set the To date to the end of the selected From date
-                  setNewEvent((prevEvent) => ({
-                    ...prevEvent,
-                    endDate: moment(prevEvent.startDate).endOf("day").toDate(),
-                  }));
+            {/* Select From Date and Time Input */}
+            <TouchableOpacity onPress={showFromDatePicker}>
+              <TextInput
+                placeholder="Select From Date and Time"
+                value={
+                  newEvent.startDate
+                    ? moment(newEvent.startDate).format("MMMM Do YYYY, h:mm A")
+                    : "bla"
                 }
-              }}
+                style={styles.input}
+                editable={false} // To prevent direct editing
+                //onFocus={showFromDatePicker} // Show picker when TextInput gains focus
+              />
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isFromDatePickerVisible}
+              mode="datetime"
+              onConfirm={handleConfirmFrom}
+              onCancel={hideFromDatePicker}
             />
-            <Text>All Day</Text>
-          </View>
-          {/* Type of Property (info) */}
-          <Text style={styles.label}>Type of Event</Text>
-          <RNPickerSelect
-            value={newEvent?.type}
-            //useNativeAndroidPickerStyle={false}
-            style={{
-              inputIOS: styles.pickerStyle,
-              inputAndroid: styles.pickerStyle,
-            }}
-            onValueChange={(itemValue) =>
-              setNewEvent({
-                ...newEvent,
-                type: itemValue,
-              })
-            }
-            items={[
-              { label: "Test", value: "Test" },
-              { label: "Submission", value: "Submission" },
-              { label: "Study session", value: "Study" },
-              { label: "Birthday", value: "Birthday" },
-              { label: "Any", value: "Any" },
-            ]}
-          />
-          {/* Repeat Options */}
-          <Text style={styles.label}>Repeat</Text>
-          <RNPickerSelect
-            value={newEvent.repeat}
-            useNativeAndroidPickerStyle={false}
-            style={{
-              inputIOS: styles.pickerStyle,
-              inputAndroid: styles.pickerStyle,
-            }}
-            onValueChange={(itemValue) =>
-              setNewEvent({ ...newEvent, repeat: itemValue })
-            }
-            items={[
-              { label: "Does not repeat", value: "does not repeat" },
-              { label: "Daily", value: "daily" },
-              { label: "Weekly", value: "weekly" },
-              { label: "Monthly", value: "monthly" },
-            ]}
-          />
-          {/* Repeat Count Input 
+
+            {/* Select To Date and Time Input */}
+            <TouchableOpacity onPress={!isAllDay ? showToDatePicker : null}>
+              <TextInput
+                placeholder="Select To Date and Time"
+                value={
+                  newEvent.endDate
+                    ? moment(newEvent.endDate).format("MMMM Do YYYY, h:mm A")
+                    : ""
+                }
+                style={styles.input}
+                editable={false}
+                //editable={!isAllDay} // Disable when All Day is active
+              />
+            </TouchableOpacity>
+            {!isAllDay && (
+              <DateTimePickerModal
+                isVisible={isToDatePickerVisible}
+                mode="datetime"
+                onConfirm={handleConfirmTo}
+                onCancel={hideToDatePicker}
+              />
+            )}
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Switch
+                value={isAllDay}
+                onValueChange={(value) => {
+                  setIsAllDay(value);
+                  if (value && newEvent.startDate) {
+                    // Set the To date to the end of the selected From date
+                    setNewEvent((prevEvent) => ({
+                      ...prevEvent,
+                      endDate: moment(prevEvent.startDate)
+                        .endOf("day")
+                        .toDate(),
+                    }));
+                  }
+                }}
+              />
+              <Text>All Day</Text>
+            </View>
+            {/* Type of Property (info) */}
+            <Text style={styles.label}>Type of Event</Text>
+            <RNPickerSelect
+              value={newEvent?.type}
+              //useNativeAndroidPickerStyle={false}
+              style={{
+                inputIOS: styles.pickerStyle,
+                inputAndroid: styles.pickerStyle,
+              }}
+              onValueChange={(itemValue) =>
+                setNewEvent({
+                  ...newEvent,
+                  type: itemValue,
+                })
+              }
+              items={[
+                { label: "Test", value: "Test" },
+                { label: "Submission", value: "Submission" },
+                { label: "Study session", value: "Study" },
+                { label: "Birthday", value: "Birthday" },
+                { label: "Any", value: "Any" },
+              ]}
+            />
+            {/* Repeat Options */}
+            <Text style={styles.label}>Repeat</Text>
+            <RNPickerSelect
+              value={newEvent.repeat}
+              useNativeAndroidPickerStyle={false}
+              style={{
+                inputIOS: styles.pickerStyle,
+                inputAndroid: styles.pickerStyle,
+              }}
+              onValueChange={(itemValue) =>
+                setNewEvent({ ...newEvent, repeat: itemValue })
+              }
+              items={[
+                { label: "Does not repeat", value: "does not repeat" },
+                { label: "Daily", value: "daily" },
+                { label: "Weekly", value: "weekly" },
+                { label: "Monthly", value: "monthly" },
+              ]}
+            />
+            {/* Repeat Count Input 
           // Show this input only when repeat is not 'does not repeat' or
           'custom'*/}
-          {newEvent.repeat !== "does not repeat" && (
-            <>
-              <Text style={styles.label}>Repetition Count</Text>
-              <TextInput
-                placeholder="Number of repetitions"
-                value={newEvent.repeatCount}
-                onChangeText={(text) =>
-                  setNewEvent({ ...newEvent, repeatCount: parseInt(text) })
-                }
-                keyboardType="numeric"
-                style={styles.input}
-              />
-            </>
-          )}
-{/* Save Button */}
-         <Button title="Save Event" onPress={saveEvent} />
-{/* Close Modal */}
-          <Button title="Close" onPress={() => setEventModalVisible(false)} />
+            {newEvent.repeat !== "does not repeat" && (
+              <>
+                <Text style={styles.label}>Repetition Count</Text>
+                <TextInput
+                  placeholder="Number of repetitions"
+                  value={newEvent.repeatCount}
+                  onChangeText={(text) =>
+                    setNewEvent({ ...newEvent, repeatCount: parseInt(text) })
+                  }
+                  keyboardType="numeric"
+                  style={styles.input}
+                />
+              </>
+            )}
+            {/* Save Button */}
+            <Button title="Save Event" onPress={saveEvent} />
+            {/* Close Modal */}
+            <Button title="Close" onPress={() => setEventModalVisible(false)} />
+          </View>
         </View>
       </Modal>
 
       {/* ------------------------------Task Creator Modal ------------------------------------ */}
-      <Modal visible={isTaskModalVisible} animationType="slide">
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Add New Task</Text>
-          <TextInput
-            placeholder="Title"
-            value={newTask.title}
-            onChangeText={(text) => setNewTask({ ...newTask, title: text })}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Description"
-            value={newTask.description}
-            onChangeText={(text) =>
-              setNewTask({ ...newTask, description: text })
-            }
-            style={styles.input}
-          />
-          {/* Select From Date and Time Input */}
-          <TouchableOpacity onPress={showTaskDatePicker}>
+      <Modal
+        visible={isTaskModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Task</Text>
             <TextInput
-              placeholder="Select From Date and Time"
-              value={
-                newTask.startDate
-                  ? moment(newTask.startDate).format("MMMM Do YYYY, h:mm A")
-                  : ""
+              placeholder="Title"
+              value={newTask.title}
+              onChangeText={(text) => setNewTask({ ...newTask, title: text })}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Description"
+              value={newTask.description}
+              onChangeText={(text) =>
+                setNewTask({ ...newTask, description: text })
               }
               style={styles.input}
-              editable={false} // To prevent direct editing
-              onFocus={showTaskDatePicker} // Show picker when TextInput gains focus
             />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isTaskDatePickerVisible}
-            mode="datetime"
-            onConfirm={handleConfirmTask}
-            onCancel={hideTaskDatePicker}
-          />
-          {/* Date and Time Picker */}
+            {/* Select From Date and Time Input */}
+            <TouchableOpacity onPress={showTaskDatePicker}>
+              <TextInput
+                placeholder="Select From Date and Time"
+                value={
+                  newTask.startDate
+                    ? moment(newTask.startDate).format("MMMM Do YYYY, h:mm A")
+                    : ""
+                }
+                style={styles.input}
+                editable={false} // To prevent direct editing
+                onFocus={showTaskDatePicker} // Show picker when TextInput gains focus
+              />
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isTaskDatePickerVisible}
+              mode="datetime"
+              onConfirm={handleConfirmTask}
+              onCancel={hideTaskDatePicker}
+            />
+            {/* Date and Time Picker */}
 
-          {/* )Repeat Options */}
-          {/* <RNPickerSelect
+            {/* )Repeat Options */}
+            {/* <RNPickerSelect
             value={newTask.repeat}
             useNativeAndroidPickerStyle={false}
             //placeholderTextColor={colors.BLACK}
@@ -1044,8 +1083,9 @@ export default function BrokerCalendar({ navigation, user }) {
               />
             </>
           )} */}
-          <Button title="Save Task" onPress={saveTask} />
-          <Button title="Close" onPress={() => setTaskModalVisible(false)} />
+            <Button title="Save Task" onPress={saveTask} />
+            <Button title="Close" onPress={() => setTaskModalVisible(false)} />
+          </View>
         </View>
       </Modal>
 
@@ -1054,38 +1094,44 @@ export default function BrokerCalendar({ navigation, user }) {
   );
 }
 
-
-
 /*-------------------------------------STYLING------------------------------------------ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
-    backgroundColor: '#ffffff', 
+    alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   calendarContainer: {
-    width: '90%', // Keep width consistent
-    height: '50%', // Increased height for a larger calendar
-    backgroundColor: '#aac3e8', // Softer light blue for better contrast
+    width: "90%",
+    height: "50%",
+    backgroundColor: "#add8e6", // Light blue background for the calendar box
     borderWidth: 1,
-    borderColor: '#007BFF',
-    borderRadius: 20, // Larger border radius for a softer look
+    borderColor: "#add8e6",
+    borderRadius: 10,
+    padding: 10,
+  },
+  modalBackgroundA: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    width: " 80%",
+    marginVertical: "10%",
+    left: "10%",
+    borderRadius: 15,
+  },
+  modalContentA: {
     padding: 20,
-    elevation: 5, // More pronounced shadow for depth
-    marginBottom: 20, // Space below the calendar container
+    justifyContent: "center",
+    alignItems: "center",
+    width: " 80%",
   },
   year: {
-    fontSize: 26, // Increased font size for better readability
-    fontWeight: 'bold',
-    color: '#007BFF',
-    textAlign: 'center',
-    marginVertical: 20, // More space around the year text
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 15, // Space above and below the checkbox
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4a4a4a",
+    textAlign: "center",
+    marginVertical: 10,
   },
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
@@ -1096,7 +1142,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: '#1f2c8f', // Change color to match calendar theme
+    color: "#1f2c8f", // Change color to match calendar theme
   },
   Imagecon: {
     alignContent: "flex-end",
@@ -1107,23 +1153,35 @@ const styles = StyleSheet.create({
     width: 90,
     borderRadius: 45, // Make it circular
     borderWidth: 2,
-    borderColor: '#007BFF', // Border for better visibility
+    borderColor: "#007BFF", // Border for better visibility
     marginBottom: 10,
   },
   modalBackground: {
     flex: 1,
-    height: '50%',
-    backgroundColor: '#e0f7fa', // Matching the calendar color
-    justifyContent: "flex-end",
-    padding: 30, // More padding for a spacious feel
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    width: " 80%",
+    marginVertical: "10%",
+    left: "10%",
+    borderRadius: 15,
+    shadowColor: "#009ad8",
+    shadowOffset: { width: 0, height: 9 },
+    shadowRadius: 30,
+    shadowOpacity: 0.5,
   },
   iconContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
+    width: "98%",
+    height: "100%",
+    borderRadius: 15,
+    padding: 20,
+    alignItems: "flex-end",
   },
   iconButton: {
-    margin: 10,
+    position: "fixed",
+    marginBottom: 10,
     alignItems: "center",
+    top: 490,
+    left: 70,
   },
   iconLabel: {
     color: "#aac3e8", // Matching the theme color
@@ -1131,10 +1189,17 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: "bold",
   },
-  modalContent: { 
-    padding: 25, 
-    justifyContent: "center", 
-    alignItems: "center" 
+  exitButton: {
+    position: "absolute",
+    top: 10,
+    left: 20,
+    zIndex: 1,
+  },
+  modalContent: {
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   modalTitle: { 
     fontSize: 24, // Larger modal title
@@ -1192,9 +1257,9 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
-  Bookingoffer: { 
+  Bookingoffer: {
     fontSize: 16, // Adjusted for consistency
-    marginBottom: 10 
+    marginBottom: 10,
   },
   StatusStrip: {
     height: 130,
@@ -1221,11 +1286,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    color: '#333333', // Darker text for better contrast
+    color: "#333333", // Darker text for better contrast
   },
  
 });
-
-
-
-
