@@ -40,6 +40,9 @@ export default function BrokerCalendar({ navigation, user }) {
   const [showHomework, setShowHomework] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [showCompletedTasks, setShowCompletedTasks] = useState(false);
+  const [completedTasks, setCompletedTasks] = useState([]);
+
   let userId = user.uid;
 
   /*----------------------DATA ACCESSOR METHODS----------------------- */
@@ -434,6 +437,24 @@ export default function BrokerCalendar({ navigation, user }) {
       setItems(newItems); // Update the state with tasks and events
     }, 1000);
   };
+  // Filter tasks by selected date
+  const filterTasksByDate = (date) => {
+    const filtered = tasks.filter(
+      (task) =>
+        task.startDate &&
+        task.startDate.substring(0, 10) === date.substring(0, 10)
+    );
+
+    setFilteredTasks(filtered);
+  };
+
+  // Filter for completed tasks only
+  const handleShowCompletedTasks = () => {
+    setShowCompletedTasks(!showCompletedTasks);
+  };
+
+  // Completed tasks filtered from the filteredTasks list
+  const completedTaskss = filteredTasks.filter((task) => task.completed);
 
   /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
@@ -562,16 +583,6 @@ export default function BrokerCalendar({ navigation, user }) {
     filterTasksByDate(date);
   };
 
-  // Filter tasks by selected date
-  const filterTasksByDate = (date) => {
-    const filtered = tasks.filter(
-      (task) =>
-        task.startDate &&
-        task.startDate.substring(0, 10) === date.substring(0, 10)
-    );
-
-    setFilteredTasks(filtered);
-  };
   /*-------------------------------------SAVE EVENTS/TASKS------------------------------------------ */
   //handles repeated events
   const handleAddEvent = (newEvent) => {
@@ -665,10 +676,15 @@ export default function BrokerCalendar({ navigation, user }) {
 
   /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
   const toggleTaskCompletion = async (task) => {
+    // Update task's completed status locally
     const updatedTasks = tasks.map((t) =>
       t.taskId === task.taskId ? { ...t, completed: !t.completed } : t
     );
     setTasks(updatedTasks);
+
+    // Update completed tasks list locally without requiring re-render from database
+    const newCompletedTasks = updatedTasks.filter((t) => t.completed);
+    setCompletedTasks(newCompletedTasks);
 
     console.log("uid: ", userId);
 
@@ -716,9 +732,9 @@ export default function BrokerCalendar({ navigation, user }) {
           }}
         />
       </View>
-
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
       <Text style={styles.title}>TO DO LIST</Text>
+      {/* <ScrollView style={styles.toDoListContainer}> */}
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
           {filteredTasks && filteredTasks.length > 0 ? (
@@ -749,7 +765,65 @@ export default function BrokerCalendar({ navigation, user }) {
             <Text style={styles.noTasksText}>No Tasks for today</Text>
           )}
         </ScrollView>
+
+        {/* /*----------------------------------------Completed Tasks ------------------------------------ */}
+        <View style={styles.toDoListContainer}>
+          {/* <ScrollView>
+            {showCompletedTasks ? (
+              <FlatList
+                data={completedTasks}
+                keyExtractor={(item) => item.taskId.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.completedTaskContainer}>
+                    <Text style={styles.completedTaskText}>
+                      {item.taskName}
+                    </Text>
+                  </View>
+                )}
+                ListEmptyComponent={
+                  <Text style={styles.noTasksText}>
+                    No completed tasks for today
+                  </Text>
+                }
+              />
+            ) : (
+              <Text></Text>
+              //   <FlatList
+              //     data={filteredTasks}
+              //     keyExtractor={(item) => item.taskId.toString()}
+              //     renderItem={({ item }) => (
+              //       <View style={styles.taskContainer}>
+              //         <Text style={styles.taskText}>{item.taskName}</Text>
+              //       </View>
+              //     )}
+              //     ListEmptyComponent={
+              //       <Text style={styles.noTasksText}>No tasks for today</Text>
+              //     }
+              //   />
+            )}
+          </ScrollView> */}
+
+          {showCompletedTasks && (
+            <View style={styles.completedTaskContainer}>
+              {completedTaskss.map((item) => (
+                <Text key={item.taskId} style={styles.completedTaskText}>
+                  - {item.title}
+                </Text>
+              ))}
+            </View>
+          )}
+
+          {/* Button to toggle completed tasks */}
+          <TouchableOpacity onPress={handleShowCompletedTasks}>
+            <Text style={styles.linkText}>
+              {showCompletedTasks
+                ? "Hide Completed Tasks"
+                : "Show Completed Tasks"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
+      {/* </ScrollView> */}
 
       {/*-------------------------------------PLUS ICON------------------------------------------ */}
       <TouchableOpacity
@@ -761,7 +835,6 @@ export default function BrokerCalendar({ navigation, user }) {
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
-
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackgroundA}>
@@ -808,7 +881,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       {/*-------------------------------------EVENT CREATOR MODAL------------------------------------------ */}
       <Modal
         visible={isEventModalVisible}
@@ -975,7 +1047,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       {/* ------------------------------Task Creator Modal ------------------------------------ */}
       <Modal
         visible={isTaskModalVisible}
@@ -1058,10 +1129,7 @@ export default function BrokerCalendar({ navigation, user }) {
             </>
           )} */}
             {/* Save Button */}
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={saveEvent}
-            >
+            <TouchableOpacity style={styles.buttonContainer} onPress={saveTask}>
               <Text style={styles.buttonText}>Save Event</Text>
             </TouchableOpacity>
 
@@ -1075,7 +1143,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       <NavBar />
     </KeyboardAvoidingView>
   );
@@ -1096,9 +1163,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
+  taskContainer: {
+    padding: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  taskText: {
+    fontSize: 16,
+    color: "#4B4B4B",
+  },
+  completedTaskContainer: {
+    padding: 15,
+    backgroundColor: "#D3D3D3", // Light gray background for completed tasks
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  completedTaskText: {
+    fontSize: 16,
+    color: "#4B4B4B",
+    textDecorationLine: "line-through", // Strikethrough for completed tasks
+  },
+  linkText: {
+    fontSize: 16,
+    color: "#007AFF", // Link color for "Show Completed Tasks" button
+    marginTop: 15,
+    textAlign: "center",
+  },
   toDoListContainer: {
     width: "90%",
     height: "35%",
+    padding: "10",
   },
   calendarContainer: {
     width: "90%",
