@@ -721,29 +721,33 @@ export default function BrokerCalendar({ navigation, user }) {
       <Text style={styles.title}>TO DO LIST</Text>
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-          <FlatList
-            data={filteredTasks}
-            keyExtractor={(item) => item.taskId}
-            renderItem={({ item }) => (
-              <View style={styles.checkboxContainer}>
-                <BouncyCheckbox
-                  isChecked={item.completed} // Use isChecked instead of value
-                  fillColor={item.completed ? "blue" : "#FF6347"} // Green when checked, red when unchecked
-                  unfillColor="#FFFFFF" // Background color when unchecked
-                  onPress={() => toggleTaskCompletion(item)} // Call toggle function
-                />
+          {filteredTasks && filteredTasks.length > 0 ? (
+            <FlatList
+              data={filteredTasks}
+              keyExtractor={(item) => item.taskId}
+              renderItem={({ item }) => (
+                <View style={styles.checkboxContainer}>
+                  <BouncyCheckbox
+                    isChecked={item.completed} // Use isChecked instead of value
+                    fillColor={item.completed ? "blue" : "#FF6347"} // Green when checked, red when unchecked
+                    unfillColor="#FFFFFF" // Background color when unchecked
+                    onPress={() => toggleTaskCompletion(item)} // Call toggle function
+                  />
 
-                <Text
-                  style={[
-                    styles.taskTitle,
-                    item.completed && styles.completedTask,
-                  ]}
-                >
-                  {item.title}
-                </Text>
-              </View>
-            )}
-          />
+                  <Text
+                    style={[
+                      styles.taskTitle,
+                      item.completed && styles.completedTask,
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                </View>
+              )}
+            />
+          ) : (
+            <Text style={styles.noTasksText}>No Tasks for today</Text>
+          )}
         </ScrollView>
       </View>
 
@@ -1085,6 +1089,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ffffff",
     width: "100%",
+  },
+  noTasksText: {
+    fontSize: 16,
+    color: "grey",
+    textAlign: "center",
+    marginTop: 20,
   },
   toDoListContainer: {
     width: "90%",
