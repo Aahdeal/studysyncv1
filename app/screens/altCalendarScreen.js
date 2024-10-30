@@ -24,6 +24,8 @@ import Icon from "../../components/Icon";
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import colours from "../../constants/Colours";
+
 
 export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({}); //state for tasks and events to be loaded within selected date range
@@ -1094,6 +1096,43 @@ export default function BrokerCalendar({ navigation, user }) {
   );
 }
 
+const YourComponentName = () => {
+  // Assuming you have a useState hook for tasks
+  const [tasks, setTasks] = useState([]);
+
+  const completeAllGoals = () => {
+    setTasks(tasks.map(task => ({ ...task, completed: true })));
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.year}>2016 June</Text>
+      <View style={styles.calendarContainer}>
+        <Text style={{ fontSize: 16, color: "#4a4a4a" }}>Calendar Placeholder</Text>
+        {/* Add your calendar component here */}
+      </View>
+
+      <ScrollView style={styles.taskContainer}>
+        {tasks.map((task, index) => (
+          <View key={index} style={styles.task}>
+            <Text style={task.completed ? styles.completedTask : null}>
+              {task.title}
+            </Text>
+          </View>
+        ))}
+        <TouchableOpacity onPress={completeAllGoals} style={styles.completeAllButton}>
+          <Text style={styles.completeAllButtonText}>Complete All Goals</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <View style={styles.bottomNav}>
+        <NavBar />
+      </View>
+    </View>
+  );
+};
+
+
 /*-------------------------------------STYLING------------------------------------------ */
 const styles = StyleSheet.create({
   container: {
@@ -1105,15 +1144,30 @@ const styles = StyleSheet.create({
   calendarContainer: {
     width: "90%",
     height: "50%",
-    backgroundColor: "#add8e6", // Light blue background for the calendar box
     borderWidth: 1,
     borderColor: "#add8e6",
     borderRadius: 10,
     padding: 10,
+    backgroundColor: colours.paleBlue, // Main background color of the agenda
+    calendarBackground: colours.paleBlue, // Background color for the calendar itself
+    textSectionTitleColor: "#007BFF", // Color for the section title (month/year)
+    selectedDayBackgroundColor: "#00adf5", // Background color for selected day
+    selectedDayTextColor: "#ffffff", // Text color for the selected day
+    todayTextColor: colours.darkBlue, // Color for today's date
+    dayTextColor: "#2d4150", // Color for regular days
+    textDisabledColor: "#dd99ee", // Color for disabled dates
+    monthTextColor: colours.darkBlue, // Color for the month name
+    textDayFontFamily: "Avenir", // Font family for day text
+    textMonthFontFamily: "Avenir", // Font family for month text
+    textDayFontWeight: "bold", // Font weight for day text
+    textMonthFontWeight: "bold", // Font weight for month text
+    textDayFontSize: 16, // Font size for day text
+    textMonthFontSize: 18, // Font size for month text
+    textSectionTitleFontSize: 18, // Font size for section titles
   },
   modalBackgroundA: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: colours.paleBlue,
     justifyContent: "center",
     width: " 80%",
     marginVertical: "10%",
@@ -1158,13 +1212,13 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colours.blushPink,
     justifyContent: "center",
     width: " 80%",
     marginVertical: "10%",
     left: "10%",
     borderRadius: 15,
-    shadowColor: "#009ad8",
+    shadowColor: colours.paleBlue,
     shadowOffset: { width: 0, height: 9 },
     shadowRadius: 30,
     shadowOpacity: 0.5,
@@ -1199,12 +1253,12 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colours.lightPink,
   },
   modalTitle: { 
     fontSize: 24, // Larger modal title
     marginBottom: 20, 
-    color: '#007BFF', // Matching the theme color
+    color: '#fff',
   },
   input: { 
     borderBottomWidth: 1, 
@@ -1280,7 +1334,7 @@ const styles = StyleSheet.create({
     marginVertical: 15, // Increase the vertical margin between items
     borderWidth: 1, // Add a border for better separation
     borderColor: "#007BFF", // Border color to match the theme
-    backgroundColor: "#aac3e8", // Keep background color for items
+    backgroundColor: colours.paleBlue, // Keep background color for items
     borderRadius: 12, // Rounded corners for items
     elevation: 2, // Add a subtle shadow effect
   },
@@ -1288,5 +1342,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333333", // Darker text for better contrast
   },
+  
+
  
 });
