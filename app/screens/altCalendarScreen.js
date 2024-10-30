@@ -862,7 +862,6 @@ export default function BrokerCalendar({ navigation, user }) {
             {/* Title Input */}
             <TextInput
               placeholder="Title"
-              placeholderTextColor="#ffffff"
               value={newEvent.title}
               onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
               style={styles.input}
@@ -871,7 +870,6 @@ export default function BrokerCalendar({ navigation, user }) {
             {/* Description Input */}
             <TextInput
               placeholder="Description"
-              placeholderTextColor="#ffffff"
               value={newEvent.description}
               onChangeText={(text) =>
                 setNewEvent({ ...newEvent, description: text })
@@ -938,7 +936,7 @@ export default function BrokerCalendar({ navigation, user }) {
                   }
                 }}
               />
-              <Text style={{ color: '#ffffff' }}>All Day</Text> 
+              <Text>All Day</Text> 
             </View>
             {/* Type of Property (info) */}
             <Text style={styles.label}>Type of Event</Text>
@@ -1024,14 +1022,12 @@ export default function BrokerCalendar({ navigation, user }) {
             <Text style={styles.modalTitle}>Add New Task</Text>
             <TextInput
               placeholder="Title"
-              placeholderTextColor="#ffffff"
               value={newTask.title}
               onChangeText={(text) => setNewTask({ ...newTask, title: text })}
               style={styles.input}
             />
             <TextInput
               placeholder="Description"
-              placeholderTextColor="#ffffff"
               value={newTask.description}
               onChangeText={(text) =>
                 setNewTask({ ...newTask, description: text })
@@ -1194,7 +1190,7 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    backgroundColor: colours.lightPink,
+    backgroundColor: "#ffe4e1",
     justifyContent: "center",
     width: " 80%",
     marginVertical: "10%",
@@ -1235,12 +1231,12 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colours.lightPink,
+    backgroundColor: "#ffe4e1",
   },
   modalTitle: { 
     fontSize: 24, // Larger modal title
     marginBottom: 20, 
-    color: "#fff",
+    color: colours.darkBlue,
   },
   input: { 
     borderBottomWidth: 1, 
@@ -1248,7 +1244,7 @@ const styles = StyleSheet.create({
     width: "80%", 
     padding: 10,
     borderBottomColor: colours.paleBlue, // Change border color to match the theme
-    color: '#ffffff',
+
   },
   viewTask: {
     position: "absolute",
@@ -1327,7 +1323,7 @@ const styles = StyleSheet.create({
   },
   
   buttonContainer: {
-    backgroundColor: colours.paleBlue, 
+    backgroundColor: colours.darkBlue, 
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 8,
@@ -1352,9 +1348,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  label: {
-    color: '#ffffff', // White text color
-  },
+  
 
 
 });
