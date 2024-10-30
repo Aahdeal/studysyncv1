@@ -702,17 +702,6 @@ export default function BrokerCalendar({ navigation, user }) {
       {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda
-          //   style={{ backgroundColor: "#add8e6" }}
-          //   theme={{
-          //     backgroundColor: "#ffffff",
-          //     calendarBackground: "#ffffff",
-          //     textSectionTitleColor: "#b6c1cd",
-          //     selectedDayBackgroundColor: "#00adf5",
-          //     selectedDayTextColor: "#ffffff",
-          //     todayTextColor: "#00adf5",
-          //     dayTextColor: "#2d4150",
-          //     textDisabledColor: "#dd99ee",
-          //   }}
           items={items}
           loadItemsForMonth={loadItems}
           selected={new Date()}
