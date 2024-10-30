@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 import colours from "../../constants/Colours";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function FlashcardTesting({ route }) {
   const { item } = route.params;
@@ -97,15 +98,26 @@ export default function FlashcardTesting({ route }) {
       </View>
       <View style={{ flexDirection: "row", padding: 5 }}>
         <TouchableOpacity
-          style={styles.button}
+          //   style={styles.button}
           onPress={() => handleNextCard(true)}
         >
+          <Ionicons
+            name={"checkmark"} // Change icon based on password visibility
+            size={40}
+            color={colours.lightPink}
+          />
           <Text style={styles.buttonText}>I Know</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          //   style={styles.button}
           onPress={() => handleNextCard(false)}
         >
+          <Ionicons
+            name={"close"} // Change icon based on password visibility
+            size={40}
+            color={colours.lightPink}
+            fontSize={"64px"}
+          />
           <Text style={styles.buttonText}>I Don't Know</Text>
         </TouchableOpacity>
       </View>
@@ -162,7 +174,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     textAlign: "center",
   },
