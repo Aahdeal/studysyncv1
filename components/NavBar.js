@@ -29,10 +29,10 @@ export default function NavBar() {
       {/* Calendar Icon */}
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate("Calendar")}
+        onPress={() => navigation.navigate("altCalendar")}
       >
         <Icon
-          name={currentRoute === "Calendar" ? "calendar-outline" : "calendar"} // Filled if active
+          name={currentRoute === "altCalendar" ? "calendar-outline" : "calendar"} // Filled if active
           size={30}
           color={Colours.darkBlue}
         />
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: '#ffffff'
   },
   navButton: {
     flex: 1,
