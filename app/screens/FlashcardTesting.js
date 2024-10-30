@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 import colours from "../../constants/Colours";
 import { Ionicons } from "@expo/vector-icons";
+import { update, ref, get } from "firebase/database";
+import { database } from "../firebase";
 
-export default function FlashcardTesting({ route }) {
+export default function FlashcardTesting({ navigation, route, user }) {
   const { item } = route.params;
   const [currentIndex, setCurrentIndex] = useState(0); // Track current flashcard
   const [showAnswer, setShowAnswer] = useState(false); // Toggle between question and answer
@@ -12,15 +14,46 @@ export default function FlashcardTesting({ route }) {
   const [quizEnd, setQuizEnd] = useState(false);
   const [showCard, setShowCard] = useState(false); // Control card visibility
   const [score, setScore] = useState(0); // Track the number of correct answers
+  const [latestScore, setLatestScore] = useState(null);
+
+  const [randomizedList, setRandomizedList] = useState([]);
+
+useEffect(() => {
+  // Randomize the questions only once when the component mounts
+  const shuffledList = item.questionList.slice().sort(() => Math.random() - 0.5);
+  setRandomizedList(shuffledList); // Initialize progress at 0
+}, [item.questionList]);
+
+const currentCard = randomizedList[currentIndex];
+
+  //update
+  const handleUpdateScore = async (updatedScore) => {
+    const userId = user.uid;
+    const deckId = item.deckId.replace(".", ""); // Ensure valid Firebase path
+    const deckRef = ref(database, `users/${userId}/flashcards/decks/${deckId}`);
+
+    try {
+      await update(deckRef, {
+        lastScore: updatedScore,
+      });
+      console.log("Deck score updated successfully");
+    } catch (error) {
+      console.error("Error updating deck:", error);
+    }
+  };
 
   const handleCardPress = () => {
     setShowAnswer(!showAnswer); // Flip the card
   };
 
   const handleNextCard = (isCorrect) => {
+    let newScore = score; // Local variable to track score changes immediately
+
     // Update score if the answer is correct
     if (isCorrect) {
-      setScore(score + 1);
+      newScore += 1; // Increment the local score variable
+      setScore(newScore); // Update the state
+      console.log("Current score:", newScore); // Log the updated score immediately
     }
 
     if (currentIndex < item.questionList.length - 1) {
@@ -29,6 +62,8 @@ export default function FlashcardTesting({ route }) {
     } else {
       setQuizEnd(true);
       setShowCard(false);
+      console.log("Final score:", newScore);
+      handleUpdateScore(newScore);
     }
   };
 
@@ -46,23 +81,43 @@ export default function FlashcardTesting({ route }) {
     setScore(0);
   };
 
-  const currentCard = item.questionList[currentIndex];
-  //const progress = (currentIndex + 1) / item.questionList.length; // Calculate progress
+  const endQuiz = () => {
+    setQuizEnd(true);
+    navigation.navigate("Flashcards");
+  }
+
+  const quitQuiz = () => {
+    navigation.navigate("Flashcards")
+  }
+
+  //randomize the questions
   const progress = currentIndex / item.questionList.length;
 
   return (
     <View style={styles.container}>
+      {/* Quit button */}
+      <TouchableOpacity
+          //   style={styles.button}
+          onPress={() => endQuiz(false)}
+        >
+          <Ionicons
+            name={"close"} // Change icon based on password visibility
+            size={40}
+            color={colours.darkBlue}
+            fontSize={"64px"}
+          />
+          <Text style={styles.buttonText}>Exit</Text>
+        </TouchableOpacity>
       {/* Progress bar */}
       {showCard && (
         <Progress.Bar
           styleAttr="Horizontal"
           indeterminate={false}
           progress={progress}
-          color="#4B4B4B"
           style={styles.progressBar}
           width={null}
           height={"100%"}
-          colour={colours.paleBlue}
+          color={colours.paleBlue}
           animated={true}
         />
       )}
@@ -93,6 +148,9 @@ export default function FlashcardTesting({ route }) {
             <Text style={styles.cardText}>
               Score: {score} / {item.questionList.length}
             </Text>
+            <TouchableOpacity onPress={() => quitQuiz()}>
+              <Text style={styles.buttonText}>Return to Flashcard Home</Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>

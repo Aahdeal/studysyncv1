@@ -25,7 +25,7 @@ export default function FlashcardsScreen({ navigation, user }) {
   const [isEditing, setIsEditing] = useState(false); // Flag for editing mode
   const [editingDeckId, setEditingDeckId] = useState(null); // Track which deck is being edited
   const [selectedDeckId, setSelectedDeckId] = useState(null); // Track which deck's menu is open
-
+  
   /*--------------------------- OBJECTS ----------------------------------------- */
   const [decks, setDecks] = useState([]); // State for managing flashcard decks
   const [questionList, setQuestionList] = useState([]);
@@ -209,37 +209,6 @@ export default function FlashcardsScreen({ navigation, user }) {
     handleDeckDownload();
   }, []);
 
-  /* --------------------------TESTING----------------------------- */
-
-  //testingModal
-  const [startQuiz, setStartQuiz] = useState(false);
-
-  const quizQuestions = (deckId) => {};
-
-  const closeQuiz = () => {
-    setTestModalVisible(false);
-    setStartTestModalVisible(false);
-    setStartQuiz(false);
-  };
-
-  const iKnow = () => {
-    if (!startQuiz) {
-      setStartQuiz(true);
-      setTestModalVisible(true);
-    } else {
-      //i know functionality
-    }
-  };
-
-  const iDontKnow = () => {
-    //iDontKNow functionality
-  };
-
-  //load specific deck
-
-  //test functionality
-
-  //ending screen and button to retry or return
 
   /* --------------------------UserInterface----------------------------- */
 
