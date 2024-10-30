@@ -761,8 +761,9 @@ export default function BrokerCalendar({ navigation, user }) {
       </View>
 
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
-      <View>
-        <Text style={styles.title}>TO DO LIST</Text>
+      <Text style={styles.title}>TO DO LIST</Text>
+      <View style={styles.toDoListContainer}>
+        
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
           <FlatList
             data={filteredTasks}
@@ -1118,6 +1119,11 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     backgroundColor: "#ffffff",
+    width: "100%",
+  },
+  toDoListContainer: {
+    width: "90%",
+    height: "35%",
   },
   calendarContainer: {
     width: "90%",
