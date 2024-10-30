@@ -5,6 +5,7 @@ import { LineChart, ProgressChart } from 'react-native-chart-kit';
 import NavBar from "../../components/NavBar";
 import { ref, get } from "firebase/database";
 import { database } from '../firebase'; // Ensure this points to your Firebase config
+import moment from 'moment';
 
 
 
@@ -12,17 +13,18 @@ export default function HomeScreen({ navigation, user }) {
 
   const [motivationalMessage, setMotivationalMessage] = useState({ message: '', author: '' });
   //fake data to be replaced with database data
-  const [hoursStudied, setHoursStudied] = useState([4, 5, 2, 6, 7, 3, 4]); // Example data for bar chart
+  const [hoursStudied, setHoursStudied] = useState([1,1,1,1,1,1,1]); // Example data for bar chart
   const [progress, setProgress] = useState(0.75); // Example progress (75% of goals met)
   const [eventData, setEventData] = useState([]);
   const [taskData, setTaskData] = useState([]);
+  const [eventsThisWeek, setEventsThisWeek] = useState([]);
   /*-------------------------DATA ACCESSOR METHODS---------------------- */
 
-  let eData = [];
-  let tData = [];
+  
 
   // ref(database, "users/" + userId + "/calender/events) try with and without the 0
   const fetchTasks = async () => {
+    let tData = [];
     let userId = user.uid;
     const eventsRef = ref(database, `users/${userId}/calendar/tasks`);
 
@@ -34,14 +36,17 @@ export default function HomeScreen({ navigation, user }) {
         snapshot.forEach((childSnapshot) => {
           const task = childSnapshot.val();  // Get the event data
           const taskId = childSnapshot.key;
-          console.log("task id: " + childSnapshot.key);  // Get the unique key
+          console.log("task state: " + task['completed']);  // Get the unique key
 
           // Push both the key and data into the events array
-          tData.push({task, taskId});
+          task['startDate'] = moment(new Date(task['startDate'])).format("MMM DD");
+          if(!task['completed']){
+            tData.push({task, taskId});
+          }
         });
         
         setTaskData(tData);
-        console.log("Fetched tasks:");
+        console.log("Fetched tasks:", taskData);
       } else {
         console.log("No events found for user.");
       }
@@ -52,6 +57,7 @@ export default function HomeScreen({ navigation, user }) {
 
   // ref(database, "users/" + userId + "/calender/events) try with and without the 0
   const fetchEvents = async () => {
+    let eData = [];
     let userId = user.uid;
     const eventsRef = ref(database, `users/${userId}/calendar/events`);
 
@@ -60,16 +66,28 @@ export default function HomeScreen({ navigation, user }) {
       const snapshot = await get(eventsRef);
       
       if (snapshot.exists()) {
-        const events = [];
+        const today = new Date();
+        const sevenDays = moment().subtract(7, "days");
+        let weekData = [];
+
         snapshot.forEach((childSnapshot) => {
           const event = childSnapshot.val();  // Get the event data
-          const eventId = childSnapshot.key; // Get the unique key
+          const eventId = childSnapshot.key;  // Get the unique key
+          const eventDate = moment(event['startDate']);
+          //if (eventDate < today && eventDate >= sevenDays && event['type'] == "Relaxing"){
+          //  weekData.push({event, eventId});
+          //}
+          if (new Date(event['startDate']) >= today && new Date(event['endDate']) >= today || new Date(event['endDate']) >= today){
+            // Push both the key and data into the events array only if event is upcoming
+            console.log(event['startDate'] + " " + event['endDate'])
+            eData.push({event, eventId});
+          }
 
-          // Push both the key and data into the events array
-          eData.push({event, eventId});
+          
         });
         
         setEventData(eData);
+        //setEventsThisWeek(weekData);
         console.log("Fetched events", eventData);
       } else {
         console.log("No events found for user.");
@@ -94,53 +112,10 @@ export default function HomeScreen({ navigation, user }) {
   };
 
   //calculate hours studied in the past 7 days
-  const calcHoursStudied = (eventData) => {
-    console.log(eventData[0]['event']);
-    const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 7);
-      //store all events from 7 days prior to array lastSeven remove all events where type not study
-      var lastSevenDaysEvents = [];
-      for(i = 0; i < eventData.length; i++){
-        let event = eventData[i]['event']['startDate'];
-        console.log(event);
-      }
-      eventData.forEach(event =>{
-        const eventDate = event['event']['startDate'];
-        console.log(eventDate)
-        if(eventDate >= sevenDaysAgo && eventDate <= today && event['event']['type'] === 'Relaxing'){
-          lastSevenDaysEvents.push(event);
-        }
-      });
-    
-      console.log("last 7 days: ", lastSevenDaysEvents);
-      //separate events by day and calculate hours studied for that day by looking at startDate and endDate
-      const hoursByDay = {};
-
-      lastSevenDaysEvents.forEach(event => {
-        const eventDate = new Date(event['event']['startDate']).toDateString();
-        const startDate = new Date(event['event']['startDate']);
-        const endDate = new Date(event['event']['endDate']);
-        
-        // Calculate hours studied for the event
-        const hoursStudied = (endDate - startDate) / (1000 * 60 * 60); // Convert ms to hours
-
-        // Initialize the day's entry if it doesn't exist
-        if (!hoursByDay[eventDate]) {
-          hoursByDay[eventDate] = 0;
-        }
-
-        hoursByDay[eventDate] += hoursStudied;
-        
-
-      });
-      
-
-      const arrayHours = Object.entries(hoursByDay).map(([date, hours]) => ({ date, hours }));
-
-        // Set hours studied (you might want to store it or return it)
-        setHoursStudied(arrayHours);
-
+  const calcHoursStudied = (eventsThisWeek) => {
+    //console.log(eventsThisWeek[0]['event']['id']);
+    //i have all the events from the past 7 days
+    //create 7 variables, check each event, calculate duration and find start day, if same start date add to variable
   };
 
   useEffect(() => {
@@ -153,14 +128,15 @@ export default function HomeScreen({ navigation, user }) {
       fetchTasks();
     };
     fetchData();
-    //calcHoursStudied(eventData);
+    //calcHoursStudied(weekData);
     
   }, []);
 
-  const renderTaskItem = ({ item }) => (
+  const renderTaskItem = ({ item }) => 
+    (
     <View style={styles.taskItem}>
       <Text style={styles.taskTitle}>{item['task']['title']}</Text>
-      <Text style={styles.taskDueDate}>Due: {item['task']['dueDate']}</Text>
+      <Text style={styles.taskDueDate}>Due: {item['task']['startDate']}</Text>
     </View>
   );
 
