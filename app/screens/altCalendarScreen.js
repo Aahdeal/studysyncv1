@@ -961,9 +961,9 @@ export default function BrokerCalendar({ navigation, user }) {
               />
             </>
           )}
-          {/* Save Button */}
-          <Button title="Save Event" onPress={saveEvent} />
-          {/* Close Modal */}
+{/* Save Button */}
+         <Button title="Save Event" onPress={saveEvent} />
+{/* Close Modal */}
           <Button title="Close" onPress={() => setEventModalVisible(false)} />
         </View>
       </Modal>
@@ -1062,54 +1062,55 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#f0f8ff', // Light background color for the entire app
+    backgroundColor: '#ffffff', 
   },
   calendarContainer: {
-    width: '80%', // Keep width consistent
+    width: '90%', // Keep width consistent
     height: '50%', // Increased height for a larger calendar
-    backgroundColor: '#e0f7fa', // Softer light blue for better contrast
+    backgroundColor: '#aac3e8', // Softer light blue for better contrast
     borderWidth: 1,
     borderColor: '#007BFF',
-    borderRadius: 15, // Slightly larger border radius for a softer look
-    padding: 15,
-    elevation: 3, // Add subtle shadow for depth
+    borderRadius: 20, // Larger border radius for a softer look
+    padding: 20,
+    elevation: 5, // More pronounced shadow for depth
     marginBottom: 20, // Space below the calendar container
   },
   year: {
-    fontSize: 22, // Increased font size for better readability
+    fontSize: 26, // Increased font size for better readability
     fontWeight: 'bold',
-    color: '#4a4a4a',
+    color: '#007BFF',
     textAlign: 'center',
-    marginVertical: 15, // More space around the year text
+    marginVertical: 20, // More space around the year text
   },
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
-    marginVertical: 10, // Space above and below checkboxes
+    marginVertical: 15, // Space above and below checkboxes
   },
   title: {
-    fontSize: 26, // Larger title for better visibility
+    fontSize: 30, // Larger title for better visibility
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: "center",
-    color: '#007BFF', // Change color to match calendar theme
+    color: '#1f2c8f', // Change color to match calendar theme
   },
   Imagecon: {
     alignContent: "flex-end",
     justifyContent: "flex-end",
   },
   Image: {
-    height: 80, // Slightly larger image
-    width: 80,
-    borderRadius: 40, // Make it circular
+    height: 90, // Slightly larger image
+    width: 90,
+    borderRadius: 45, // Make it circular
     borderWidth: 2,
     borderColor: '#007BFF', // Border for better visibility
+    marginBottom: 10,
   },
   modalBackground: {
     flex: 1,
     height: '50%',
     backgroundColor: '#e0f7fa', // Matching the calendar color
     justifyContent: "flex-end",
-    padding: 20,
+    padding: 30, // More padding for a spacious feel
   },
   iconContainer: {
     flexDirection: "row",
@@ -1121,41 +1122,42 @@ const styles = StyleSheet.create({
   },
   iconLabel: {
     color: "#007BFF", // Matching the theme color
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 5,
+    fontWeight: "bold",
   },
   modalContent: { 
-    padding: 20, 
+    padding: 25, 
     justifyContent: "center", 
     alignItems: "center" 
   },
   modalTitle: { 
-    fontSize: 22, // Larger modal title
-    marginBottom: 15, 
+    fontSize: 24, // Larger modal title
+    marginBottom: 20, 
     color: '#007BFF', // Matching the theme color
   },
   input: { 
     borderBottomWidth: 1, 
-    marginVertical: 10, 
+    marginVertical: 15, 
     width: "80%", 
-    padding: 5,
+    padding: 10,
     borderBottomColor: '#007BFF', // Change border color to match the theme
   },
   viewTask: {
     position: "absolute",
     bottom: 40,
     right: 17,
-    height: 60,
-    width: 60,
+    height: 70,
+    width: 70,
     backgroundColor: "#007BFF", // Consistent color with the theme
-    borderRadius: 30,
+    borderRadius: 35,
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#007BFF",
     shadowOffset: { width: 0, height: 9 },
     shadowRadius: 30,
     shadowOpacity: 0.5,
-    elevation: 5,
+    elevation: 7,
     zIndex: 999,
   },
   Time: {
@@ -1164,13 +1166,13 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
   },
   timeText: {
-    fontSize: 17,
-    fontWeight: "300",
+    fontSize: 18,
+    fontWeight: "400",
     marginBottom: 10,
     color: '#007BFF', // Theme color
   },
   BookingNameText: {
-    fontSize: 24, // Slightly larger for emphasis
+    fontSize: 26, // Slightly larger for emphasis
     fontWeight: "600", // Semi-bold for better visibility
     marginBottom: 5,
   },
@@ -1198,25 +1200,30 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1, // Take remaining space
     backgroundColor: "#ffffff", // Change to white for contrast
-    borderRadius: 10,
-    padding: 15, // Increased padding for better spacing
-    elevation: 2, // Add subtle shadow for depth
+    borderRadius: 15,
+    padding: 20, // Increased padding for better spacing
+    elevation: 3, // Add subtle shadow for depth
   },
   item: {
     padding: 15, // Increased padding for a more spacious item
-    marginVertical: 10, // Increase the vertical margin between items
+    marginVertical: 15, // Increase the vertical margin between items
     borderWidth: 1, // Add a border for better separation
     borderColor: "#007BFF", // Border color to match the theme
     backgroundColor: "#f9f9f9", // Keep background color for items
-    borderRadius: 10, // Rounded corners for items
-    elevation: 1, // Add a subtle shadow effect
+    borderRadius: 12, // Rounded corners for items
+    elevation: 2, // Add a subtle shadow effect
   },
   itemText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#333333', // Darker text for better contrast
   },
-
+  firstTaskText: {
+    fontSize: 18,
+    fontWeight: 'bold', // Emphasize the first task
+    color: '#007BFF', // Make the first task blue
+  },
 });
+
 
 
 
