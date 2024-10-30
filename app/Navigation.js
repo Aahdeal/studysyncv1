@@ -5,9 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
-import CalendarScreen from "./screens/CalendarScreen";
 import FlashcardScreen from "./screens/FlashcardScreen";
 import AccountScreen from "./screens/AccountScreen";
+import AltCalendarScreen from "./screens/altCalendarScreen";
 import FlashcardTesting from "./screens/FlashcardTesting";
 
 const Stack = createStackNavigator();
@@ -28,8 +28,8 @@ function AppNavigator({ user }) {
           <Stack.Screen name="Home">
             {(props) => <HomeScreen {...props} user={user} />}
           </Stack.Screen>
-          <Stack.Screen name="Calendar">
-            {(props) => <CalendarScreen {...props} user={user} />}
+          <Stack.Screen name="altCalendar">
+            {(props) => <AltCalendarScreen {...props} user={user} />}
           </Stack.Screen>
           <Stack.Screen name="Flashcards">
             {(props) => <FlashcardScreen {...props} user={user} />}
