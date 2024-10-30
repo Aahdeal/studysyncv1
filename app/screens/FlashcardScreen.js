@@ -15,6 +15,7 @@ import NavBar from "../../components/NavBar";
 import { ref, get, set, remove, update } from "firebase/database";
 import { database } from "../firebase";
 import Colors from '../../constants/Colours.js';
+import { useFonts } from 'expo-font'; // Import useFonts hook from expo-font
 
 export default function FlashcardsScreen({ navigation, user }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -237,6 +238,14 @@ export default function FlashcardsScreen({ navigation, user }) {
     </View>
   );
 
+  const [fontsLoaded] = useFonts({
+    'Graduate': require('../../assets/fonts/Graduate.ttf'), // Load the Graduate font
+  });
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>; // Loading state while fonts are loading
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Flashcards</Text>
@@ -285,16 +294,13 @@ export default function FlashcardsScreen({ navigation, user }) {
               data={questionList}
               keyExtractor={(item) => item.qNum.toString()}
               renderItem={renderQuestions}
-              ListEmptyComponent={<Text style={styles.emptyText}>No questions added yet.</Text>}
+              ListEmptyComponent={
+                <Text style={styles.emptyText}>No questions added yet.</Text>
+              }
             />
 
-            <View style={styles.modalButtons}>
-              <Button
-                title={isEditing ? "Update Deck" : "Create Deck"}
-                onPress={saveDeck}
-              />
-              <Button title="Cancel" onPress={() => setModalVisible(false)} />
-            </View>
+            <Button title={isEditing ? "Update Deck" : "Create Deck"} onPress={saveDeck} />
+            <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
         </View>
       </Modal>
@@ -315,19 +321,18 @@ export default function FlashcardsScreen({ navigation, user }) {
               value={newQuestion.answer}
               onChangeText={(text) => setNewQuestion({ ...newQuestion, answer: text })}
             />
-
-            <View style={styles.modalButtons}>
-              <Button title="Save Question" onPress={saveQuestion} />
-              <Button title="Cancel" onPress={() => setQuestionModalVisible(false)} />
-            </View>
+            <Button title="Save Question" onPress={saveQuestion} />
+            <Button title="Close" onPress={() => setQuestionModalVisible(false)} />
           </View>
         </View>
       </Modal>
 
-      <TouchableOpacity style={styles.addDeckButton} onPress={openModel}>
-        <Text style={styles.addDeckButtonText}>+</Text>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={openModel}
+      >
+        <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-
       <NavBar navigation={navigation} />
     </View>
   );
@@ -337,26 +342,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
+    padding: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 30,
+    fontFamily: 'Graduate', // Use the Graduate font for the title
     textAlign: 'center',
-    marginVertical: 20,
-  },
-  deckContainer: {
-    padding: 15,
-    marginVertical: 5,
-    marginHorizontal: 10,
-    backgroundColor: Colors.beige,
-    borderRadius: 8,
-  },
-  deckTitle: {
-    fontSize: 18,
-  },
-  optionsIcon: {
-    fontSize: 18,
-    alignSelf: 'flex-end',
+    marginBottom: 20,
   },
   emptyText: {
     textAlign: 'center',
@@ -364,66 +356,70 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    width: '90%',
-    padding: 20,
-    backgroundColor: Colors.white,
+    width: "80%",
+    backgroundColor: Colors.beige,
     borderRadius: 10,
-    elevation: 5,
+    padding: 20,
   },
   modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
+    fontSize: 24,
+    fontFamily: 'Graduate', // Use the Graduate font for the modal title
+    marginBottom: 10,
+    textAlign: 'center',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    borderColor: Colors.gray,
     borderWidth: 1,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
   addQuestionText: {
     color: Colors.blue,
-    marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
+    marginBottom: 10,
   },
-  addDeckButton: {
+  optionsMenu: {
+    position: "absolute",
+    right: 0,
+    backgroundColor: Colors.white,
+    borderRadius: 5,
+    padding: 10,
+  },
+  optionText: {
+    padding: 5,
+  },
+  optionsIcon: {
+    fontSize: 20,
+  },
+  deckContainer: {
+    padding: 15,
+    backgroundColor: Colors.lightPink,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  deckTitle: {
+    fontSize: 20,
+    fontFamily: 'Graduate', // Use the Graduate font for deck titles
+  },
+  addButton: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 20,
     right: 20,
     backgroundColor: Colors.blue,
     borderRadius: 30,
-    width: 60,
     height: 60,
+    width: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
   },
-  addDeckButtonText: {
-    fontSize: 30,
-    color: Colors.lightPink,
-  },
-  optionsMenu: {
-    position: 'absolute',
-    top: 30,
-    right: 0,
-    backgroundColor: 'white',
-    elevation: 5,
-    padding: 10,
-    borderRadius: 8,
-  },
-  optionText: {
-    marginVertical: 5,
-    textAlign: 'right',
+  addButtonText: {
+    color: Colors.white,
+    fontSize: 40,
   },
 });
