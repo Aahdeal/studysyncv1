@@ -43,11 +43,11 @@ export default function BrokerCalendar({ navigation, user }) {
 
   /*----------------------DATA ACCESSOR METHODS----------------------- */
   const handleEventUpload = async () => {
-    let userId = user.uid;
+    let userId = user.uid; // get user Id
     console.log(data.length);
 
-    let event = data.slice(-1);
-    let repeat = event[0].repeatCount;
+    let event = data.slice(-1); //get the last event in the array data
+    let repeat = event[0].repeatCount; //set repeat to repeatCount from the last
     console.log("event.eventId : ", event[0].eventId, " event: ", { event });
 
     try {
@@ -603,13 +603,13 @@ export default function BrokerCalendar({ navigation, user }) {
 
     //resets fields
     setNewEvent({
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       startDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
       endDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
-      type: '',
-      repeat: 'does not repeat',
-      repeatCount: '',
+      type: "",
+      repeat: "does not repeat",
+      repeatCount: "",
     });
     setEventModalVisible(false); // Close modal after saving
   };
@@ -633,7 +633,7 @@ export default function BrokerCalendar({ navigation, user }) {
       description: "",
       startDate: moment(new Date()).format("YYYY-MM-DD HH:mm"),
       completed: "",
-    })
+    });
     setTaskModalVisible(false);
   };
 
