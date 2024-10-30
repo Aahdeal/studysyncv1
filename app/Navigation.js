@@ -8,6 +8,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import FlashcardScreen from "./screens/FlashcardScreen";
 import AccountScreen from "./screens/AccountScreen";
+import FlashcardTesting from "./screens/FlashcardTesting";
 
 const Stack = createStackNavigator();
 
@@ -15,7 +16,7 @@ function AppNavigator({ user }) {
   return (
     <Stack.Navigator
       initialRouteName={user ? "Home" : "Login"} // Redirect to Home if user is logged in
-      screenOptions={{ headerShown: false }}    // Hide the header for all screens
+      screenOptions={{ headerShown: false }} // Hide the header for all screens
     >
       {!user ? (
         <>
@@ -25,16 +26,19 @@ function AppNavigator({ user }) {
       ) : (
         <>
           <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} user={user} />}
+            {(props) => <HomeScreen {...props} user={user} />}
           </Stack.Screen>
           <Stack.Screen name="Calendar">
-            {props => <CalendarScreen {...props} user={user} />}
+            {(props) => <CalendarScreen {...props} user={user} />}
           </Stack.Screen>
           <Stack.Screen name="Flashcards">
-            {props => <FlashcardScreen {...props} user={user} />}
+            {(props) => <FlashcardScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen name="FlashcardTesting">
+            {(props) => <FlashcardTesting {...props} user={user} />}
           </Stack.Screen>
           <Stack.Screen name="Account">
-            {props => <AccountScreen {...props} user={user} />}
+            {(props) => <AccountScreen {...props} user={user} />}
           </Stack.Screen>
         </>
       )}
