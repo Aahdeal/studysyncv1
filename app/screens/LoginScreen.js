@@ -99,11 +99,11 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.containerLogin}>
         <Text
           style={{
-            textAlign: "left",
+            textAlign: "center",
             color: colours.blushPink,
             fontSize: 35,
             paddingBottom: 15,
-            right: 100,
+            
           }}
         >
           Login
