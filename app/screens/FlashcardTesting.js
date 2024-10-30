@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
+import colours from "../../constants/Colours";
 
 export default function FlashcardTesting({ route }) {
   const { item } = route.params;
@@ -45,7 +46,8 @@ export default function FlashcardTesting({ route }) {
   };
 
   const currentCard = item.questionList[currentIndex];
-  const progress = (currentIndex + 1) / item.questionList.length; // Calculate progress
+  //const progress = (currentIndex + 1) / item.questionList.length; // Calculate progress
+  const progress = currentIndex / item.questionList.length;
 
   return (
     <View style={styles.container}>
@@ -57,6 +59,10 @@ export default function FlashcardTesting({ route }) {
           progress={progress}
           color="#4B4B4B"
           style={styles.progressBar}
+          width={null}
+          height={"100%"}
+          colour={colours.paleBlue}
+          animated={true}
         />
       )}
       <View style={styles.calendarContainer}>
@@ -164,6 +170,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 10,
     marginVertical: 10,
+    color: colours.paleBlue,
   },
   resetButton: {
     marginTop: 20,
