@@ -26,7 +26,6 @@ import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import colours from "../../constants/Colours";
 
-
 export default function BrokerCalendar({ navigation, user }) {
   const [items, setItems] = useState({}); //state for tasks and events to be loaded within selected date range
   const [isModalVisible, setModalVisible] = useState(false); // State to handle modal visibility
@@ -664,37 +663,6 @@ export default function BrokerCalendar({ navigation, user }) {
     setTaskModalVisible(false);
   };
 
-  /*-------------------------------------DISPLAYS TASKS IDK YET JAILYNN EXPLAIN------------------------------------------ */
-  const renderTask = (task) => {
-    return (
-      <TouchableOpacity
-        style={{ marginRight: 10, marginTop: 17 }}
-        onPress={() => navigation.navigate("TaskDetails", { data: item })}
-      >
-        <Card>
-          <Card.Content>
-            <View style={{ flexDirection: "row" }}>
-              {/* <CheckBox
-                value={item.completed}
-                onValueChange={() => toggleTaskCompletion(item)}
-              /> */}
-              <View>
-                {/* <Text
-                  style={
-                    item.completed ? styles.completedTask : styles.taskTitle
-                  }
-                >
-                  {item.title}
-                </Text>
-                <Text>{item.description}</Text> */}
-              </View>
-            </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
-    );
-  };
-
   /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
   const toggleTaskCompletion = async (task) => {
     const updatedTasks = tasks.map((t) =>
@@ -763,7 +731,6 @@ export default function BrokerCalendar({ navigation, user }) {
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
       <Text style={styles.title}>TO DO LIST</Text>
       <View style={styles.toDoListContainer}>
-        
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
           <FlatList
             data={filteredTasks}
@@ -790,7 +757,6 @@ export default function BrokerCalendar({ navigation, user }) {
           />
         </ScrollView>
       </View>
-
 
       {/*-------------------------------------PLUS ICON------------------------------------------ */}
       <TouchableOpacity
@@ -844,7 +810,7 @@ export default function BrokerCalendar({ navigation, user }) {
                   family="FontAwesome"
                 />
                 <Text style={styles.iconLabel}>Task</Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -937,7 +903,7 @@ export default function BrokerCalendar({ navigation, user }) {
                   }
                 }}
               />
-              <Text>All Day</Text> 
+              <Text>All Day</Text>
             </View>
             {/* Type of Property (info) */}
             <Text style={styles.label}>Type of Event</Text>
@@ -998,18 +964,23 @@ export default function BrokerCalendar({ navigation, user }) {
                 />
               </>
             )}
-              {/* Save Button */}
-      <TouchableOpacity style={styles.buttonContainer} onPress={saveEvent}>
-        <Text style={styles.buttonText}>Save Event</Text>
-      </TouchableOpacity>
+            {/* Save Button */}
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={saveEvent}
+            >
+              <Text style={styles.buttonText}>Save Event</Text>
+            </TouchableOpacity>
 
-      {/* Close Button */}
-      <TouchableOpacity style={styles.closeButtonContainer} onPress={() => setEventModalVisible(false)}>
-        <Text style={styles.buttonText}>Close</Text>
-      </TouchableOpacity>
+            {/* Close Button */}
+            <TouchableOpacity
+              style={styles.closeButtonContainer}
+              onPress={() => setEventModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
-
       </Modal>
 
       {/* ------------------------------Task Creator Modal ------------------------------------ */}
@@ -1094,14 +1065,20 @@ export default function BrokerCalendar({ navigation, user }) {
             </>
           )} */}
             {/* Save Button */}
-      <TouchableOpacity style={styles.buttonContainer} onPress={saveEvent}>
-        <Text style={styles.buttonText}>Save Event</Text>
-      </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={saveEvent}
+            >
+              <Text style={styles.buttonText}>Save Event</Text>
+            </TouchableOpacity>
 
-      {/* Close Button */}
-      <TouchableOpacity style={styles.closeButtonContainer} onPress={() => setEventModalVisible(false)}>
-        <Text style={styles.buttonText}>Close</Text>
-      </TouchableOpacity>
+            {/* Close Button */}
+            <TouchableOpacity
+              style={styles.closeButtonContainer}
+              onPress={() => setEventModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -1110,7 +1087,6 @@ export default function BrokerCalendar({ navigation, user }) {
     </KeyboardAvoidingView>
   );
 }
-
 
 /*-------------------------------------STYLING------------------------------------------ */
 const styles = StyleSheet.create({
@@ -1191,7 +1167,7 @@ const styles = StyleSheet.create({
     width: 90,
     borderRadius: 45, // Make it circular
     borderWidth: 2,
-    borderColor: colours.darkBlue, 
+    borderColor: colours.darkBlue,
     marginBottom: 10,
   },
   modalBackground: {
@@ -1239,18 +1215,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ffe4e1",
   },
-  modalTitle: { 
+  modalTitle: {
     fontSize: 24, // Larger modal title
-    marginBottom: 20, 
+    marginBottom: 20,
     color: colours.darkBlue,
   },
-  input: { 
-    borderBottomWidth: 1, 
-    marginVertical: 15, 
-    width: "80%", 
+  input: {
+    borderBottomWidth: 1,
+    marginVertical: 15,
+    width: "80%",
     padding: 10,
     borderBottomColor: colours.paleBlue, // Change border color to match the theme
-
   },
   viewTask: {
     position: "absolute",
@@ -1269,7 +1244,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     zIndex: 999,
     marginBottom: 20, // Add this line to create space below the task box
-},
+  },
   Time: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1279,7 +1254,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     marginBottom: 10,
-    color: '#1f2c8f', // Theme color
+    color: "#1f2c8f", // Theme color
   },
   BookingNameText: {
     fontSize: 26, // Slightly larger for emphasis
@@ -1305,7 +1280,7 @@ const styles = StyleSheet.create({
     width: 5,
     marginRight: 10,
     borderRadius: 5,
-    backgroundColor: '#aac3e8', // Visual connection to the theme
+    backgroundColor: "#aac3e8", // Visual connection to the theme
   },
   scrollView: {
     flex: 1, // Take remaining space
@@ -1327,34 +1302,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colours.darkBlue,
   },
-  
+
   buttonContainer: {
-    backgroundColor: colours.darkBlue, 
+    backgroundColor: colours.darkBlue,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
     elevation: 2,
   },
   // Close button container
   closeButtonContainer: {
-    backgroundColor: colours.paleBlue, 
+    backgroundColor: colours.paleBlue,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
     elevation: 2,
   },
   // Button text style
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
-
-  
-
-
 });
