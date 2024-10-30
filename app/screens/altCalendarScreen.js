@@ -799,7 +799,7 @@ export default function BrokerCalendar({ navigation, user }) {
                 name="calendar"
                 type="material"
                 size={40}
-                color="#fff"
+                color="#aac3e8"
                 family="FontAwesome"
               />
               <Text style={styles.iconLabel}>Event</Text>
@@ -811,7 +811,7 @@ export default function BrokerCalendar({ navigation, user }) {
                 name="check-circle-o"
                 type="material"
                 size={40}
-                color="#fff"
+                color="#aac3e8"
                 family="FontAwesome"
               />
               <Text style={styles.iconLabel}>Task</Text>
@@ -1083,6 +1083,11 @@ const styles = StyleSheet.create({
     marginVertical: 20, // More space around the year text
   },
   checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 15, // Space above and below the checkbox
+  },
+  checkboxContainer: {
     flexDirection: "row", // Align items in a row
     marginVertical: 15, // Space above and below checkboxes
   },
@@ -1121,7 +1126,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconLabel: {
-    color: "#007BFF", // Matching the theme color
+    color: "#aac3e8", // Matching the theme color
     fontSize: 16,
     marginTop: 5,
     fontWeight: "bold",
@@ -1141,7 +1146,7 @@ const styles = StyleSheet.create({
     marginVertical: 15, 
     width: "80%", 
     padding: 10,
-    borderBottomColor: '#007BFF', // Change border color to match the theme
+    borderBottomColor: '#aac3e8', // Change border color to match the theme
   },
   viewTask: {
     position: "absolute",
@@ -1159,7 +1164,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     elevation: 7,
     zIndex: 999,
-  },
+    marginBottom: 20, // Add this line to create space below the task box
+},
   Time: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1169,7 +1175,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     marginBottom: 10,
-    color: '#007BFF', // Theme color
+    color: '#1f2c8f', // Theme color
   },
   BookingNameText: {
     fontSize: 26, // Slightly larger for emphasis
@@ -1180,7 +1186,7 @@ const styles = StyleSheet.create({
     fontSize: 16, // Increased for better readability
     fontWeight: "300",
     marginBottom: 10,
-    color: "#ff0000",
+    color: "#de8c8c",
   },
   Imageplus: {
     height: 30,
@@ -1195,11 +1201,11 @@ const styles = StyleSheet.create({
     width: 5,
     marginRight: 10,
     borderRadius: 5,
-    backgroundColor: '#007BFF', // Visual connection to the theme
+    backgroundColor: '#aac3e8', // Visual connection to the theme
   },
   scrollView: {
     flex: 1, // Take remaining space
-    backgroundColor: "#ffffff", // Change to white for contrast
+    backgroundColor: "#f5cdce", // Change to white for contrast
     borderRadius: 15,
     padding: 20, // Increased padding for better spacing
     elevation: 3, // Add subtle shadow for depth
@@ -1209,7 +1215,7 @@ const styles = StyleSheet.create({
     marginVertical: 15, // Increase the vertical margin between items
     borderWidth: 1, // Add a border for better separation
     borderColor: "#007BFF", // Border color to match the theme
-    backgroundColor: "#f9f9f9", // Keep background color for items
+    backgroundColor: "#aac3e8", // Keep background color for items
     borderRadius: 12, // Rounded corners for items
     elevation: 2, // Add a subtle shadow effect
   },
@@ -1217,11 +1223,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333333', // Darker text for better contrast
   },
-  firstTaskText: {
-    fontSize: 18,
-    fontWeight: 'bold', // Emphasize the first task
-    color: '#007BFF', // Make the first task blue
-  },
+ 
 });
 
 
