@@ -69,8 +69,9 @@ export default function BrokerCalendar({ navigation, user }) {
       console.error("Loop Error uploading event:", error);
     }
   };
+  // Function to upload task data to Firebase
   const handleTaskUpload = async () => {
-    console.log("uid: ", userId);
+    console.log("uid: ", userId); // Log the user ID
     //console.log(data.length);
     let event = taskData.slice(-1);
     console.log(
@@ -83,12 +84,12 @@ export default function BrokerCalendar({ navigation, user }) {
     );
 
     try {
-      let uploadEvent = taskData[taskData.length - 1];
+      let uploadEvent = taskData[taskData.length - 1]; // Get the latest task data
       let taskID = uploadEvent.taskId.replace(".", "");
       console.log("T ", taskID, " date ", uploadEvent.startDate);
       await set(
         ref(database, "users/" + userId + "/calendar/tasks/" + taskID),
-        uploadEvent
+        uploadEvent // Upload task data to Firebase
       )
         .then(() => {
           console.log("Task uploaded successfully!");
@@ -1099,6 +1100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   calendarContainer: {
     width: "90%",
@@ -1134,21 +1136,26 @@ const styles = StyleSheet.create({
 
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
+    marginVertical: 15, // Space above and below checkboxes
   },
   title: {
-    fontSize: 24,
+    fontSize: 30, // Larger title for better visibility
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: "center",
+    color: "#1f2c8f", // Change color to match calendar theme
   },
   Imagecon: {
     alignContent: "flex-end",
     justifyContent: "flex-end",
   },
   Image: {
-    height: 75,
-    width: 75,
-    borderRadius: 50,
+    height: 90, // Slightly larger image
+    width: 90,
+    borderRadius: 45, // Make it circular
+    borderWidth: 2,
+    borderColor: "#007BFF", // Border for better visibility
+    marginBottom: 10,
   },
   modalBackground: {
     flex: 1,
@@ -1178,9 +1185,10 @@ const styles = StyleSheet.create({
     left: 70,
   },
   iconLabel: {
-    color: "#fff",
-    fontSize: 14,
+    color: "#007BFF", // Matching the theme color
+    fontSize: 16,
     marginTop: 5,
+    fontWeight: "bold",
   },
   exitButton: {
     position: "absolute",
@@ -1200,17 +1208,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 40,
     right: 17,
-    height: 60,
-    width: 60,
-    backgroundColor: "#009ad8",
-    borderRadius: 30,
+    height: 70,
+    width: 70,
+    backgroundColor: "#007BFF", // Consistent color with the theme
+    borderRadius: 35,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#009ad8",
+    shadowColor: "#007BFF",
     shadowOffset: { width: 0, height: 9 },
     shadowRadius: 30,
     shadowOpacity: 0.5,
-    elevation: 5,
+    elevation: 7,
     zIndex: 999,
   },
   Time: {
@@ -1219,18 +1227,18 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
   },
   timeText: {
-    fontSize: 17,
-    fontWeight: "300",
+    fontSize: 18,
+    fontWeight: "400",
     marginBottom: 10,
-    color: "#add8e6",
+    color: "#007BFF", // Theme color
   },
   BookingNameText: {
-    fontSize: 22,
-    fontWeight: "300",
+    fontSize: 26, // Slightly larger for emphasis
+    fontWeight: "600", // Semi-bold for better visibility
     marginBottom: 5,
   },
   BookingDescriptionText: {
-    fontSize: 15,
+    fontSize: 16, // Increased for better readability
     fontWeight: "300",
     marginBottom: 10,
     color: "#ff0000",
@@ -1239,46 +1247,40 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
-  Bookingoffer: { fontSize: 15, marginBottom: 10 },
+  Bookingoffer: {
+    fontSize: 16, // Adjusted for consistency
+    marginBottom: 10,
+  },
   StatusStrip: {
     height: 130,
     width: 5,
     marginRight: 10,
     borderRadius: 5,
+    backgroundColor: "#007BFF", // Visual connection to the theme
   },
-  viewTask: {
-    position: "absolute",
-    bottom: 40,
-    right: 17,
-    height: 60,
-    width: 60,
-    backgroundColor: "#009ad8",
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#009ad8",
-    shadowOffset: {
-      width: 0,
-      height: 9,
-    },
-    shadowRadius: 30,
-    shadowOpacity: 0.5,
-    elevation: 5,
-    zIndex: 999,
-  },
-  //styles for displaying todo lists
   scrollView: {
-    height: 250,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 5,
-    padding: 10,
+    flex: 1, // Take remaining space
+    backgroundColor: "#ffffff", // Change to white for contrast
+    borderRadius: 15,
+    padding: 20, // Increased padding for better spacing
+    elevation: 3, // Add subtle shadow for depth
   },
   item: {
-    padding: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: "#FFB6C1",
+    padding: 15, // Increased padding for a more spacious item
+    marginVertical: 15, // Increase the vertical margin between items
+    borderWidth: 1, // Add a border for better separation
+    borderColor: "#007BFF", // Border color to match the theme
+    backgroundColor: "#f9f9f9", // Keep background color for items
+    borderRadius: 12, // Rounded corners for items
+    elevation: 2, // Add a subtle shadow effect
   },
   itemText: {
-    fontSize: 16,
+    fontSize: 18,
+    color: "#333333", // Darker text for better contrast
+  },
+  firstTaskText: {
+    fontSize: 18,
+    fontWeight: "bold", // Emphasize the first task
+    color: "#007BFF", // Make the first task blue
   },
 });
