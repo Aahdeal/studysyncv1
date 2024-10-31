@@ -5,6 +5,7 @@ import colours from "../../constants/Colours";
 import { Ionicons } from "@expo/vector-icons";
 import { update, ref, get } from "firebase/database";
 import { database } from "../firebase";
+import {useCustomFonts} from "../../constants/fonts.js"
 
 export default function FlashcardTesting({ navigation, route, user }) {
   const { item } = route.params;
@@ -15,6 +16,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
   const [showCard, setShowCard] = useState(false); // Control card visibility
   const [score, setScore] = useState(0); // Track the number of correct answers
   const [latestScore, setLatestScore] = useState(null);
+  const fontsLoaded = useCustomFonts();
 
   const [randomizedList, setRandomizedList] = useState([]);
 
@@ -96,18 +98,9 @@ const currentCard = randomizedList[currentIndex];
   return (
     <View style={styles.container}>
       {/* Quit button */}
-      <TouchableOpacity
-          //   style={styles.button}
-          onPress={() => endQuiz(false)}
-        >
-          <Ionicons
-            name={"close"} // Change icon based on password visibility
-            size={40}
-            color={colours.darkBlue}
-            fontSize={"64px"}
-          />
-          <Text style={styles.buttonText}>Exit</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.exitButton} onPress={endQuiz}>
+        <Ionicons name="close" size={40} color={colours.darkBlue} />
+      </TouchableOpacity>
       {/* Progress bar */}
       {showCard && (
         <Progress.Bar
@@ -124,12 +117,11 @@ const currentCard = randomizedList[currentIndex];
       <View style={styles.calendarContainer}>
         {showInstructions && (
           <View>
-            <Text>Instructions</Text>
             <TouchableOpacity
-              style={styles.button}
+              style={styles.startQuizButton}
               onPress={toggleCardVisibility}
             >
-              <Text style={styles.buttonText}>start quiz</Text>
+              <Text style={styles.startQuizButtonText}>start quiz</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -154,7 +146,7 @@ const currentCard = randomizedList[currentIndex];
           </View>
         )}
       </View>
-      <View style={{ flexDirection: "row", padding: 5 }}>
+      <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-around", width: "100%" }}>
         <TouchableOpacity
           //   style={styles.button}
           onPress={() => handleNextCard(true)}
@@ -202,9 +194,10 @@ const styles = StyleSheet.create({
     margin: 10,
     marginTop: 0,
     alignItems: "center",
+    justifyContent: "center",
   },
   card: {
-    backgroundColor: "#D2B48C", // Light tan/beige color
+    backgroundColor: colours.beige, // Light tan/beige color
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
@@ -213,9 +206,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
-    width: "80%",
+    flex: 1, // Make the card fill the available space
     alignItems: "center",
     justifyContent: "center",
+    width: "85%",
   },
   cardText: {
     fontSize: 20,
@@ -225,7 +219,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: "#4B4B4B", // Darker gray button
+    backgroundColor: colours.darkBlue, // Darker gray button
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -244,9 +238,47 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     marginTop: 20,
-    backgroundColor: "#8B0000", // Dark red for reset button
+    backgroundColor: colours.paleBlue, // Pastel blue theme color
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+    alignItems: "center",
   },
+  exitButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    position: "absolute",
+    top: 20,
+    left: 20,
+  },
+  startQuizButton: {
+    backgroundColor: colours.lightPink, // Use the light pink color for the button
+    paddingVertical: 15, // Adjust padding for a more pronounced button
+    paddingHorizontal: 25, // Adjust padding for a more pronounced button
+    borderRadius: 10, // Slightly larger border radius for rounded corners
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000", // Add shadow for a raised effect
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  startQuizButtonText: {
+    color: 'white', // Change to white for contrast
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: "Graduate_400Regular", // Use the Graduate font
+    textAlign: 'center',
+  },
+  
 });
