@@ -431,8 +431,8 @@ export default function BrokerCalendar({ navigation, user }) {
               eventId: event.eventId,
               title: event.title,
               description: event.description,
-              //   StartTime: moment(event.startDate).format("HH:mm"),
-              //   EndTime: moment(event.endDate).format("HH:mm"),
+              StartTime: moment(event.startDate).format("HH:mm"),
+              EndTime: moment(event.endDate).format("HH:mm"),
               type: event.type,
             });
           }
@@ -504,35 +504,43 @@ export default function BrokerCalendar({ navigation, user }) {
     } else {
       //display event card
       return (
-        //allow it to be clickable, once clicked it can pop up to editable mode maybe?
         <TouchableOpacity
           style={{ marginRight: 10, marginTop: 17 }}
           onPress={() =>
-            //we dont have this navigation, maybe we can set add event modal to display
-            //but then we need event id's as well to pull the specific events info
-            navigation.navigate("PullForwardDetails", {
-              data: item,
-            })
+            navigation.navigate("PullForwardDetails", { data: item })
           }
         >
-          <Card style={{ width: "90%", height: 100 }}>
+          <Card
+            style={{
+              width: "90%",
+              height: "auto", // Adjust height based on content
+              borderRadius: 15, // Rounded corners for a modern feel
+              overflow: "hidden", // Ensures content fits within rounded corners
+              shadowColor: "#000", // Subtle shadow for depth
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              elevation: 3, // Shadow on Android
+              backgroundColor: "#ffffff", // Clean white background
+            }}
+          >
             <Card.Content
-              style={{ width: "90%", height: 100, justifyContent: "center" }}
+              style={{
+                paddingVertical: 15, // Add padding for breathing room
+                paddingHorizontal: 20,
+              }}
             >
-              <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
                   style={[
                     styles.StatusStrip,
-                    { backgroundColor: colours.beige },
+                    { backgroundColor: colours.beige }, // Using predefined color
                   ]}
                 />
-                <View style={{ flex: 0.7, justifyContent: "center" }}>
-                  <View style={styles.Time}>
-                    <Text style={styles.timeText}>
-                      {/* display start and end time */}
-                      {item?.StartTime} - {item?.EndTime}
-                    </Text>
-                  </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.timeText}>
+                    {item?.StartTime} - {item?.EndTime}
+                  </Text>
                   <Text style={styles.BookingNameText}>{item.title}</Text>
                   <Text style={styles.BookingDescriptionText}>
                     {item.description}
@@ -1348,23 +1356,29 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
   },
   timeText: {
-    fontSize: 18,
-    fontWeight: "400",
-    marginBottom: 10,
-    color: colours.darkBlue, // Theme color
+    fontSize: 16, // Reduced slightly for subtlety
+    fontWeight: "400", // Medium weight for balance
+    color: colours.darkBlue,
   },
   BookingNameText: {
-    fontSize: 26, // Slightly larger for emphasis
-    fontWeight: "600", // Semi-bold for better visibility
-    marginBottom: 5,
+    fontSize: 22, // Slightly smaller for a modern look
+    fontWeight: "600", // Bold for emphasis
     color: colours.darkBlue,
+    marginBottom: 5,
   },
   BookingDescriptionText: {
-    fontSize: 16, // Increased for better readability
-    fontWeight: "300",
-    marginBottom: 10,
-    color: colours.darkBlue,
+    fontSize: 14, // Adjusted for readability and alignment
+    color: "#6D6D6D", // Softer color for description text
   },
+  StatusStrip: {
+    width: 6,
+    height: "80%",
+    marginRight: 15,
+    borderRadius: 3,
+    backgroundColor: colours.beige,
+    alignSelf: "center",
+  },
+
   Imageplus: {
     height: 30,
     width: 30,
@@ -1372,13 +1386,6 @@ const styles = StyleSheet.create({
   Bookingoffer: {
     fontSize: 16, // Adjusted for consistency
     marginBottom: 10,
-  },
-  StatusStrip: {
-    height: 60,
-    width: 5,
-    marginRight: 10,
-    borderRadius: 5,
-    backgroundColor: colours.beige, // Visual connection to the theme
   },
   scrollView: {
     flex: 1, // Take remaining space
