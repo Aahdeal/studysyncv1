@@ -1104,10 +1104,7 @@ export default function BrokerCalendar({ navigation, user }) {
             </>
           )} */}
             {/* Save Button */}
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={saveEvent}
-            >
+            <TouchableOpacity style={styles.buttonContainer} onPress={saveTask}>
               <Text style={styles.buttonText}>Save Event</Text>
             </TouchableOpacity>
 
