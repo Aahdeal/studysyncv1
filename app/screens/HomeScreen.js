@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react"; 
+import React, { useState, useEffect, useCallback} from "react"; 
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from "react-native";
 import { LineChart, ProgressChart } from 'react-native-chart-kit';
 import NavBar from "../../components/NavBar";
@@ -20,22 +21,28 @@ const HomeScreen = ({ navigation, user }) => {
   const [completeTaskData, setCTD] = useState([]);
   const [eventsThisWeek, setEventsThisWeek] = useState([]);
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({ Graduate: require('../../assets/fonts/Graduate.ttf') });
-      setFontsLoaded(true);
-    };
-    const fetchData = async () => {
-      const messageData = await getRandomMotivationalMessage();
-      if (messageData) {
-        setMotivationalMessage(messageData);
-      }
-      fetchEvents();
-      fetchTasks();
-    };
-    loadFonts();
-    fetchData();
-  }, []);
+  
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadFonts = async () => {
+        await Font.loadAsync({ Graduate: require('../../assets/fonts/Graduate.ttf') });
+        setFontsLoaded(true);
+      };
+
+      const fetchData = async () => {
+        const messageData = await getRandomMotivationalMessage();
+        if (messageData) {
+          setMotivationalMessage(messageData);
+        }
+        fetchEvents();
+        fetchTasks();
+      };
+
+      loadFonts();
+      fetchData();
+    }, [])
+  );
 
   useEffect(() => {
     // Check if both taskData and completeTaskData are populated before calculating completion
@@ -65,7 +72,6 @@ const HomeScreen = ({ navigation, user }) => {
         snapshot.forEach((childSnapshot) => {
           const task = childSnapshot.val();  // Get the event data
           const taskId = childSnapshot.key;
-          console.log("task state: " + task['completed']);  // Get the unique key
 
           // Push both the key and data into the events array
           task['startDate'] = moment(new Date(task['startDate'])).format("MMM DD");
@@ -78,9 +84,7 @@ const HomeScreen = ({ navigation, user }) => {
         
         setTaskData(tData);
         setCTD(ctData);
-        console.log("Fetched tasks:", taskData);
       } else {
-        console.log("No events found for user.");
       }
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -112,7 +116,6 @@ const HomeScreen = ({ navigation, user }) => {
           //}
           if (new Date(event['startDate']) >= today && new Date(event['endDate']) >= today || new Date(event['endDate']) >= today){
             // Push both the key and data into the events array only if event is upcoming
-            console.log(event['startDate'] + " " + event['endDate'])
             eData.push({event, eventId});
           }else{
             oData.push({event, eventId})
@@ -124,7 +127,6 @@ const HomeScreen = ({ navigation, user }) => {
         setEventData(eData);
         setPastEventData(oData);
         //setEventsThisWeek(weekData);
-        console.log("Fetched events", eventData);
       } else {
         console.log("No events found for user.");
       }
@@ -149,9 +151,6 @@ const HomeScreen = ({ navigation, user }) => {
 
   //calculate hours studied in the past 7 days
   const calcHoursStudied = () => {
-    //console.log(eventsThisWeek[0]['event']['id']);
-    //i have all the events from the past 7 days
-    //create 7 variables, check each event, calculate duration and find start day, if same start date add to variable
     const today = new Date(); // Get today's date
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the month
 
@@ -374,6 +373,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', // Set the background color to white
   },
   scrollContainer: {
+    marginBottom: 30,
   },
   title: {
     fontSize: 28,
@@ -428,6 +428,9 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginTop: 20,
+  },
+  listView:{
+    height: 150,
   },
   sectionHeading: {
     fontSize: 18,
