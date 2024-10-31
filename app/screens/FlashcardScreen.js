@@ -351,13 +351,16 @@ export default function FlashcardsScreen({ navigation, user }) {
                 {isEditing ? "Update Deck" : "Add Deck"}
               </Text>
             </TouchableOpacity>
-            <Button
-              title="Close"
-              onPress={() => {
-                setModalVisible(false);
-                setIsEditing(false);
-              }}
-            />
+            <TouchableOpacity
+      style={styles.closeButton}
+      onPress={() => {
+        setModalVisible(false);
+        setIsEditing(false);
+      }}
+    >
+      <Text style={styles.buttonText}>Close</Text>
+    </TouchableOpacity>
+            
           </View>
         </View>
       </Modal>
@@ -405,7 +408,9 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
-  optionsIcon: {
+
+  optionsIcon: 
+  {
     fontSize: 20,
     color: "#4B4B4B",
     position: "relative",
@@ -414,11 +419,11 @@ const styles = StyleSheet.create({
   },
   addDeckModal: {
     position: "absolute",
-    bottom: 40,
+    bottom: 90,
     right: 17,
     height: 60,
     width: 60,
-    backgroundColor: "#009ad8",
+    backgroundColor: "#1f2c8f",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
@@ -429,9 +434,42 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 999,
   },
-  modalContainer: { backgroundColor: "white" },
+  modalContainer: { 
+    backgroundColor: "#ccbe89",
+    borderRadius: 15,       // Adds rounded corners
+    padding: 15,            // Adds internal padding for spacing
+    shadowColor: "#000",    // Adds shadow for a more polished look
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,  
+    width: "90%",               // Sets modal width to 80% of the screen
+    position: "absolute",         // Positions the modal absolutely
+    top: "30%",                   // Moves the modal to the vertical center
+    transform: [{ translateY: -100 }], // Adjusts position to truly center the modal
+    alignSelf: "center",        // Centers the modal horizontally
+   },
+   modalTitle:{
+    fontSize: 26,                 // Large font size for emphasis
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#4B4B4B",             // Dark gray text color for contrast
+    marginBottom: 20,             // Space below the title
+    letterSpacing: 1,             // Adds slight spacing between letters
+    textTransform: "uppercase",   // Converts text to uppercase for a clean look
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,          // Soft shadow for subtle depth
+    shadowRadius: 1,
+   },
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
+  title: { 
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#000", 
+    marginBottom: 20,
+  },
   navbarContainer: {
     position: "absolute",
     bottom: 0,
@@ -457,4 +495,55 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+  saveButton: {
+    backgroundColor: "#aac3e8",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+  saveButtonText: {
+    color: "#fff",
+  },
+  closeButton: {
+    backgroundColor: "#aac3e8",      
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
+    width: '80%',
+    alignSelf: "center",
+  },
+  closeButtonText: {
+    color: "#fff",
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: "gray",
+  },
+  addQuestionButton: {
+    backgroundColor: "#ccbe89",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+  addQuestionButtonText: {
+    color: "#fff",
+  },
+
 });
