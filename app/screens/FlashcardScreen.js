@@ -348,7 +348,7 @@ export default function FlashcardsScreen({ navigation, user }) {
             </TouchableOpacity>
             <TouchableOpacity style={styles.addButton} onPress={saveDeck}>
               <Text style={styles.addButtonText}>
-                {isEditing ? "Update Deck" : "Add Deck"}
+                {isEditing ? "Update Deck" : "Save Deck"}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -544,5 +544,20 @@ const styles = StyleSheet.create({
   addQuestionButtonText: {
     color: "#fff",
   },
+
+  addButton: {
+    backgroundColor: "#aac3e8",      
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
+    width: '80%',
+    alignSelf: "center"
+  }
 
 });
