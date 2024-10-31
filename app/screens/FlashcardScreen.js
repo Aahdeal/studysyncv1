@@ -408,7 +408,6 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
-
   optionsIcon: 
   {
     fontSize: 20,
@@ -477,7 +476,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   deckContainer: {
-    backgroundColor: "#D2B48C", // Light tan/beige color
+    backgroundColor: "#aac3e8", 
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
