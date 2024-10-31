@@ -120,8 +120,6 @@ const HomeScreen = ({ navigation, user }) => {
           }else{
             oData.push({event, eventId})
           }
-
-          
         });
         
         setEventData(eData);
@@ -171,7 +169,10 @@ const HomeScreen = ({ navigation, user }) => {
     });
 
     console.log("eventsSince",eventsSinceMonthStart)
+    eventsSinceMonthStart.sort((a, b) => new Date(a.event.startDate) - new Date(b.event.startDate));
+    console.log("eventsSince sorted",eventsSinceMonthStart)
     let duration = []; // Initialize total duration
+   
 
         // Object to hold the duration for events grouped by date
         const eventsByDate = {};
@@ -197,31 +198,23 @@ const HomeScreen = ({ navigation, user }) => {
         console.log("eventsByDate",eventsByDate)
 
         Object.entries(eventsByDate).forEach(([date, count]) => {
+          const eventDate = new Date(date); // Convert string date to Date object
+          // Calculate the number of days since the beginning of the month
+          const daysSinceStart = (today - startOfMonth) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
           // Check if duration is empty
           if (duration.length === 0) {
-              const eventDate = new Date(date); // Convert string date to Date object
-      
-              // Calculate the number of days since the beginning of the month
-              const daysSinceStart = (eventDate - startOfMonth) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-      
               // Push 0 to duration for each day since the beginning of the month
               for (let i = 0; i <= daysSinceStart; i++) {
                   duration.push(0);
               }
-      
-              // Break out of the loop after processing the first date
-              return; // Using return inside forEach to break out of this iteration
           }
+          const daysSinceEvent = (eventDate - startOfMonth) / (1000 * 60 * 60 * 24);
+          duration[daysSinceEvent] = count;
       });
-
-        // Calculate the total duration from the grouped durations
-        for (const total of Object.values(eventsByDate)) {
-            duration.push(total); // Sum all durations
-        }
 
         console.log(duration)
         setHoursStudied(duration)
-
+        duration.forEach(())
   };
 
   const calcTaskCompletion = () => {
