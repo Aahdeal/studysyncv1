@@ -212,9 +212,8 @@ const HomeScreen = ({ navigation, user }) => {
           duration[daysSinceEvent] = count;
       });
 
-        console.log(duration)
-        setHoursStudied(duration)
-        duration.forEach(())
+        console.log(duration);
+        setHoursStudied(duration);
   };
 
   const calcTaskCompletion = () => {
