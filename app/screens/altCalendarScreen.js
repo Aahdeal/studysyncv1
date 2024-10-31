@@ -40,6 +40,9 @@ export default function BrokerCalendar({ navigation, user }) {
   const [showHomework, setShowHomework] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [showCompletedTasks, setShowCompletedTasks] = useState(false);
+  const [completedTasks, setCompletedTasks] = useState([]);
+
   let userId = user.uid;
 
   /*----------------------DATA ACCESSOR METHODS----------------------- */
@@ -333,51 +336,78 @@ export default function BrokerCalendar({ navigation, user }) {
   };
 
   /*----------------------------Sets dot color on events------------------------------------ */
+  const testData = [
+    {
+      startDate: "2024-10-31",
+      type: "Submission",
+      title: "Math Assignment",
+      description: "Due date",
+      StartTime: "09:00",
+      EndTime: "10:00",
+    },
+    {
+      date: "2024-11-01",
+      type: "Test",
+      title: "Science Exam",
+      description: "Unit Test",
+      StartTime: "11:00",
+      EndTime: "12:00",
+    },
+  ];
+  console.log("data: ", Array.isArray(data), items);
+  data.push(items);
   const formattedEvents =
     //if data is true and data is an array and data array>0
-    data && Array.isArray(data) && data.length > 0;
-  //run through all of it and set dot colour according to the type of event
-  data.reduce((acc, current) => {
-    let dotColor;
-    switch (current.type) {
-      case "Submission":
-        dotColor = "red";
-        break;
-      case "Test":
-        dotColor = "orange";
-        break;
-      case "Study":
-        dotColor = "blue";
-        break;
-      case "Birthday":
-        dotColor = "pink";
-        break;
-      case "Any":
-        dotColor = "beige";
-        break;
-      default:
-        dotColor = "gray"; // fallback color
-    }
-    //settings to display the dots on calendar for each date
-    acc[current.date] = {
-      marked: true,
-      dotColor: dotColor,
-      activeOpacity: 0.5,
-      //next 4 props are probably not necessary here
-      title: current.title,
-      description: current.description,
-      StartTime: current.StartTime,
-      EndTime: current.EndTime,
-    };
-    return acc;
-  }, {});
+    data && Array.isArray(data)
+      ? //run through all of it and set dot colour according to the type of event
+        data.reduce((acc, current) => {
+          // Extract the date from startDate
+          const eventDate = moment(current.startDate).format("YYYY-MM-DD"); // "YYYY-MM-DD"
+          let dotColor;
+          switch (current.type) {
+            case "Submission":
+              dotColor = "red";
+              break;
+            case "Test":
+              dotColor = "orange";
+              break;
+            case "Study":
+              dotColor = colours.blushPink;
+              break;
+            case "Birthday":
+              dotColor = "pink";
+              break;
+            case "Any":
+              dotColor = "beige";
+              break;
+            default:
+              dotColor = "gray"; // fallback color
+          }
+
+          //settings to display the dots on calendar for each date
+          acc[eventDate] = {
+            marked: true,
+            dotColor: dotColor,
+            activeOpacity: 0.5,
+            //next 4 props are probably not necessary here
+            title: current.title,
+            description: current.description,
+            StartTime: current.startDate,
+            EndTime: current.EndTime,
+          };
+          console.log("cur: ", acc);
+          return acc;
+        }, {})
+      : { items };
+
+  console.log("form: ", formattedEvents);
 
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {
     //day is either current day or day selected on calendar
     //fetch data from db
     const items = {}; // Temporary object to hold events and tasks
-    const fourteenDaysAgo = moment().subtract(14, "days");
+    const thirtyTwoDaysAgo = moment().subtract(32, "days");
 
     setTimeout(() => {
       // Loop through a range of dates (-14 days to +30 days from the current date)
@@ -393,7 +423,7 @@ export default function BrokerCalendar({ navigation, user }) {
         // Add events from 'data' to the items object if it is within date range
         data.forEach((event) => {
           const eventStartDate = moment(event.startDate);
-          if (eventStartDate.isBefore(fourteenDaysAgo)) {
+          if (eventStartDate.isBefore(thirtyTwoDaysAgo)) {
             // Assuming you have a function to delete from the database
             deleteEventFromDatabase(event.eventId); // Replace with your deletion method
           } else if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
@@ -401,8 +431,8 @@ export default function BrokerCalendar({ navigation, user }) {
               eventId: event.eventId,
               title: event.title,
               description: event.description,
-              StartTime: moment(event.startDate).format("HH:mm"),
-              EndTime: moment(event.endDate).format("HH:mm"),
+              //   StartTime: moment(event.startDate).format("HH:mm"),
+              //   EndTime: moment(event.endDate).format("HH:mm"),
               type: event.type,
             });
           }
@@ -412,7 +442,7 @@ export default function BrokerCalendar({ navigation, user }) {
         tasks.forEach((task) => {
           const taskDate = moment(task.date);
           // Delete task if older than 14 days
-          if (taskDate.isBefore(fourteenDaysAgo)) {
+          if (taskDate.isBefore(thirtyTwoDaysAgo)) {
             deleteTaskFromDatabase(task.taskId); // Replace with your deletion method
           } else if (task.date === strTime) {
             items[strTime].push({
@@ -434,25 +464,43 @@ export default function BrokerCalendar({ navigation, user }) {
       setItems(newItems); // Update the state with tasks and events
     }, 1000);
   };
+  // Filter tasks by selected date
+  const filterTasksByDate = (date) => {
+    const filtered = tasks.filter(
+      (task) =>
+        task.startDate &&
+        task.startDate.substring(0, 10) === date.substring(0, 10)
+    );
+
+    setFilteredTasks(filtered);
+  };
+
+  // Filter for completed tasks only
+  const handleShowCompletedTasks = () => {
+    setShowCompletedTasks(!showCompletedTasks);
+  };
+
+  // Completed tasks filtered from the filteredTasks list
+  const completedTaskss = filteredTasks.filter((task) => task.completed);
 
   /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
   const renderItem = (item) => {
     if (item.completed !== undefined) {
       // This is a task, events dont have completed field
-      return (
-        <View style={styles.taskContainer}>
-          {/* <CheckBox
-            value={item.completed}
-            onValueChange={() => toggleTaskCompletion(item)}
-          /> */}
-          <Text
-            style={item.completed ? styles.completedTask : styles.taskTitle}
-          >
-            {item.title}
-          </Text>
-        </View>
-      );
+      //   return (
+      //     <View style={styles.taskContainer}>
+      //       {/* <CheckBox
+      //         value={item.completed}
+      //         onValueChange={() => toggleTaskCompletion(item)}
+      //       /> */}
+      //       <Text
+      //         style={item.completed ? styles.completedTask : styles.taskTitle}
+      //       >
+      //         {item.title}
+      //       </Text>
+      //     </View>
+      //   );
     } else {
       //display event card
       return (
@@ -467,17 +515,16 @@ export default function BrokerCalendar({ navigation, user }) {
             })
           }
         >
-          <Card>
-            <Card.Content>
+          <Card style={{ width: "90%", height: 100 }}>
+            <Card.Content
+              style={{ width: "90%", height: 100, justifyContent: "center" }}
+            >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <View
                   //statusStrip = that colour line on the side. can me set to same colour as dot marking
-                  style={[
-                    styles.StatusStrip,
-                    { backgroundColor: "#009ad8", height: 50 },
-                  ]}
+                  style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
                 />
-                <View style={{ flex: 0.7, height: 70 }}>
+                <View style={{ flex: 0.7 }}>
                   <View style={styles.Time}>
                     <Text style={styles.timeText}>
                       {/* display start and end time */}
@@ -509,6 +556,7 @@ export default function BrokerCalendar({ navigation, user }) {
     if (newEvent.repeat === "does not repeat") {
       events.push(newEvent); // Push the event as-is to array
       data.push(newEvent);
+      console.log(" 535 is data array? ", Array.isArray(data));
       return events;
     }
 
@@ -554,6 +602,7 @@ export default function BrokerCalendar({ navigation, user }) {
       nextEvent.eventId = newEvent.eventId + i; // adjusting ID for repeated events
       events.push(nextEvent);
       data.push(nextEvent);
+      console.log("581 is data array? ", Array.isArray(data));
     }
 
     return events;
@@ -565,16 +614,6 @@ export default function BrokerCalendar({ navigation, user }) {
     filterTasksByDate(date);
   };
 
-  // Filter tasks by selected date
-  const filterTasksByDate = (date) => {
-    const filtered = tasks.filter(
-      (task) =>
-        task.startDate &&
-        task.startDate.substring(0, 10) === date.substring(0, 10)
-    );
-
-    setFilteredTasks(filtered);
-  };
   /*-------------------------------------SAVE EVENTS/TASKS------------------------------------------ */
   //handles repeated events
   const handleAddEvent = (newEvent) => {
@@ -666,43 +705,17 @@ export default function BrokerCalendar({ navigation, user }) {
     setTaskModalVisible(false);
   };
 
-  /*-------------------------------------DISPLAYS TASKS IDK YET JAILYNN EXPLAIN------------------------------------------ */
-  const renderTask = (task) => {
-    return (
-      <TouchableOpacity
-        style={{ marginRight: 10, marginTop: 17 }}
-        onPress={() => navigation.navigate("TaskDetails", { data: item })}
-      >
-        <Card>
-          <Card.Content>
-            <View style={{ flexDirection: "row" }}>
-              {/* <CheckBox
-                value={item.completed}
-                onValueChange={() => toggleTaskCompletion(item)}
-              /> */}
-              <View>
-                {/* <Text
-                  style={
-                    item.completed ? styles.completedTask : styles.taskTitle
-                  }
-                >
-                  {item.title}
-                </Text>
-                <Text>{item.description}</Text> */}
-              </View>
-            </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
-    );
-  };
-
   /*-------------------------------------TASK COMPLETION TOGGLE------------------------------------------ */
   const toggleTaskCompletion = async (task) => {
+    // Update task's completed status locally
     const updatedTasks = tasks.map((t) =>
       t.taskId === task.taskId ? { ...t, completed: !t.completed } : t
     );
     setTasks(updatedTasks);
+
+    // Update completed tasks list locally without requiring re-render from database
+    const newCompletedTasks = updatedTasks.filter((t) => t.completed);
+    setCompletedTasks(newCompletedTasks);
 
     console.log("uid: ", userId);
 
@@ -736,17 +749,6 @@ export default function BrokerCalendar({ navigation, user }) {
       {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda
-          //   style={{ backgroundColor: "#add8e6" }}
-          //   theme={{
-          //     backgroundColor: "#ffffff",
-          //     calendarBackground: "#ffffff",
-          //     textSectionTitleColor: "#b6c1cd",
-          //     selectedDayBackgroundColor: "#00adf5",
-          //     selectedDayTextColor: "#ffffff",
-          //     todayTextColor: "#00adf5",
-          //     dayTextColor: "#2d4150",
-          //     textDisabledColor: "#dd99ee",
-          //   }}
           items={items}
           loadItemsForMonth={loadItems}
           selected={new Date()}
@@ -761,34 +763,40 @@ export default function BrokerCalendar({ navigation, user }) {
           }}
         />
       </View>
-
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
       <Text style={styles.title}>TO DO LIST</Text>
+      {/* <ScrollView style={styles.toDoListContainer}> */}
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-          <FlatList
-            data={filteredTasks}
-            keyExtractor={(item) => item.taskId}
-            renderItem={({ item }) => (
-              <View style={styles.checkboxContainer}>
-                <BouncyCheckbox
-                  isChecked={item.completed} // Use isChecked instead of value
-                  fillColor={item.completed ? "blue" : "#FF6347"} // Green when checked, red when unchecked
-                  unfillColor="#FFFFFF" // Background color when unchecked
-                  onPress={() => toggleTaskCompletion(item)} // Call toggle function
-                />
+          {filteredTasks && filteredTasks.length > 0 ? (
+            <FlatList
+              data={filteredTasks}
+              keyExtractor={(item) => item.taskId}
+              renderItem={({ item }) => (
+                <View style={styles.checkboxContainer}>
+                  <BouncyCheckbox
+                    isChecked={item.completed} // Use isChecked instead of value
+                    fillColor={
+                      item.completed ? colours.beige : colours.paleBlue
+                    } // Green when checked, red when unchecked
+                    unfillColor={colours.paleBlue} // Background color when unchecked
+                    onPress={() => toggleTaskCompletion(item)} // Call toggle function
+                  />
 
-                <Text
-                  style={[
-                    styles.taskTitle,
-                    item.completed && styles.completedTask,
-                  ]}
-                >
-                  {item.title}
-                </Text>
-              </View>
-            )}
-          />
+                  <Text
+                    style={[
+                      styles.taskTitle,
+                      item.completed && styles.completedTask,
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                </View>
+              )}
+            />
+          ) : (
+            <Text style={styles.noTasksText}>No Tasks for today</Text>
+          )}
         </ScrollView>
       </View>
 
@@ -802,7 +810,6 @@ export default function BrokerCalendar({ navigation, user }) {
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
-
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View style={styles.modalBackgroundA}>
@@ -849,7 +856,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       {/*-------------------------------------EVENT CREATOR MODAL------------------------------------------ */}
       <Modal
         visible={isEventModalVisible}
@@ -1016,7 +1022,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       {/* ------------------------------Task Creator Modal ------------------------------------ */}
       <Modal
         visible={isTaskModalVisible}
@@ -1116,7 +1121,6 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
-
       <NavBar />
     </KeyboardAvoidingView>
   );
@@ -1131,9 +1135,45 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     width: "100%",
   },
+  noTasksText: {
+    fontSize: 16,
+    color: "grey",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  taskContainer: {
+    padding: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  taskText: {
+    fontSize: 16,
+    color: "#4B4B4B",
+  },
+  completedTaskContainer: {
+    padding: 15,
+    backgroundColor: colours.beige, // Light gray background for completed tasks
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  completedTaskText: {
+    fontSize: 16,
+    color: "#4B4B4B",
+    textDecorationLine: "line-through", // Strikethrough for completed tasks
+  },
+  linkText: {
+    fontSize: 16,
+    color: colours.paleBlue, // Link color for "Show Completed Tasks" button
+    marginTop: 15,
+    textAlign: "center",
+  },
   toDoListContainer: {
     width: "90%",
     height: "35%",
+    padding: "10",
   },
   calendarContainer: {
     width: "90%",
@@ -1183,7 +1223,8 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: "row", // Align items in a row
-    marginVertical: 15, // Space above and below checkboxes
+    // marginVertical: 15, // Space above and below checkboxes
+    padding: 10,
   },
   title: {
     fontSize: 30, // Larger title for better visibility
@@ -1287,18 +1328,18 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 16,
     fontWeight: "400",
-    marginBottom: 1,
+    marginBottom: 10,
     color: "#1f2c8f", // Theme color
   },
   BookingNameText: {
     fontSize: 18, // Slightly larger for emphasis
     fontWeight: "600", // Semi-bold for better visibility
-    //marginBottom: 5,
+    marginBottom: 5,
   },
   BookingDescriptionText: {
     fontSize: 14, // Increased for better readability
     fontWeight: "300",
-    marginBottom: 3,
+    marginBottom: 10,
     color: "#de8c8c",
   },
   Imageplus: {
@@ -1310,7 +1351,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   StatusStrip: {
-    //height: 130,
+    height: 130,
     width: 5,
     alignSelf: "center",
     marginRight: 10,
