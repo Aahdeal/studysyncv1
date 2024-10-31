@@ -5,7 +5,7 @@ import colours from "../../constants/Colours";
 import { Ionicons } from "@expo/vector-icons";
 import { update, ref, get } from "firebase/database";
 import { database } from "../firebase";
-import {useCustomFonts} from "../../constants/fonts.js"
+import { useCustomFonts } from "../../constants/fonts"
 
 export default function FlashcardTesting({ navigation, route, user }) {
   const { item } = route.params;
@@ -95,6 +95,10 @@ const currentCard = randomizedList[currentIndex];
   //randomize the questions
   const progress = currentIndex / item.questionList.length;
 
+  if (!fontsLoaded) {
+    return <Text>Loading fonts...</Text>; // Loading indicator
+  }
+
   return (
     <View style={styles.container}>
       {/* Quit button */}
@@ -154,7 +158,7 @@ const currentCard = randomizedList[currentIndex];
           <Ionicons
             name={"checkmark"} // Change icon based on password visibility
             size={40}
-            color={colours.lightPink}
+            color={"#A3D9A5"}
           />
           <Text style={styles.buttonText}>I Know</Text>
         </TouchableOpacity>
@@ -165,7 +169,7 @@ const currentCard = randomizedList[currentIndex];
           <Ionicons
             name={"close"} // Change icon based on password visibility
             size={40}
-            color={colours.lightPink}
+            color={"#FF7F7F"}
             fontSize={"64px"}
           />
           <Text style={styles.buttonText}>I Don't Know</Text>
@@ -189,8 +193,6 @@ const styles = StyleSheet.create({
   calendarContainer: {
     height: "60%",
     width: "90%",
-    borderWidth: 1,
-    borderColor: "grey",
     margin: 10,
     marginTop: 0,
     alignItems: "center",
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     left: 20,
   },
   startQuizButton: {
-    backgroundColor: colours.lightPink, // Use the light pink color for the button
+    backgroundColor: colours.darkBlue, // Use the dark blue color from your theme
     paddingVertical: 15, // Adjust padding for a more pronounced button
     paddingHorizontal: 25, // Adjust padding for a more pronounced button
     borderRadius: 10, // Slightly larger border radius for rounded corners
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
-  },
+},
   startQuizButtonText: {
     color: 'white', // Change to white for contrast
     fontSize: 18,
