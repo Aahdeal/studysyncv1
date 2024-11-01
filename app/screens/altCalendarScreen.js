@@ -1201,13 +1201,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   toDoListContainer: {
-    width: "90%",
-    height: "35%",
+    width: "100%",
+    height: "28%",
     padding: "10",
   },
   calendarContainer: {
-    width: "90%",
-    height: "40%",
+    width: "100%",
+    height: "50%",
     borderWidth: 1,
     borderColor: "#add8e6",
     borderRadius: 10,
@@ -1259,7 +1259,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30, // Larger title for better visibility
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
     color: colours.darkBlue, // Change color to match calendar theme
   },
