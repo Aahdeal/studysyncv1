@@ -90,20 +90,19 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={titleFont}>
-          Welcome Back {"\n"}to {"\n"}STUDYSYNC
-        </Text>
-      </View>
-
       <View style={styles.containerLogin}>
+        <View style={styles.header}>
+          <Text style={titleFont}>
+            Welcome Back {"\n"}to {"\n"}STUDYSYNC
+          </Text>
+        </View>
+
         <Text
           style={{
             textAlign: "center",
             color: colours.blushPink,
             fontSize: 35,
             paddingBottom: 15,
-            
           }}
         >
           Login
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "relative",
   },
-  header: { top: 40, width: "100%", padding: 5 },
+  header: { top: -90, width: "100%", padding: 15 },
   title: {
     fontSize: 34,
     textAlign: "center",

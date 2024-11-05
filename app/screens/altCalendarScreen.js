@@ -278,7 +278,7 @@ export default function BrokerCalendar({ navigation, user }) {
   const handleConfirmTask = (date) => {
     setNewTask({
       ...newTask,
-      startDate: date,
+      startDate: date, //
     });
     console.warn(
       "A Task date has been picked: ",
@@ -364,6 +364,7 @@ export default function BrokerCalendar({ navigation, user }) {
           // Extract the date from startDate
           const eventDate = moment(current.startDate).format("YYYY-MM-DD"); // "YYYY-MM-DD"
           let dotColor;
+          //set dotColor for dorMarking according to event type
           switch (current.type) {
             case "Submission":
               dotColor = "red";
@@ -389,11 +390,10 @@ export default function BrokerCalendar({ navigation, user }) {
             marked: true,
             dotColor: dotColor,
             activeOpacity: 0.5,
-            //next 4 props are probably not necessary here
-            title: current.title,
-            description: current.description,
-            StartTime: current.startDate,
-            EndTime: current.EndTime,
+            // title: current.title,
+            // description: current.description,
+            // StartTime: current.startDate,
+            // EndTime: current.EndTime,
           };
           console.log("cur: ", acc);
           return acc;
