@@ -19,6 +19,7 @@ import { database } from "../firebase";
 import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useCustomFonts, titleFont } from "../../constants/fonts";
 import Icon from "../../components/Icon";
 
 import { Card } from "react-native-paper";
@@ -755,7 +756,7 @@ export default function BrokerCalendar({ navigation, user }) {
   /*-------------------------------------USER INTERFACE------------------------------------------ */
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Text style={styles.title}>CALENDAR</Text>
+      <Text style={titleFont}>CALENDAR</Text>
       {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda
@@ -774,7 +775,7 @@ export default function BrokerCalendar({ navigation, user }) {
         />
       </View>
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
-      <Text style={styles.title}>TO DO LIST</Text>
+      <Text style={titleFont}>TO DO LIST</Text>
       {/* <ScrollView style={styles.toDoListContainer}> */}
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>

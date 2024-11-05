@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
+import { useCustomFonts, titleFont } from "../../constants/fonts";
 import Icon from "../../components/Icon";
 import { ref, get, set, remove, update } from "firebase/database";
 import { database } from "../firebase";
@@ -25,7 +26,7 @@ export default function FlashcardsScreen({ navigation, user }) {
   const [isEditing, setIsEditing] = useState(false); // Flag for editing mode
   const [editingDeckId, setEditingDeckId] = useState(null); // Track which deck is being edited
   const [selectedDeckId, setSelectedDeckId] = useState(null); // Track which deck's menu is open
-  
+
   /*--------------------------- OBJECTS ----------------------------------------- */
   const [decks, setDecks] = useState([]); // State for managing flashcard decks
   const [questionList, setQuestionList] = useState([]);
@@ -209,7 +210,6 @@ export default function FlashcardsScreen({ navigation, user }) {
     handleDeckDownload();
   }, []);
 
-
   /* --------------------------UserInterface----------------------------- */
 
   //main page
@@ -281,7 +281,7 @@ export default function FlashcardsScreen({ navigation, user }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Flashcards</Text>
+      <Text style={titleFont}>Flashcards</Text>
 
       {/* add deck button */}
       <TouchableOpacity style={styles.addDeckModal} onPress={openModel}>
