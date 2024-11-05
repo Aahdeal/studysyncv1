@@ -17,6 +17,12 @@ import { useCustomFonts, titleFont } from "../../constants/fonts";
 import Icon from "../../components/Icon";
 import { ref, get, set, remove, update } from "firebase/database";
 import { database } from "../firebase";
+import colours from "../../constants/Colours";
+import {
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 export default function FlashcardsScreen({ navigation, user }) {
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility for creating/editing deck
@@ -285,7 +291,13 @@ export default function FlashcardsScreen({ navigation, user }) {
 
       {/* add deck button */}
       <TouchableOpacity style={styles.addDeckModal} onPress={openModel}>
-        <Icon name="plus" size={30} color="white" family="FontAwesome" />
+        <Icon
+          name="plus-circle"
+          size={60}
+          color={colours.darkBlue}
+          family="FontAwesome"
+          style="light"
+        />
       </TouchableOpacity>
 
       {/* List of flashcard decks */}
@@ -302,7 +314,7 @@ export default function FlashcardsScreen({ navigation, user }) {
       />
 
       {/* Modal for creating/editing a deck */}
-      <Modal animationType="slide" visible={modalVisible} transparent={false}>
+      <Modal animationType="slide" visible={modalVisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
@@ -352,15 +364,14 @@ export default function FlashcardsScreen({ navigation, user }) {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-      style={styles.closeButton}
-      onPress={() => {
-        setModalVisible(false);
-        setIsEditing(false);
-      }}
-    >
-      <Text style={styles.buttonText}>Close</Text>
-    </TouchableOpacity>
-            
+              style={styles.closeButton}
+              onPress={() => {
+                setModalVisible(false);
+                setIsEditing(false);
+              }}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -408,65 +419,68 @@ export default function FlashcardsScreen({ navigation, user }) {
 }
 
 const styles = StyleSheet.create({
-  optionsIcon: 
-  {
+  optionsIcon: {
     fontSize: 20,
     color: "#4B4B4B",
     position: "relative",
-    left: 330,
-    bottom: 35,
+    left: 315,
+    bottom: 20,
+    fontWeight: "600",
+    fontSize: 35,
   },
   addDeckModal: {
     position: "absolute",
     bottom: 90,
     right: 17,
-    height: 60,
-    width: 60,
-    backgroundColor: "#1f2c8f",
-    borderRadius: 30,
+    // height: 60,
+    // width: 60,
+    //backgroundColor: "#1f2c8f",
+    //borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#009ad8",
-    shadowOffset: { width: 0, height: 9 },
-    shadowRadius: 30,
-    shadowOpacity: 0.5,
-    elevation: 5,
+    //shadowColor: "#009ad8",
+    //shadowOffset: { width: 0, height: 9 },
+    //shadowRadius: 30,
+    //shadowOpacity: 0.5,
+    // elevation: 5,
     zIndex: 999,
   },
-  modalContainer: { 
-    backgroundColor: "#ccbe89",
-    borderRadius: 15,       // Adds rounded corners
-    padding: 15,            // Adds internal padding for spacing
-    shadowColor: "#000",    // Adds shadow for a more polished look
+  modalContainer: {
+    backgroundColor: "white",
+    borderRadius: 15, // Adds rounded corners
+    padding: 15, // Adds internal padding for spacing
+    shadowColor: "#000", // Adds shadow for a more polished look
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
-    elevation: 5,  
-    width: "90%",               // Sets modal width to 80% of the screen
-    position: "absolute",         // Positions the modal absolutely
-    top: "30%",                   // Moves the modal to the vertical center
+    elevation: 5,
+    width: "90%", // Sets modal width to 80% of the screen
+    position: "absolute", // Positions the modal absolutely
+    top: "45%", // Moves the modal to the vertical center
     transform: [{ translateY: -100 }], // Adjusts position to truly center the modal
-    alignSelf: "center",        // Centers the modal horizontally
-   },
-   modalTitle:{
-    fontSize: 26,                 // Large font size for emphasis
+    alignSelf: "center", // Centers the modal horizontally
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  modalTitle: {
+    fontSize: 26, // Large font size for emphasis
     fontWeight: "bold",
     textAlign: "center",
-    color: "#4B4B4B",             // Dark gray text color for contrast
-    marginBottom: 20,             // Space below the title
-    letterSpacing: 1,             // Adds slight spacing between letters
-    textTransform: "uppercase",   // Converts text to uppercase for a clean look
+    color: "#4B4B4B", // Dark gray text color for contrast
+    marginBottom: 20, // Space below the title
+    letterSpacing: 1, // Adds slight spacing between letters
+    textTransform: "uppercase", // Converts text to uppercase for a clean look
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,          // Soft shadow for subtle depth
+    shadowOpacity: 0.15, // Soft shadow for subtle depth
     shadowRadius: 1,
-   },
+  },
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { 
+  title: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#000", 
+    color: "#000",
     marginBottom: 20,
   },
   navbarContainer: {
@@ -476,15 +490,17 @@ const styles = StyleSheet.create({
     right: 0,
   },
   deckContainer: {
-    backgroundColor: "#aac3e8", 
+    backgroundColor: colours.beige,
     padding: 20,
     marginVertical: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5, // Android shadow
+    borderColor: "black",
+    borderWidth: 1,
   },
   deckTitle: {
     position: "relative",
@@ -512,7 +528,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   closeButton: {
-    backgroundColor: "#aac3e8",      
+    backgroundColor: "#aac3e8",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -522,7 +538,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 4,
-    width: '80%',
+    width: "80%",
     alignSelf: "center",
   },
   closeButtonText: {
@@ -546,7 +562,7 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    backgroundColor: "#aac3e8",      
+    backgroundColor: "#aac3e8",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -556,8 +572,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 4,
-    width: '80%',
-    alignSelf: "center"
-  }
-
+    width: "80%",
+    alignSelf: "center",
+  },
 });
