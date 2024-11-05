@@ -408,7 +408,7 @@ export default function BrokerCalendar({ navigation, user }) {
     //day is either current day or day selected on calendar
     //fetch data from db
     const items = {}; // Temporary object to hold events and tasks
-    const fourteenDaysAgo = moment().subtract(14, "days");
+    const thirtyTwoDaysAgo = moment().subtract(32, "days");
 
     setTimeout(() => {
       // Loop through a range of dates (-14 days to +30 days from the current date)
@@ -424,7 +424,7 @@ export default function BrokerCalendar({ navigation, user }) {
         // Add events from 'data' to the items object if it is within date range
         data.forEach((event) => {
           const eventStartDate = moment(event.startDate);
-          if (eventStartDate.isBefore(fourteenDaysAgo)) {
+          if (eventStartDate.isBefore(thirtyTwoDaysAgo)) {
             // Assuming you have a function to delete from the database
             deleteEventFromDatabase(event.eventId); // Replace with your deletion method
           } else if (moment(event.startDate).format("YYYY-MM-DD") === strTime) {
@@ -443,7 +443,7 @@ export default function BrokerCalendar({ navigation, user }) {
         tasks.forEach((task) => {
           const taskDate = moment(task.date);
           // Delete task if older than 14 days
-          if (taskDate.isBefore(fourteenDaysAgo)) {
+          if (taskDate.isBefore(thirtyTwoDaysAgo)) {
             deleteTaskFromDatabase(task.taskId); // Replace with your deletion method
           } else if (task.date === strTime) {
             items[strTime].push({
@@ -809,30 +809,7 @@ export default function BrokerCalendar({ navigation, user }) {
             <Text style={styles.noTasksText}>No Tasks for today</Text>
           )}
         </ScrollView>
-
-        {/* /*----------------------------------------Completed Tasks ------------------------------------ */}
-        {/* <View style={styles.toDoListContainer}> */}
-        {/* Button to toggle completed tasks */}
-        <TouchableOpacity onPress={handleShowCompletedTasks}>
-          <Text style={styles.linkText}>
-            {showCompletedTasks
-              ? "Hide Completed Tasks"
-              : "Show Completed Tasks"}
-          </Text>
-        </TouchableOpacity>
-
-        {showCompletedTasks && (
-          <View style={styles.completedTaskContainer}>
-            {completedTaskss.map((item) => (
-              <Text key={item.taskId} style={styles.completedTaskText}>
-                - {item.title}
-              </Text>
-            ))}
-          </View>
-        )}
       </View>
-      {/* </View> */}
-      {/* </ScrollView> */}
 
       {/*-------------------------------------PLUS ICON------------------------------------------ */}
       <TouchableOpacity
@@ -1357,6 +1334,10 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
   },
   timeText: {
+    fontSize: 16,
+    fontWeight: "400",
+    marginBottom: 10,
+    color: "#1f2c8f", // Theme color
     fontSize: 16, // Reduced slightly for subtlety
     fontWeight: "400", // Medium weight for balance
     color: colours.darkBlue,
@@ -1378,6 +1359,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: colours.beige,
     alignSelf: "center",
+    fontSize: 14, // Increased for better readability
+    fontWeight: "300",
+    marginBottom: 10,
+    color: "#de8c8c",
   },
 
   Imageplus: {
@@ -1387,6 +1372,14 @@ const styles = StyleSheet.create({
   Bookingoffer: {
     fontSize: 16, // Adjusted for consistency
     marginBottom: 10,
+  },
+  StatusStrip: {
+    height: 130,
+    width: 5,
+    alignSelf: "center",
+    marginRight: 10,
+    borderRadius: 5,
+    backgroundColor: "#aac3e8", // Visual connection to the theme
   },
   scrollView: {
     flex: 1, // Take remaining space
