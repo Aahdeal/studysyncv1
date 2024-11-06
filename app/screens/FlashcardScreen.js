@@ -551,11 +551,12 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   addQuestionButton: {
-    backgroundColor: "#ccbe89",
+    backgroundColor: colours.beige,
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
     alignItems: "center",
+    borderWidth: 1,
   },
   addQuestionButtonText: {
     color: "#fff",

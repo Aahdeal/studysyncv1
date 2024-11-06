@@ -5,7 +5,7 @@ import colours from "../../constants/Colours";
 import { Ionicons } from "@expo/vector-icons";
 import { update, ref, get } from "firebase/database";
 import { database } from "../firebase";
-import { useCustomFonts } from "../../constants/fonts"
+import { useCustomFonts } from "../../constants/fonts";
 
 export default function FlashcardTesting({ navigation, route, user }) {
   const { item } = route.params;
@@ -20,13 +20,15 @@ export default function FlashcardTesting({ navigation, route, user }) {
 
   const [randomizedList, setRandomizedList] = useState([]);
 
-useEffect(() => {
-  // Randomize the questions only once when the component mounts
-  const shuffledList = item.questionList.slice().sort(() => Math.random() - 0.5);
-  setRandomizedList(shuffledList); // Initialize progress at 0
-}, [item.questionList]);
+  useEffect(() => {
+    // Randomize the questions only once when the component mounts
+    const shuffledList = item.questionList
+      .slice()
+      .sort(() => Math.random() - 0.5);
+    setRandomizedList(shuffledList); // Initialize progress at 0
+  }, [item.questionList]);
 
-const currentCard = randomizedList[currentIndex];
+  const currentCard = randomizedList[currentIndex];
 
   //update
   const handleUpdateScore = async (updatedScore) => {
@@ -86,11 +88,11 @@ const currentCard = randomizedList[currentIndex];
   const endQuiz = () => {
     setQuizEnd(true);
     navigation.navigate("Flashcards");
-  }
+  };
 
   const quitQuiz = () => {
-    navigation.navigate("Flashcards")
-  }
+    navigation.navigate("Flashcards");
+  };
 
   //randomize the questions
   const progress = currentIndex / item.questionList.length;
@@ -150,7 +152,14 @@ const currentCard = randomizedList[currentIndex];
           </View>
         )}
       </View>
-      <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-around", width: "100%" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 10,
+          justifyContent: "space-around",
+          width: "100%",
+        }}
+      >
         <TouchableOpacity
           //   style={styles.button}
           onPress={() => handleNextCard(true)}
@@ -163,7 +172,7 @@ const currentCard = randomizedList[currentIndex];
           <Text style={styles.buttonText}>I Know</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          //   style={styles.button}
+          style={styles.button}
           onPress={() => handleNextCard(false)}
         >
           <Ionicons
@@ -171,6 +180,7 @@ const currentCard = randomizedList[currentIndex];
             size={40}
             color={"#FF7F7F"}
             fontSize={"64px"}
+            style={{ justifySelf: "center" }}
           />
           <Text style={styles.buttonText}>I Don't Know</Text>
         </TouchableOpacity>
@@ -220,12 +230,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    marginTop: 20,
-    backgroundColor: colours.darkBlue, // Darker gray button
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    margin: 10,
+    // marginTop: 20,
+    //backgroundColor: colours.darkBlue, // Darker gray button
+    //paddingVertical: 10,
+    //paddingHorizontal: 20,
+    //borderRadius: 5,
+    //margin: 10,
+    justifyContent: "center",
+    borderWidth: 1,
+    justifySelf: "center",
   },
   buttonText: {
     color: "black",
@@ -267,20 +280,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25, // Adjust padding for a more pronounced button
     borderRadius: 10, // Slightly larger border radius for rounded corners
     marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000", // Add shadow for a raised effect
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
-},
-  startQuizButtonText: {
-    color: 'white', // Change to white for contrast
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: "Graduate_400Regular", // Use the Graduate font
-    textAlign: 'center',
   },
-  
+  startQuizButtonText: {
+    color: "white", // Change to white for contrast
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Graduate_400Regular", // Use the Graduate font
+    textAlign: "center",
+  },
 });

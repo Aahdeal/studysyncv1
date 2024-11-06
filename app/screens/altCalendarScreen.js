@@ -316,6 +316,17 @@ export default function BrokerCalendar({ navigation, user }) {
   /*-------------------------------------updates new event end------------------------------------------ */
 
   const handleConfirmTo = (date) => {
+    // Check if startDate exists and if the new endDate is before startDate
+    if (
+      newEvent.startDate &&
+      moment(date).isBefore(moment(newEvent.startDate))
+    ) {
+      alert("End date cannot be before the start date."); // Display an alert
+      // Reopen the date picker if validation fails
+      setToDatePickerVisibility(true);
+      return; // Exit the function without setting the endDate
+    }
+    // Update endDate if the validation passes
     setNewEvent({
       ...newEvent,
       endDate: date,
@@ -355,7 +366,7 @@ export default function BrokerCalendar({ navigation, user }) {
       EndTime: "12:00",
     },
   ];
-  console.log("data: ", Array.isArray(data), items);
+  //console.log("data: ", Array.isArray(data), items);
   data.push(items);
   const formattedEvents =
     //if data is true and data is an array and data array>0
