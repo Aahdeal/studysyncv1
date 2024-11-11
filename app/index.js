@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import AppNavigator from "./Navigation";
-import {View, Text } from "react-native";
+import { View, Text } from "react-native";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -23,7 +23,7 @@ export default function App() {
   if (loading) {
     // Display a loading indicator while checking auth state
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading</Text>
       </View>
     );
@@ -35,4 +35,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-

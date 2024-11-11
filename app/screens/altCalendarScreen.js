@@ -368,6 +368,7 @@ export default function BrokerCalendar({ navigation, user }) {
   ];
   //console.log("data: ", Array.isArray(data), items);
   data.push(items);
+  console.log("I am data: ", data);
   const formattedEvents =
     //if data is true and data is an array and data array>0
     data && Array.isArray(data)
@@ -407,7 +408,7 @@ export default function BrokerCalendar({ navigation, user }) {
             // StartTime: current.startDate,
             // EndTime: current.EndTime,
           };
-          console.log("cur: ", acc);
+          //console.log("cur: ", acc);
           return acc;
         }, {})
       : { items };
@@ -525,7 +526,7 @@ export default function BrokerCalendar({ navigation, user }) {
           <Card
             style={{
               width: "90%",
-              height: "auto", // Adjust height based on content
+              height: 100, // Adjust height based on content
               borderRadius: 15, // Rounded corners for a modern feel
               overflow: "hidden", // Ensures content fits within rounded corners
               shadowColor: "#000", // Subtle shadow for depth
@@ -534,6 +535,7 @@ export default function BrokerCalendar({ navigation, user }) {
               shadowRadius: 10,
               elevation: 3, // Shadow on Android
               backgroundColor: "#ffffff", // Clean white background
+              justifyContent: "center",
             }}
           >
             <Card.Content
@@ -542,7 +544,7 @@ export default function BrokerCalendar({ navigation, user }) {
                 paddingHorizontal: 20,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "right" }}>
                 <View
                   style={[
                     styles.StatusStrip,
@@ -1384,14 +1386,14 @@ const styles = StyleSheet.create({
     fontSize: 16, // Adjusted for consistency
     marginBottom: 10,
   },
-  StatusStrip: {
-    height: 130,
-    width: 5,
-    alignSelf: "center",
-    marginRight: 10,
-    borderRadius: 5,
-    backgroundColor: "#aac3e8", // Visual connection to the theme
-  },
+  // StatusStrip: {
+  //   height: 100,
+  //   width: 5,
+  //   alignSelf: "center",
+  //   marginRight: 10,
+  //   borderRadius: 5,
+  //   backgroundColor: "#aac3e8", // Visual connection to the theme
+  // },
   scrollView: {
     flex: 1, // Take remaining space
     backgroundColor: colours.lightPink, // Change to white for contrast
