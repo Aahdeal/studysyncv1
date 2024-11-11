@@ -16,7 +16,7 @@ export const useCustomFonts = () => {
 
 // Style object for titles
 export const titleFont = {
-  fontFamily: "Graduate_400Regular",
+  fontFamily: "Graduate",
   fontSize: 40,
   textAlign: "center",
   color: colours.darkBlue, // Change this color to suit your app
