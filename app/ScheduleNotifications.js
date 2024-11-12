@@ -3,8 +3,8 @@ import moment from "moment";
 
 const scheduleNotificationsForEvents = (events) => {
   events.forEach((event) => {
-    console.log("I am event: ", event);
-    const eventTime = moment(event.startDate); // Assuming startDate is a moment-compatible date
+    console.log("I am event: ", event, event.event.startDate);
+    const eventTime = moment(event.event.startDate); // Assuming startDate is a moment-compatible date
 
     // Calculate reminder times
     const tenMinutesBefore = eventTime.clone().subtract(10, "minutes");
@@ -16,7 +16,7 @@ const scheduleNotificationsForEvents = (events) => {
       Notifications.scheduleNotificationAsync({
         content: {
           title: "Upcoming Event",
-          body: `${event.title} starts in 10 minutes.`,
+          body: `${event.event.title} starts in 10 minutes.`,
         },
         trigger: tenMinutesBefore.toDate(), // Trigger at 10 minutes before
       });
@@ -24,10 +24,11 @@ const scheduleNotificationsForEvents = (events) => {
 
     // Schedule 5-minute reminder if it's still in the future
     if (fiveMinutesBefore.isAfter(now)) {
+      console.log("check for noti");
       Notifications.scheduleNotificationAsync({
         content: {
           title: "Event Reminder",
-          body: `${event.title} starts in 5 minutes.`,
+          body: `${event.event.title} starts in 5 minutes.`,
         },
         trigger: fiveMinutesBefore.toDate(), // Trigger at 5 minutes before
       });
