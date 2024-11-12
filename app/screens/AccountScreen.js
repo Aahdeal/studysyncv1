@@ -1,33 +1,33 @@
 // screens/AccountScreen.js
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, Image, TextInput } from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
 import { auth, database } from "../firebase"; // Import auth from firebase
 import { signOut } from "firebase/auth"; // Import signOut function
-import { ref, get, set} from "firebase/database";
+import { ref, get, set } from "firebase/database";
+import { TouchableOpacity } from "react-native";
+
+import * as Notifications from "expo-notifications";
 
 export default function AccountScreen({ navigation, user }) {
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState(null);
 
   //function to get user info from db
   const fetchUserInfo = async () => {
     let userId = user.uid;
     const snapshot = await get(ref(database, `users/${userId}/userDetails`));
-    if (snapshot.exists){
+    if (snapshot.exists) {
       setUserInfo(snapshot.val());
-    }
-    else {
+    } else {
       console.log("No user details found.");
     }
     console.log("user details found.", userInfo);
-  }
-
-
-  useEffect(()=>{
+  };
+  useEffect(() => {
     fetchUserInfo();
-  },[])
-  // Function to handle logout
+  }, []);
+
   const handleLogout = async () => {
     try {
       await signOut(auth); // Sign out the user
@@ -38,13 +38,44 @@ export default function AccountScreen({ navigation, user }) {
     }
   };
 
+  async function registerForPushNotificationsAsync() {
+    try {
+      // Check if permissions are already granted
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      console.log("Existing permission status:", existingStatus);
+
+      // If not granted, request permissions
+      if (existingStatus !== "granted") {
+        console.log("get that permis");
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+        console.log("Requested permission status:", status);
+      }
+
+      // Check the final status
+      if (finalStatus !== "granted") {
+        alert("You need to enable notifications permissions in settings");
+        return;
+      }
+
+      // Get the push notification token
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log("Push Notification Token:", token);
+
+      // You may want to store this token for later use in sending notifications to this device
+      return token;
+    } catch (error) {
+      console.error("Failed to get push token:", error);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.settingsTitle}>SETTINGS</Text>
-      <Image
-        
-        style={styles.profileImage}
-      />
+      <Image style={styles.profileImage} />
       <TextInput
         style={styles.usernameInput}
         placeholder="Username"
@@ -55,6 +86,9 @@ export default function AccountScreen({ navigation, user }) {
         <Text style={styles.optionText}>Theme</Text>
         <Text style={styles.optionText}>Accessibility</Text>
         <Text style={styles.optionText}>Notifications</Text>
+        <TouchableOpacity onPress={registerForPushNotificationsAsync}>
+          <Text style={styles.optionText}> Enable Notifications</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.logoutButton}>
         <Button title="Logout" onPress={handleLogout} color="#333" />
