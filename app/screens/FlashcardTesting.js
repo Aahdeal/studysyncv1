@@ -145,12 +145,12 @@ const currentCard = randomizedList[currentIndex];
               Score: {score} / {item.questionList.length}
             </Text>
             <TouchableOpacity onPress={() => quitQuiz()}>
-              <Text style={styles.buttonText}>Return to Flashcard Home</Text>
+              <Text style={styles.buttonText}>Return to Flashcard Sets</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
-      <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-around", width: "100%" }}>
+      <View style={{ flexDirection: "row", padding: 20, justifyContent: "space-between", width: "100%" }}>
         <TouchableOpacity
           //   style={styles.button}
           onPress={() => handleNextCard(true)}
@@ -262,25 +262,28 @@ const styles = StyleSheet.create({
     left: 20,
   },
   startQuizButton: {
-    backgroundColor: colours.darkBlue, // Use the dark blue color from your theme
-    paddingVertical: 15, // Adjust padding for a more pronounced button
-    paddingHorizontal: 25, // Adjust padding for a more pronounced button
-    borderRadius: 10, // Slightly larger border radius for rounded corners
+    backgroundColor: 'transparent', // Transparent background for gradient
+    borderWidth: 2, // Adding a border for definition
+    paddingVertical: 14, // Increased padding for a larger button
+    paddingHorizontal: 30, // Adjusted padding for balance
+    borderRadius: 15, // Fully rounded edges for a more inviting look
     marginTop: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: "#000", // Add shadow for a raised effect
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
-},
-  startQuizButtonText: {
-    color: 'white', // Change to white for contrast
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: "Graduate_400Regular", // Use the Graduate font
-    textAlign: 'center',
+    shadowRadius: 4,
+    backgroundImage: `linear-gradient(to right, ${colours.paleBlue}, ${colours.darkBlue})`, // Gradient background
+    textTransform: 'uppercase', // All caps for bold text
   },
+  startQuizButtonText: {
+    color: 'black', // White text for contrast
+    fontSize: 20, // Larger text to make it more noticeable
+    fontFamily: "Graduate_400Regular", // Playful, custom font
+    textAlign: 'center',
+    letterSpacing: 2, // Increased letter spacing for a unique look
+  },
+  
   
 });
