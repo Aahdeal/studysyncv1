@@ -92,7 +92,7 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={titleFont}>
-          Welcome Back {"\n"}to {"\n"}STUDYSYNC
+          STUDYSYNC
         </Text>
       </View>
 
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "relative",
   },
-  header: { top: 40, width: "100%", padding: 5 },
+  header: { top: 40, width: "100%", padding: 5, position: "relative" },
   title: {
     fontSize: 34,
     textAlign: "center",

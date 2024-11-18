@@ -150,7 +150,7 @@ const currentCard = randomizedList[currentIndex];
           </View>
         )}
       </View>
-      <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-around", width: "100%" }}>
+      <View style={{ flexDirection: "row", padding: 10, justifyContent: "space-evenly", width: "100%" }}>
         <TouchableOpacity
           //   style={styles.button}
           onPress={() => handleNextCard(true)}
@@ -172,7 +172,7 @@ const currentCard = randomizedList[currentIndex];
             color={"#FF7F7F"}
             fontSize={"64px"}
           />
-          <Text style={styles.buttonText}>I Don't Know</Text>
+          <Text style={styles.buttonText}>I Dont</Text>
         </TouchableOpacity>
       </View>
       {/* Reset Button */}

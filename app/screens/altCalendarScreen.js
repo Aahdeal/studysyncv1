@@ -797,7 +797,7 @@ export default function BrokerCalendar({ navigation, user }) {
               )}
             />
           ) : (
-            <Text style={styles.noTasksText}>No Tasks for today</Text>
+            <Text style={styles.noTasksText}>No Date Selected!{"\n"}Please select a date in the calendar to view tasks</Text>
           )}
         </ScrollView>
 

@@ -289,20 +289,21 @@ export default function FlashcardsScreen({ navigation, user }) {
       </TouchableOpacity>
 
       {/* List of flashcard decks */}
-
-      <FlatList
-        data={decks}
-        keyExtractor={(item) => item.deckId.toString()}
-        renderItem={renderDeck}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            No decks available. Add one by click the plus on the bottom right!
-          </Text>
-        }
-      />
+      <ScrollView style={styles.listView} contentContainerStyle={justifyContent = "space-around"}>
+        <FlatList
+          data={decks}
+          keyExtractor={(item) => item.deckId.toString()}
+          renderItem={renderDeck}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>
+              No decks available. Add one by click the plus on the bottom right!
+            </Text>
+          }
+        />
+      </ScrollView>
 
       {/* Modal for creating/editing a deck */}
-      <Modal animationType="slide" visible={modalVisible} transparent={false}>
+      <Modal animationType="slide" visible={modalVisible} transparent={false} style={styles.modalBox}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
@@ -330,7 +331,7 @@ export default function FlashcardsScreen({ navigation, user }) {
                 setNewDeck({ ...newDeck, description: text })
               }
             />
-
+            <ScrollView style={styles.qListSV}>
             <FlatList
               data={questionList}
               keyExtractor={(item) => item.qNum.toString()}
@@ -339,6 +340,7 @@ export default function FlashcardsScreen({ navigation, user }) {
                 <Text style={styles.emptyText}>No questions yet</Text>
               }
             />
+            </ScrollView>
 
             <TouchableOpacity
               style={styles.addQuestionButton}
@@ -416,6 +418,12 @@ const styles = StyleSheet.create({
     left: 330,
     bottom: 35,
   },
+  listView:{
+    height: "70%",
+  },
+  qListSV:{
+    height: 300,
+  },
   addDeckModal: {
     position: "absolute",
     bottom: 90,
@@ -433,7 +441,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 999,
   },
+  modalBox:{
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalContainer: { 
+    top: 40,
     backgroundColor: "#ccbe89",
     borderRadius: 15,       // Adds rounded corners
     padding: 15,            // Adds internal padding for spacing
@@ -443,9 +456,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,  
     width: "90%",               // Sets modal width to 80% of the screen
-    position: "absolute",         // Positions the modal absolutely
-    top: "30%",                   // Moves the modal to the vertical center
-    transform: [{ translateY: -100 }], // Adjusts position to truly center the modal
+    position: "absolute",         // Positions the modal absolutely                  // Moves the modal to the vertical center
     alignSelf: "center",        // Centers the modal horizontally
    },
    modalTitle:{
