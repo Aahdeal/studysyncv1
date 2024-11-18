@@ -521,12 +521,10 @@ export default function BrokerCalendar({ navigation, user }) {
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <View
-                  style={[
-                    styles.StatusStrip,
-                    { backgroundColor: colours.beige },
-                  ]}
+                  //statusStrip = that colour line on the side. can me set to same colour as dot marking
+                  style={[styles.StatusStrip, { backgroundColor: "#009ad8" }]}
                 />
-                <View style={{ flex: 0.7, justifyContent: "center" }}>
+                <View style={{ flex: 0.7 }}>
                   <View style={styles.Time}>
                     <Text style={styles.timeText}>
                       {/* display start and end time */}
@@ -800,30 +798,7 @@ export default function BrokerCalendar({ navigation, user }) {
             <Text style={styles.noTasksText}>No Date Selected!{"\n"}Please select a date in the calendar to view tasks</Text>
           )}
         </ScrollView>
-
-        {/* /*----------------------------------------Completed Tasks ------------------------------------ */}
-        {/* <View style={styles.toDoListContainer}> */}
-        {/* Button to toggle completed tasks */}
-        <TouchableOpacity onPress={handleShowCompletedTasks}>
-          <Text style={styles.linkText}>
-            {showCompletedTasks
-              ? "Hide Completed Tasks"
-              : "Show Completed Tasks"}
-          </Text>
-        </TouchableOpacity>
-
-        {showCompletedTasks && (
-          <View style={styles.completedTaskContainer}>
-            {completedTaskss.map((item) => (
-              <Text key={item.taskId} style={styles.completedTaskText}>
-                - {item.title}
-              </Text>
-            ))}
-          </View>
-        )}
       </View>
-      {/* </View> */}
-      {/* </ScrollView> */}
 
       {/*-------------------------------------PLUS ICON------------------------------------------ */}
       <TouchableOpacity
@@ -1348,22 +1323,21 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
   },
   timeText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "400",
     marginBottom: 10,
-    color: colours.darkBlue, // Theme color
+    color: "#1f2c8f", // Theme color
   },
   BookingNameText: {
-    fontSize: 26, // Slightly larger for emphasis
+    fontSize: 18, // Slightly larger for emphasis
     fontWeight: "600", // Semi-bold for better visibility
     marginBottom: 5,
-    color: colours.darkBlue,
   },
   BookingDescriptionText: {
-    fontSize: 16, // Increased for better readability
+    fontSize: 14, // Increased for better readability
     fontWeight: "300",
     marginBottom: 10,
-    color: colours.darkBlue,
+    color: "#de8c8c",
   },
   Imageplus: {
     height: 30,
@@ -1374,11 +1348,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   StatusStrip: {
-    height: 60,
+    height: 130,
     width: 5,
+    alignSelf: "center",
     marginRight: 10,
     borderRadius: 5,
-    backgroundColor: colours.beige, // Visual connection to the theme
+    backgroundColor: "#aac3e8", // Visual connection to the theme
   },
   scrollView: {
     flex: 1, // Take remaining space
