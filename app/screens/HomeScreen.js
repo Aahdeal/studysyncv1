@@ -67,8 +67,8 @@ const HomeScreen = ({ navigation, user }) => {
       calcTaskCompletion();
       calcHoursStudied();
     }
-    registerForPushNotificationsAsync();
-    scheduleNotificationsForEvents(eventData);
+    //registerForPushNotificationsAsync();
+    //scheduleNotificationsForEvents(eventData);
   }, [taskData, completeTaskData, eventData]);
 
   /*-------------------------DATA ACCESSOR METHODS---------------------- */
@@ -274,30 +274,30 @@ const HomeScreen = ({ navigation, user }) => {
     return <Text>Loading...</Text>;
   }
 
-  //get Permission for push notifications
-  async function registerForPushNotificationsAsync() {
-    // Check if permissions are already granted
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    console.log(existingStatus);
-    // If not granted, ask for permission
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
+  // //get Permission for push notifications
+  // async function registerForPushNotificationsAsync() {
+  //   // Check if permissions are already granted
+  //   const { status: existingStatus } =
+  //     await Notifications.getPermissionsAsync();
+  //   let finalStatus = existingStatus;
+  //   console.log(existingStatus);
+  //   // If not granted, ask for permission
+  //   if (existingStatus !== "granted") {
+  //     const { status } = await Notifications.requestPermissionsAsync();
+  //     finalStatus = status;
+  //   }
 
-    // Check the final status
-    if (finalStatus !== "granted") {
-      alert("You need to enable notifications permissions in settings");
-      return;
-    }
+  //   // Check the final status
+  //   if (finalStatus !== "granted") {
+  //     alert("You need to enable notifications permissions in settings");
+  //     return;
+  //   }
 
-    // If granted, get the token
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Push Notification Token:", token);
-    return token;
-  }
+  //   // If granted, get the token
+  //   const token = (await Notifications.getExpoPushTokenAsync()).data;
+  //   console.log("Push Notification Token:", token);
+  //   return token;
+  // }
 
   return (
     <View>

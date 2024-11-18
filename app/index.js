@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import AppNavigator from "./Navigation";
 import { View, Text } from "react-native";
+import useUpcomingNotifications from "./upcomingNotifications";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -19,6 +20,9 @@ export default function App() {
 
     return unsubscribe; // Cleanup the subscription on unmount
   }, []);
+
+  // Use the custom hook to schedule notifications
+  useUpcomingNotifications(user);
 
   if (loading) {
     // Display a loading indicator while checking auth state

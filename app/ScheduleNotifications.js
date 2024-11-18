@@ -1,5 +1,9 @@
 import * as Notifications from "expo-notifications";
 import moment from "moment";
+import React, { useEffect } from "react";
+import * as Permissions from "expo-permissions";
+import { database } from "./firebase"; // Adjust the path to your firebase config
+import { ref, onValue } from "firebase/database";
 
 const scheduleNotificationsForEvents = (events) => {
   events.forEach((event) => {
@@ -13,6 +17,7 @@ const scheduleNotificationsForEvents = (events) => {
 
     // Schedule 10-minute reminder if it's still in the future
     if (tenMinutesBefore.isAfter(now)) {
+      console.log("ten mins");
       Notifications.scheduleNotificationAsync({
         content: {
           title: "Upcoming Event",
@@ -28,9 +33,22 @@ const scheduleNotificationsForEvents = (events) => {
       Notifications.scheduleNotificationAsync({
         content: {
           title: "Event Reminder",
-          body: `${event.event.title} starts in 5 minutes.`,
+          body: `${event.event.title} starts now.`,
         },
         trigger: fiveMinutesBefore.toDate(), // Trigger at 5 minutes before
+      });
+    }
+
+    // Schedule reminder on start
+    if (eventTime == now) {
+      console.log("event starts now");
+
+      Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Event Reminder",
+          body: `${event.event.title} starts in 5 minutes.`,
+        },
+        trigger: now, // Trigger at 5 minutes before
       });
     }
   });
