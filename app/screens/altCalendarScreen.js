@@ -834,9 +834,14 @@ export default function BrokerCalendar({ navigation, user }) {
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
       {/*-------------------------------------CREATION CHOICE VIEW------------------------------------------ */}
-      <Modal transparent={true} visible={isModalVisible} animationType="slide">
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="none"
+        style={styles.modalBackgroundA}
+      >
         <View style={styles.modalBackgroundA}>
-          <View style={styles.modalContentA}>
+          <View>
             <View style={styles.iconContainer}>
               <TouchableOpacity style={styles.exitButton} onPress={closeModal}>
                 <Icon
@@ -1220,13 +1225,15 @@ const styles = StyleSheet.create({
     textSectionTitleFontSize: 18, // Font size for section titles
   },
   modalBackgroundA: {
-    flex: 1,
+    position: "absolute",
+    flexDirection: "column",
     backgroundColor: colours.paleBlue,
-    justifyContent: "center",
-    width: " 80%",
-    marginVertical: "10%",
-    left: "10%",
-    borderRadius: 15,
+    padding: 3,
+    bottom: 50,
+    right: 17,
+    borderRadius: 35,
+
+    zIndex: 999,
   },
   modalContentA: {
     padding: 20,
@@ -1279,18 +1286,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
   },
   iconContainer: {
-    width: "98%",
-    height: "100%",
-    borderRadius: 15,
-    padding: 20,
-    alignItems: "flex-end",
+    flexDirection: "column",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "space-between",
+    //bottom: 45,
   },
   iconButton: {
-    position: "fixed",
-    marginBottom: 10,
     alignItems: "center",
-    top: 490,
-    left: 70,
+    marginTop: 15,
   },
   iconLabel: {
     color: colours.darkBlue, // Matching the theme color
@@ -1299,10 +1303,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   exitButton: {
-    position: "absolute",
-    top: 10,
-    left: 20,
-    zIndex: 1,
+    marginBottom: 10,
   },
   modalContent: {
     padding: 20,
@@ -1324,21 +1325,20 @@ const styles = StyleSheet.create({
   },
   viewTask: {
     position: "absolute",
-    bottom: 40,
+    bottom: 45,
     right: 17,
-    height: 70,
-    width: 70,
-    backgroundColor: "#007BFF", // Consistent color with the theme
-    borderRadius: 35,
+    height: 60,
+    width: 60,
+    backgroundColor: colours.paleBlue,
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#007BFF",
+    shadowColor: "#009ad8",
     shadowOffset: { width: 0, height: 9 },
     shadowRadius: 30,
     shadowOpacity: 0.5,
-    elevation: 7,
+    elevation: 5,
     zIndex: 999,
-    marginBottom: 20, // Add this line to create space below the task box
   },
   Time: {
     flexDirection: "row",
@@ -1385,14 +1385,6 @@ const styles = StyleSheet.create({
     fontSize: 16, // Adjusted for consistency
     marginBottom: 10,
   },
-  // StatusStrip: {
-  //   height: 100,
-  //   width: 5,
-  //   alignSelf: "center",
-  //   marginRight: 10,
-  //   borderRadius: 5,
-  //   backgroundColor: "#aac3e8", // Visual connection to the theme
-  // },
   scrollView: {
     flex: 1, // Take remaining space
     backgroundColor: colours.lightPink, // Change to white for contrast
