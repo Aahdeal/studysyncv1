@@ -8,8 +8,12 @@ import { database } from '../firebase';
 import moment from 'moment';
 import colors from '../../constants/Colours';
 import * as Font from 'expo-font';
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 const HomeScreen = ({ navigation, user }) => {
+  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [motivationalMessage, setMotivationalMessage] = useState({ message: '', author: '' });
   //fake data to be replaced with database data
@@ -20,8 +24,6 @@ const HomeScreen = ({ navigation, user }) => {
   const [taskData, setTaskData] = useState([]);
   const [completeTaskData, setCTD] = useState([]);
   const [eventsThisWeek, setEventsThisWeek] = useState([]);
-
-  
 
   useFocusEffect(
     useCallback(() => {
@@ -327,7 +329,7 @@ const HomeScreen = ({ navigation, user }) => {
       </View>
 
       <View style={styles.listContainer}>
-          <Text style={styles.sectionHeading}>Tasks Due</Text>
+          <Text style={styles.sectionHeading}>Task(s) Due</Text>
         <ScrollView style={styles.listView}
         nestedScrollEnabled = {true}>
           <FlatList
@@ -356,95 +358,5 @@ const HomeScreen = ({ navigation, user }) => {
     </View>
   );
 }
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: 'white', // Set the background color to white
-  },
-  scrollContainer: {
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: 'Graduate',
-    marginBottom: 15,
-    textAlign: 'center',
-    color: colors.darkBlue,
-  },
-  motivationalMessage: {
-    marginVertical: 20,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: colors.lightgrey,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
-  },
-  motivation: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: colors.darkBlue,
-  },
-  chartsContainer: {
-    marginBottom: 20,
-    borderRadius: 16,
-    backgroundColor: 'white',
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
-  },
-  chartWrapper: {
-    width: Dimensions.get('window').width * 0.85,
-    marginVertical: 10, // Space between charts
-  },
-  chartSpacing: {
-    height: 20, // Additional space between charts
-  },
-  chartTitle: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: colors.darkBlue,
-    fontFamily: 'Graduate',
-  },
-  chartStyle: {
-    marginVertical: 8,
-    borderRadius: 16,
-  },
-  listContainer: {
-    marginTop: 20,
-  },
-  listView:{
-    height: 150,
-  },
-  sectionHeading: {
-    fontSize: 18,
-    fontFamily: 'Graduate',
-    color: colors.darkBlue,
-    marginBottom: 10,
-  },
-  taskItem: {
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 8,
-    backgroundColor: colors.lightPink,
-  },
-  taskTitle: {
-    fontSize: 16,
-    fontFamily: 'Graduate',
-    color: colors.darkBlue,
-  },
-  taskDueDate: {
-    fontSize: 14,
-    color: colors.darkBlue,
-  },
-});
 
 export default HomeScreen;

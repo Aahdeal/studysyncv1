@@ -6,9 +6,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { auth, database } from "../firebase"; // Import auth from firebase
 import { signOut } from "firebase/auth"; // Import signOut function
 import { ref, get, set} from "firebase/database";
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 export default function AccountScreen({ navigation, user }) {
   const [userInfo, setUserInfo] = useState(null)
+  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
+
 
   //function to get user info from db
   const fetchUserInfo = async () => {
@@ -63,52 +68,3 @@ export default function AccountScreen({ navigation, user }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingTop: 50,
-    paddingHorizontal: 20,
-  },
-  settingsTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#6C63FF",
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#D3A5A5",
-    marginBottom: 35,
-  },
-  usernameInput: {
-    borderWidth: 1,
-    borderColor: "#333",
-    padding: 8,
-    width: "80%",
-    marginBottom: 35,
-    textAlign: "center",
-  },
-  options: {
-    width: "80%",
-    marginBottom: 20,
-    marginTop: 50,
-  },
-  optionText: {
-    fontSize: 18,
-    color: "#6C63FF",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    textAlign: "left",
-  },
-  logoutButton: {
-    flexDirection: "flex-end",
-    marginTop: 50,
-    width: "60%",
-  },
-});

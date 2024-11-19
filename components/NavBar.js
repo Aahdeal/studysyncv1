@@ -2,10 +2,11 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons"; // Using Ionicons for icons
 import { useNavigation, useNavigationState } from "@react-navigation/native";
-import Colours from "../constants/Colours";
+import colours from "../constants/Colours";
 
 export default function NavBar() {
   const navigation = useNavigation();
+  const colour = colours[0];
 
   // Get the current route name
   const currentRoute = useNavigationState(
@@ -22,7 +23,7 @@ export default function NavBar() {
         <Icon
           name={currentRoute === "Home" ? "pie-chart-outline" : "pie-chart"} // Filled if active
           size={30}
-          color={Colours.darkBlue} // Always blue
+          color={colour.darkBlue} // Always blue
         />
       </TouchableOpacity>
 
@@ -34,7 +35,7 @@ export default function NavBar() {
         <Icon
           name={currentRoute === "altCalendar" ? "calendar-outline" : "calendar"} // Filled if active
           size={30}
-          color={Colours.darkBlue}
+          color={colour.darkBlue}
         />
       </TouchableOpacity>
 
@@ -46,7 +47,7 @@ export default function NavBar() {
         <Icon
           name={currentRoute === "Flashcards" ? "albums-outline" : "albums"} // Filled if active
           size={30}
-          color={Colours.darkBlue}
+          color={colour.darkBlue}
         />
       </TouchableOpacity>
 
@@ -58,7 +59,7 @@ export default function NavBar() {
         <Icon
           name={currentRoute === "Account" ? "settings-outline" : "settings"} // Filled if active
           size={30}
-          color={Colours.darkBlue}
+          color={colour.darkBlue}
         />
       </TouchableOpacity>
     </View>
