@@ -368,7 +368,6 @@ export default function BrokerCalendar({ navigation, user }) {
   ];
   //console.log("data: ", Array.isArray(data), items);
   data.push(items);
-  console.log("I am data: ", data);
   const formattedEvents =
     //if data is true and data is an array and data array>0
     data && Array.isArray(data)
@@ -403,7 +402,7 @@ export default function BrokerCalendar({ navigation, user }) {
             marked: true,
             dotColor: dotColor,
             activeOpacity: 0.5,
-            // title: current.title,
+            title: current.title,
             // description: current.description,
             // StartTime: current.startDate,
             // EndTime: current.EndTime,
@@ -697,8 +696,8 @@ export default function BrokerCalendar({ navigation, user }) {
     setNewEvent({
       title: "",
       description: "",
-      startDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
-      endDate: moment(new Date()).format("MMMM Do YYYY, h:mm A"),
+      startDate: new Date(),
+      endDate: moment().add(1, "hour").toDate(),
       type: "",
       repeat: "does not repeat",
       repeatCount: "",
