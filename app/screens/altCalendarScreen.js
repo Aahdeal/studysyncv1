@@ -412,7 +412,7 @@ export default function BrokerCalendar({ navigation, user }) {
         }, {})
       : { items };
 
-  console.log("form: ", formattedEvents);
+  //console.log("form: ", formattedEvents);
 
   /*-------------------------------------loads items to display------------------------------------------ */
   const loadItems = (day) => {

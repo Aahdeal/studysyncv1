@@ -21,6 +21,28 @@ export default function App() {
     return unsubscribe; // Cleanup the subscription on unmount
   }, []);
 
+  // Request notification permissions and retrieve Expo push token
+  const registerForPushNotificationsAsync = async () => {
+    console.log("in register for push");
+    const { status } = await Notifications.getPermissionsAsync(); //await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    console.log("perm status: ", status);
+    if (status === "granted") {
+      const token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId: "your-project-id",
+        })
+      ).data;
+      console.log("Expo Push Token:", token);
+
+      // Store the token in Firebase under the user's profile if needed
+      const userId = user.uid; // Replace this with actual user ID logic
+      const tokenRef = ref(database, `users/${userId}/preferances/pushToken`);
+      set(tokenRef, token);
+    } else {
+      alert("Notification permissions required!");
+    }
+  };
+
   // Use the custom hook to schedule notifications
   useUpcomingNotifications(user);
 
