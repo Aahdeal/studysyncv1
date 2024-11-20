@@ -307,7 +307,7 @@ export default function FlashcardsScreen({ navigation, user }) {
 
       {/* Modal for creating/editing a deck */}
       <Modal animationType="slide" visible={modalVisible} transparent={true}>
-        <View style={styles.modalContainer}>
+        <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
               {isEditing ? "Edit Deck" : "Create New Deck"}
@@ -372,9 +372,9 @@ export default function FlashcardsScreen({ navigation, user }) {
       <Modal
         animationType="slide"
         visible={questionModalVisible}
-        transparent={false}
+        transparent={true}
       >
-        <View style={styles.modalContainer}>
+        <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
               {isEditing ? "Edit Deck" : "Create New Deck"}
