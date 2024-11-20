@@ -288,11 +288,11 @@ export default function FlashcardsScreen({ navigation, user }) {
       <Text style={styles.title}>Flashcards</Text>
 
       {/* add deck button */}
-      <TouchableOpacity style={styles.addDeckModal} onPress={openModel}>
+      <TouchableOpacity style={styles.viewTask} onPress={openModel}>
         <Icon
-          name="plus-circle"
-          size={60}
-          color={"colours.darkBlue"}
+          name="plus"
+          size={30}
+          color="white"
           family="FontAwesome"
           style="light"
         />
