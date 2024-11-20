@@ -292,7 +292,7 @@ export default function FlashcardsScreen({ navigation, user }) {
         <Icon
           name="plus-circle"
           size={60}
-          color={colours.darkBlue}
+          color={"colours.darkBlue"}
           family="FontAwesome"
           style="light"
         />

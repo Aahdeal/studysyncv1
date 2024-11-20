@@ -302,16 +302,15 @@ export default function BrokerCalendar({ navigation, user }) {
       ...newEvent,
       startDate: date,
       // Automatically Ensure end date is after start date by making enddate = startdate +1h, user can change end date afterwards
-      endDate:
-        newEvent.endDate && date > newEvent.endDate
-          ? moment(new Date(date.getTime() + 60 * 60 * 1000)).format(
-              "MMMM Do YYYY, h:mm A"
-            ) // Add 1 hour default
-          : newEvent.endDate,
+      endDate: newEvent.endDate //&& date > newEvent.endDate
+        ? moment(date).add(1, "hour").toDate()
+        : "02",
     });
-    console.warn(
+    console.log(
       "A From date has been picked: ",
-      moment(date).format("MMMM Do YYYY, h:mm A")
+      moment(date).format("MMMM Do YYYY, h:mm A"),
+      " end: ",
+      newEvent.endDate
     );
     // console.log("new date: ", newEvent.startDate);
     // console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
