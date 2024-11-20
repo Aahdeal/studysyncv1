@@ -59,7 +59,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
     let newScore = score; // Local variable to track score changes immediately
 
     // Update score if the answer is correct
-    if (isCorrect && !currentIndex < item.questionList.length - 1) {
+    if (isCorrect) {
       newScore += 1; // Increment the local score variable
       setScore(newScore); // Update the state
       console.log("Current score:", newScore); // Log the updated score immediately
