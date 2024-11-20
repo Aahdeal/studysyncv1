@@ -47,7 +47,7 @@ export default function App() {
   registerForPushNotificationsAsync();
 
   // Use the custom hook to schedule notifications
-  useUpcomingNotifications(user);
+  //useUpcomingNotifications(user);
 
   if (loading) {
     // Display a loading indicator while checking auth state

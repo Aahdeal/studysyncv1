@@ -58,7 +58,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
     let event = data.slice(-1);
     let repeat = event[0].repeatCount;
-    console.log("event.eventId : ", event[0].eventId, " event: ", { event });
+    //console.log("event.eventId : ", event[0].eventId, " event: ", { event });
 
     try {
       for (i = 1; i <= repeat; i++) {
@@ -313,9 +313,9 @@ export default function BrokerCalendar({ navigation, user }) {
       "A From date has been picked: ",
       moment(date).format("MMMM Do YYYY, h:mm A")
     );
-    console.log("new date: ", newEvent.startDate);
-    console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
-      hideFromDatePicker();
+    // console.log("new date: ", newEvent.startDate);
+    // console.log("start time ", moment(newEvent.startDate).format("HH:mm")),
+    hideFromDatePicker();
   };
 
   /*-------------------------------------updates new event end------------------------------------------ */
@@ -673,7 +673,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
     setItems(updatedItems); // Set the updated items once
     handleEventUpload();
-    console.log("data: ", data, "data 0: ", data[0]);
+    //console.log("data: ", data, "data 0: ", data[0]);
   };
 
   // Function to save new events to events array
