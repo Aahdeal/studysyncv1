@@ -529,26 +529,26 @@ export default function BrokerCalendar({ navigation, user }) {
         >
           <Card
             style={{
-              width: "90%",
-              height: 100, // Adjust height based on content
-              borderRadius: 15, // Rounded corners for a modern feel
+              width: "85%",
+              height: 110,  
+              borderRadius: 15,  
               overflow: "hidden", // Ensures content fits within rounded corners
-              shadowColor: "#000", // Subtle shadow for depth
+              shadowColor: "#000", 
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.1,
               shadowRadius: 10,
-              elevation: 3, // Shadow on Android
-              backgroundColor: "#ffffff", // Clean white background
+              elevation: 3, 
+              backgroundColor: "#ffffff", 
               justifyContent: "center",
             }}
           >
             <Card.Content
               style={{
-                paddingVertical: 15, // Add padding for breathing room
-                paddingHorizontal: 20,
+                paddingVertical: 10, // Add padding for breathing room
+                paddingHorizontal: 25,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "right" }}>
+              <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
                 <View
                   style={[
                     styles.StatusStrip,

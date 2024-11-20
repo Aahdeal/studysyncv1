@@ -112,7 +112,7 @@ const createStyles = (colours) => {
     },
     completedTaskContainer: {
       padding: 15,
-      backgroundColor: colours.beige, // Light gray background for completed tasks
+      backgroundColor: colours.darkBlue,
       borderRadius: 10,
       marginBottom: 10,
       elevation: 2,
@@ -292,7 +292,6 @@ const createStyles = (colours) => {
     },
     timeText: {
       fontSize: 16,
-      fontWeight: "400",
       marginBottom: 10,
       color: colours.calendarTime, // Theme color
     },
