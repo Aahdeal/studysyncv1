@@ -825,6 +825,28 @@ export default function BrokerCalendar({ navigation, user }) {
             <Text style={styles.noTasksText}>No Tasks for today</Text>
           )}
         </ScrollView>
+        {/* </View> */}
+
+        {/* /*----------------------------------------Completed Tasks ------------------------------------ */}
+        {/* <View style={styles.toDoListContainer}> */}
+        {/* Button to toggle completed tasks */}
+        <TouchableOpacity onPress={handleShowCompletedTasks}>
+          <Text style={styles.linkText}>
+            {showCompletedTasks
+              ? "Hide Completed Tasks"
+              : "Show Completed Tasks"}
+          </Text>
+        </TouchableOpacity>
+
+        {showCompletedTasks && (
+          <View style={styles.completedTaskContainer}>
+            {completedTaskss.map((item) => (
+              <Text key={item.taskId} style={styles.completedTaskText}>
+                - {item.title}
+              </Text>
+            ))}
+          </View>
+        )}
       </View>
 
       {/*-------------------------------------PLUS ICON------------------------------------------ */}
@@ -1097,53 +1119,16 @@ export default function BrokerCalendar({ navigation, user }) {
               onConfirm={handleConfirmTask}
               onCancel={hideTaskDatePicker}
             />
-            {/* Date and Time Picker */}
 
-            {/* )Repeat Options */}
-            {/* <RNPickerSelect
-            value={newTask.repeat}
-            useNativeAndroidPickerStyle={false}
-            //placeholderTextColor={colors.BLACK}
-            style={{
-              inputIOS: styles.pickerStyle,
-              placeholder: {
-                color: "black",
-              },
-              inputAndroid: styles.pickerStyle,
-            }}
-            onValueChange={(itemValue) =>
-              setNewTask({ ...newTask, repeat: itemValue })
-            }
-            items={[
-              { label: "Does not repeat", value: "does not repeat" },
-              { label: "Daily", value: "daily" },
-              { label: "Weekly", value: "weekly" },
-              { label: "Monthly", value: "monthly" },
-            ]}
-          />
-          {newTask.repeat !== "does not repeat" && (
-            <>
-              <Text style={styles.label}>Repetition Count</Text>
-              <TextInput
-                placeholder="Number of repetitions"
-                value={newEvent.repeatCount?.toString() || ""}
-                onChangeText={(text) =>
-                  setNewEvent({ ...newEvent, repeatCount: parseInt(text) })
-                }
-                keyboardType="numeric"
-                style={styles.input}
-              />
-            </>
-          )} */}
             {/* Save Button */}
             <TouchableOpacity style={styles.buttonContainer} onPress={saveTask}>
-              <Text style={styles.buttonText}>Save Event</Text>
+              <Text style={styles.buttonText}>Save Task</Text>
             </TouchableOpacity>
 
             {/* Close Button */}
             <TouchableOpacity
               style={styles.closeButtonContainer}
-              onPress={() => setEventModalVisible(false)}
+              onPress={() => setTaskModalVisible(false)}
             >
               <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
