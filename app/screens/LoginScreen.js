@@ -14,12 +14,12 @@ import { auth, signInWithEmailAndPassword } from "../firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useCustomFonts, titleFont } from "../../constants/fonts";
-
+import colours from "../../constants/Colours";
 import useUserTheme from "../../hooks/useuserTheme";
 import createStyles from "../style/styles";
 
 export default function LoginScreen({ navigation }) {
-  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const themeColours = useUserTheme(""); // Get the dynamic colours based on theme preference
   const styles = createStyles(themeColours); // Pass colours into styles
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

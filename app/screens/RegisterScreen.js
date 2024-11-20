@@ -14,12 +14,12 @@ import { getDatabase, ref, set } from "firebase/database";
 import { auth } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { useCustomFonts, titleFont } from "../../constants/fonts";
-
+import colours from "../../constants/Colours";
 import useUserTheme from "../../hooks/useuserTheme";
 import createStyles from "../style/styles";
 
 export default function RegisterScreen({ navigation }) {
-  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const themeColours = useUserTheme(""); // Get the dynamic colours based on theme preference
   const styles = createStyles(themeColours); // Pass colours into styles
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");

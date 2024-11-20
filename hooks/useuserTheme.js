@@ -12,14 +12,14 @@ const useUserTheme = (userId) => {
     }
 
     const db = getDatabase();
-    const themeRef = ref(db, `users/${userId}/themePreference`);
+    const themeRef = ref(db, `users/${userId}/Preferences/themePreference`);
 
     const listener = onValue(
       themeRef,
       (snapshot) => {
         if (snapshot.exists()) {
           const themePreference = snapshot.val();
-          if (themePreference >= 0 && themePreference <= 2) {
+          if (themePreference >= 0 && themePreference <= 1) {
             setThemeColours(colours[themePreference]);
           } else {
             console.warn("Invalid theme preference value. Defaulting to colours[0].");

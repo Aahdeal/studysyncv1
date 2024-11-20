@@ -20,7 +20,7 @@ import moment from "moment"; //helps get different variants of time
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "../../components/Icon";
-
+import colours from "../../constants/Colours";
 import { Card } from "react-native-paper";
 import { Agenda } from "react-native-calendars";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
