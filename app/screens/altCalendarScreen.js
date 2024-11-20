@@ -833,7 +833,6 @@ export default function BrokerCalendar({ navigation, user }) {
         style={styles.viewTask}
         onPress={() => {
           setModalVisible(true);
-          //console.log(items);
         }}
       >
         <Icon name="plus" size={30} color="white" family="FontAwesome" />
@@ -889,6 +888,7 @@ export default function BrokerCalendar({ navigation, user }) {
           </View>
         </View>
       </Modal>
+
       {/*-------------------------------------EVENT CREATOR MODAL------------------------------------------ */}
       <Modal
         visible={isEventModalVisible}

@@ -11,10 +11,10 @@ import {
 import { LineChart, ProgressChart } from "react-native-chart-kit";
 import NavBar from "../../components/NavBar";
 import { ref, get } from "firebase/database";
-import { database } from '../firebase';
-import moment from 'moment';
-import colors from '../../constants/Colours';
-import * as Font from 'expo-font';
+import { database } from "../firebase";
+import moment from "moment";
+import colors from "../../constants/Colours";
+import * as Font from "expo-font";
 import useUserTheme from "../../hooks/useuserTheme";
 import createStyles from "../style/styles";
 
@@ -275,7 +275,7 @@ const HomeScreen = ({ navigation, user }) => {
     return <Text>Loading...</Text>;
   }
 
-  TestNotification();
+  //TestNotification();
 
   return (
     <View>
@@ -355,33 +355,29 @@ const HomeScreen = ({ navigation, user }) => {
             />
           </View>
 
-      <View style={styles.listContainer}>
-          <Text style={styles.sectionHeading}>Task(s) Due</Text>
-        <ScrollView style={styles.listView}
-        nestedScrollEnabled = {true}>
-          <FlatList
-            data={taskData}
-            renderItem={renderTaskItem}
-            keyExtractor={(item) => item['taskId']}
-          />
-        </ScrollView>
+          <View style={styles.listContainer}>
+            <Text style={styles.sectionHeading}>Task(s) Due</Text>
+            <ScrollView style={styles.listView} nestedScrollEnabled={true}>
+              <FlatList
+                data={taskData}
+                renderItem={renderTaskItem}
+                keyExtractor={(item) => item["taskId"]}
+              />
+            </ScrollView>
+          </View>
+          <View style={styles.listContainer}>
+            <Text style={styles.sectionHeading}>Upcoming Events</Text>
+            <ScrollView style={styles.listView} nestedScrollEnabled={true}>
+              <FlatList
+                data={eventData}
+                renderItem={renderEventItem}
+                keyExtractor={(item) => item["eventId"]}
+              />
+            </ScrollView>
+          </View>
         </View>
-        <View style={styles.listContainer}>
-          <Text style={styles.sectionHeading}>Upcoming Events</Text>
-        <ScrollView style={styles.listView}
-        nestedScrollEnabled = {true}>
-          <FlatList
-            data={eventData}
-            renderItem={renderEventItem}
-            keyExtractor={(item)=> item['eventId']}
-          />
-        </ScrollView>
-      </View>
-  
-      
-    </View>
-    </ScrollView>
-    <NavBar />
+      </ScrollView>
+      <NavBar />
     </View>
   );
 };
@@ -475,6 +471,5 @@ const styles = StyleSheet.create({
     color: colors.darkBlue,
   },
 });
-}
 
 export default HomeScreen;

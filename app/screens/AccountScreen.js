@@ -1,6 +1,5 @@
 // screens/AccountScreen.js
-import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, Image, TextInput } from "react-native";
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -20,7 +19,6 @@ import useUserTheme from "../../hooks/useuserTheme";
 import createStyles from "../style/styles";
 
 export default function AccountScreen({ navigation, user }) {
-  const [userInfo, setUserInfo] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
   const styles = createStyles(themeColours); // Pass colours into styles

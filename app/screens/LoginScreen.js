@@ -93,12 +93,13 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={style.container}>
-      <View style={styles.header}>
-        <Text style={titleFont}>
-          Welcome Back {"\n"}to {"\n"}STUDYSYNC
-        </Text>
-      </View>
+    <View>
+      <View style={style.container}>
+        <View style={styles.header}>
+          <Text style={titleFont}>
+            Welcome Back {"\n"}to {"\n"}STUDYSYNC
+          </Text>
+        </View>
 
         <Text
           style={{
