@@ -53,7 +53,7 @@ const createStyles = (colours) => {
       fontSize: 16,
       color: "grey",
       textAlign: "center",
-      marginTop: 20,
+      margin: 20,
     },
     taskContainer: {
       padding: 15,
@@ -77,12 +77,6 @@ const createStyles = (colours) => {
       fontSize: 16,
       color: "#4B4B4B",
       textDecorationLine: "line-through", // Strikethrough for completed tasks
-    },
-    linkText: {
-      fontSize: 16,
-      color: colours.paleBlue, // Link color for "Show Completed Tasks" button
-      marginTop: 15,
-      textAlign: "center",
     },
     toDoListContainer: {
       width: "100%",
@@ -693,11 +687,6 @@ const createStyles = (colours) => {
       justifyContent: "center",
       margin: 10,
     },
-    linkText: {
-      color: colours.blushPink,
-      textDecorationLine: "underline",
-      fontSize: 15,
-    },
     forgotPassword: {
       margin: 10,
       color: colours.text,
@@ -782,11 +771,6 @@ const createStyles = (colours) => {
       flexDirection: "row",
       justifyContent: "center",
       margin: 10,
-    },
-    linkText: {
-      color: colours.blushPink,
-      textDecorationLine: "underline",
-      fontSize: 15,
     },
     forgotPassword: {
       margin: 10,
@@ -891,7 +875,9 @@ const createStyles = (colours) => {
     linkText: {
       color: colours.paleBlue,
       textDecorationLine: "underline",
-      fontSize: 15,
+      fontSize: 16,
+      marginTop: 15,
+      textAlign: "center",
     },
     containerFlashcards: {
       flex: 1,

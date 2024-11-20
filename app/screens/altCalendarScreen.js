@@ -498,6 +498,7 @@ export default function BrokerCalendar({ navigation, user }) {
 
   // Completed tasks filtered from the filteredTasks list
   const completedTaskss = filteredTasks.filter((task) => task.completed);
+  const incompletedTaskss = filteredTasks.filter((task) => !task.completed);
 
   /*-------------------------------------DISPLAYS EVENTS ON AGENDA------------------------------------------ */
   //displays tasks and events in agenda format "card", can remove tasks since aadil figured how to diplay at bottom of screen
@@ -795,9 +796,9 @@ export default function BrokerCalendar({ navigation, user }) {
       {/* <ScrollView style={styles.toDoListContainer}> */}
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-          {filteredTasks && filteredTasks.length > 0 ? (
+          {incompletedTaskss && incompletedTaskss.length > 0 ? (
             <FlatList
-              data={filteredTasks}
+              data={incompletedTaskss}
               keyExtractor={(item) => item.taskId}
               renderItem={({ item }) => (
                 <View style={styles.checkboxContainer}>
@@ -822,7 +823,9 @@ export default function BrokerCalendar({ navigation, user }) {
               )}
             />
           ) : (
-            <Text style={styles.noTasksText}>No Tasks for today</Text>
+            <Text style={styles.noTasksText}>
+              No Tasks left to complete for today
+            </Text>
           )}
         </ScrollView>
         {/* </View> */}
@@ -830,13 +833,15 @@ export default function BrokerCalendar({ navigation, user }) {
         {/* /*----------------------------------------Completed Tasks ------------------------------------ */}
         {/* <View style={styles.toDoListContainer}> */}
         {/* Button to toggle completed tasks */}
-        <TouchableOpacity onPress={handleShowCompletedTasks}>
-          <Text style={styles.linkText}>
-            {showCompletedTasks
-              ? "Hide Completed Tasks"
-              : "Show Completed Tasks"}
-          </Text>
-        </TouchableOpacity>
+        <View style={(alignItems = "center")}>
+          <TouchableOpacity onPress={handleShowCompletedTasks}>
+            <Text style={[styles.linkText]}>
+              {showCompletedTasks
+                ? "Hide Completed Tasks"
+                : "Show Completed Tasks"}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {showCompletedTasks && (
           <View style={styles.completedTaskContainer}>
