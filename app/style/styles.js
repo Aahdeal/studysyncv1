@@ -294,19 +294,19 @@ const createStyles = (colours) => {
       fontSize: 16,
       fontWeight: "400",
       marginBottom: 10,
-      color: colours.text, // Theme color
+      color: colours.calendarTime, // Theme color
     },
     BookingNameText: {
       fontSize: 22, // Slightly larger for emphasis
       fontWeight: "600", // Semi-bold for better visibility
       marginBottom: 5,
-      color: colours.text,
+      color: colours.calendarText,
     },
     BookingDescriptionText: {
       fontSize: 16, // Increased for better readability
       // fontWeight: "300",
       // marginBottom: 10,
-      color: colours.text,
+      color: colours.calendarText,
     },
     Imageplus: {
       height: 30,
