@@ -93,14 +93,14 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View>
-      <View style={style.container}>
-        <View style={styles.header}>
-          <Text style={titleFont}>
-            Welcome Back {"\n"}to {"\n"}STUDYSYNC
-          </Text>
-        </View>
+    <View style={style.container}>
+      <View style={styles.header}>
+        <Text style={styles.titleFont}>
+          Welcome Back {"\n"}to {"\n"}STUDYSYNC
+        </Text>
+      </View>
 
+      <View style={styles.containerLogin}>
         <Text
           style={{
             textAlign: "center",
@@ -158,32 +158,32 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.linkText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </View>
 
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Reset Password</Text>
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Reset Password</Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your email"
-              value={resetEmail}
-              onChangeText={setResetEmail}
-              keyboardType="email-address"
-            />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your email"
+                value={resetEmail}
+                onChangeText={setResetEmail}
+                keyboardType="email-address"
+              />
 
-            <Button title="Send Reset Email" onPress={handleForgotPassword} />
+              <Button title="Send Reset Email" onPress={handleForgotPassword} />
 
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+              <Button title="Close" onPress={() => setModalVisible(false)} />
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
     </View>
   );
 }

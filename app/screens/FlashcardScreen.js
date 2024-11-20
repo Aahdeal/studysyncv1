@@ -285,17 +285,11 @@ export default function FlashcardsScreen({ navigation, user }) {
 
   return (
     <View style={styles.containerFlashcards}>
-      <Text style={styles.title}>Flashcards</Text>
+      <Text style={styles.titleFont}>Flashcards</Text>
 
       {/* add deck button */}
       <TouchableOpacity style={styles.viewTask} onPress={openModel}>
-        <Icon
-          name="plus"
-          size={30}
-          color="white"
-          family="FontAwesome"
-          style="light"
-        />
+        <Icon name="plus" size={30} color="white" family="FontAwesome" />
       </TouchableOpacity>
 
       {/* List of flashcard decks */}
@@ -415,7 +409,3 @@ export default function FlashcardsScreen({ navigation, user }) {
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-});

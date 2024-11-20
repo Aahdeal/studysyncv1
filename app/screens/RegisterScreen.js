@@ -96,7 +96,7 @@ export default function RegisterScreen({ navigation }) {
   return (
     <View style={style.container}>
       <View style={styles.header}>
-        <Text style={titleFont}>Sign Up</Text>
+        <Text style={styles.titleFont}>Sign Up</Text>
         <Text style={styles.heading}>Create your account</Text>
       </View>
 

@@ -1,14 +1,24 @@
 import { StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
+import { useCustomFonts } from "../../constants/fonts";
 
 const createStyles = (colours) => {
+  const fontsLoaded = useCustomFonts();
   return (styles = StyleSheet.create({
+    titleFont: {
+      fontFamily: "Graduate_400Regular",
+      fontSize: 40,
+      textAlign: "center",
+      color: colours.text, // Change this color to suit your app
+    },
     container: {
       flex: 1,
-      padding: 20,
+      backgroundColor: colours.background,
+      justifyContent: "flex-start",
       alignItems: "center",
-      backgroundColor: "#ffffff",
-      width: "100%",
+      //padding: 20,
+      paddingTop: 40,
+      paddingHorizontal: 20,
     },
     settingsTitle: {
       fontSize: 20,
@@ -17,43 +27,77 @@ const createStyles = (colours) => {
       marginBottom: 20,
     },
     profileImage: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: "#D3A5A5",
-      marginBottom: 35,
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      backgroundColor: colours.paleBlue,
+      marginBottom: 25,
+      borderWidth: 2,
+      borderColor: colours.paleBlue,
     },
     usernameInput: {
       borderWidth: 1,
-      borderColor: "#333",
-      padding: 8,
-      width: "80%",
-      marginBottom: 35,
+      borderColor: colours.darkBlue,
+      padding: 10,
+      width: "90%",
+      marginBottom: 25,
       textAlign: "center",
+      backgroundColor: colours.paleBlue,
+      borderRadius: 8,
+      color: colours.text,
+      fontSize: 16,
     },
     options: {
-      width: "80%",
-      marginBottom: 20,
-      marginTop: 50,
+      width: "100%",
+      marginTop: 30,
     },
     optionText: {
       fontSize: 18,
       color: colours.text,
       paddingVertical: 10,
       borderBottomWidth: 1,
-      borderBottomColor: "#ddd",
-      textAlign: "left",
+      borderBottomColor: colours.paleBlue,
+      marginBottom: 10,
+    },
+    buttonsContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 10,
+      marginBottom: 20,
+    },
+    button: {
+      flex: 1,
+      marginHorizontal: 5,
+      padding: 12,
+      borderRadius: 8,
+      alignItems: "center",
+      backgroundColor: colours.paleBlue,
+    },
+    selectedButton: {
+      backgroundColor: colours.lightPink,
+    },
+    buttonText: {
+      color: colours.text,
+      fontWeight: "bold",
+      fontSize: 16,
     },
     logoutButton: {
-      flexDirection: "flex-end",
+      //flexDirection: "flex-end",
       marginTop: 50,
-      width: "60%",
+      width: "70%",
     },
+    // container: {
+    //   flex: 1,
+    //   padding: 20,
+    //   alignItems: "center",
+    //   backgroundColor: colours.background,
+    //   width: "100%",
+    // },
     noTasksText: {
       fontSize: 16,
-      color: "grey",
+      color: colours.text,
       textAlign: "center",
-      margin: 20,
+      marginTop: 20,
     },
     taskContainer: {
       padding: 15,
@@ -64,7 +108,7 @@ const createStyles = (colours) => {
     },
     taskText: {
       fontSize: 16,
-      color: "#4B4B4B",
+      color: colours.text,
     },
     completedTaskContainer: {
       padding: 15,
@@ -75,17 +119,19 @@ const createStyles = (colours) => {
     },
     completedTaskText: {
       fontSize: 16,
-      color: "#4B4B4B",
+      color: colours.text,
       textDecorationLine: "line-through", // Strikethrough for completed tasks
     },
     toDoListContainer: {
-      width: "100%",
-      height: "28%",
+      width: "90%",
+      height: "35%",
+      // width: "100%",
+      // height: "28%",
       padding: "10",
     },
     calendarContainer: {
-      width: "100%",
-      height: "50%",
+      width: "90%",
+      height: "40%",
       borderWidth: 1,
       borderColor: "#add8e6",
       borderRadius: 10,
@@ -108,15 +154,21 @@ const createStyles = (colours) => {
       textSectionTitleFontSize: 18, // Font size for section titles
     },
     modalBackgroundA: {
-      position: "absolute",
-      flexDirection: "column",
+      // position: "absolute",
+      // flexDirection: "column",
+      // padding: 3,
+      // bottom: 50,
+      // right: 17,
+      // borderRadius: 35,
+      // zIndex: 999,
+      // height: 210,
+      flex: 1,
       backgroundColor: colours.paleBlue,
-      padding: 3,
-      bottom: 50,
-      right: 17,
-      borderRadius: 35,
-      zIndex: 999,
-      height: 210,
+      justifyContent: "center",
+      width: " 80%",
+      marginVertical: "10%",
+      left: "10%",
+      borderRadius: 15,
     },
     modalContentA: {
       padding: 20,
@@ -168,6 +220,14 @@ const createStyles = (colours) => {
       shadowRadius: 30,
       shadowOpacity: 0.5,
     },
+    //old v
+    // iconContainer: {
+    //   width: "98%",
+    //   height: "100%",
+    //   borderRadius: 15,
+    //   padding: 20,
+    //   alignItems: "flex-end",
+    // },
     iconContainer: {
       flexDirection: "column",
       padding: 10,
@@ -178,6 +238,14 @@ const createStyles = (colours) => {
       alignItems: "center",
       marginTop: 15,
     },
+    //old v
+    // iconButton: {
+    //   position: "fixed",
+    //   marginBottom: 10,
+    //   alignItems: "center",
+    //   top: 490,
+    //   left: 70,
+    // },
     iconLabel: {
       color: colours.text, // Matching the theme color
       fontSize: 16,
@@ -212,7 +280,7 @@ const createStyles = (colours) => {
       height: 60,
       width: 60,
       backgroundColor: colours.paleBlue, // Consistent color with the theme
-      borderRadius: 30,
+      borderRadius: 35,
       justifyContent: "center",
       alignItems: "center",
       shadowColor: "#007BFF",
@@ -229,7 +297,7 @@ const createStyles = (colours) => {
       alignContent: "flex-start",
     },
     timeText: {
-      fontSize: 16,
+      fontSize: 165,
       fontWeight: "400",
       marginBottom: 10,
       color: colours.text, // Theme color
@@ -242,7 +310,7 @@ const createStyles = (colours) => {
     },
     BookingDescriptionText: {
       fontSize: 16, // Increased for better readability
-      //fontWeight: "300",
+      // fontWeight: "300",
       // marginBottom: 10,
       color: colours.text,
     },
@@ -254,6 +322,13 @@ const createStyles = (colours) => {
       fontSize: 16, // Adjusted for consistency
       marginBottom: 10,
     },
+    // StatusStrip: {
+    //   height: 60,
+    //   width: 5,
+    //   marginRight: 10,
+    //   borderRadius: 5,
+    //   backgroundColor: colours.beige, // Visual connection to the theme
+    // },
     StatusStrip: {
       width: 6,
       height: "80%",
@@ -325,6 +400,7 @@ const createStyles = (colours) => {
       right: 17,
       height: 60,
       width: 60,
+      // backgroundColor: "#007BFF",
       backgroundColor: "#1f2c8f",
       borderRadius: 30,
       justifyContent: "center",
@@ -461,6 +537,13 @@ const createStyles = (colours) => {
       width: "80%",
       alignSelf: "center",
     },
+    containerQuiz: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 20,
+      backgroundColor: colours.background,
+    },
     quizContainer: {
       height: "60%",
       width: "90%",
@@ -470,7 +553,7 @@ const createStyles = (colours) => {
       justifyContent: "center",
     },
     card: {
-      backgroundColor: colours.beige, // Light tan/beige color
+      backgroundColor: colours.paleBlue, // Light tan/beige color
       padding: 20,
       marginVertical: 10,
       borderRadius: 10,
@@ -779,42 +862,22 @@ const createStyles = (colours) => {
       textDecorationLine: "underline",
       fontSize: 15,
     },
-    completedTaskContainer: {
-      padding: 15,
-      backgroundColor: colours.beige, // Light gray background for completed tasks
-      borderRadius: 10,
-      marginBottom: 10,
-      elevation: 2,
-    },
-    completedTaskText: {
-      fontSize: 16,
-      color: "#4B4B4B",
-      textDecorationLine: "line-through", // Strikethrough for completed tasks
-    },
     modalBackground: {
       flex: 1,
-      backgroundColor: "#ffe4e1",
-      justifyContent: "center",
-      width: " 80%",
-      marginVertical: "20%",
-      left: "10%",
-      borderRadius: 15,
-      shadowColor: colours.beige,
-      shadowOffset: { width: 0, height: 9 },
-      shadowRadius: 30,
-      shadowOpacity: 0.5,
-    },
-    modalContent: {
-      padding: 20,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#ffe4e1",
-      borderRadius: 15,
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContainer: {
+      width: 300,
+      padding: 20,
+      backgroundColor: "white",
+      borderRadius: 10,
+      alignItems: "center",
     },
     modalTitle: {
-      fontSize: 24, // Larger modal title
-      margin: 10,
-      color: colours.darkBlue,
+      fontSize: 20,
+      marginBottom: 20,
     },
     button: {
       backgroundColor: colours.lightPink,
@@ -845,11 +908,14 @@ const createStyles = (colours) => {
       alignSelf: "center",
     },
     input: {
-      borderBottomWidth: 1,
-      marginVertical: 15,
-      width: "80%",
-      padding: 10,
-      borderBottomColor: colours.paleBlue, // Change border color to match the theme
+      height: 40,
+      borderColor: "gray",
+      borderWidth: 1,
+      marginBottom: 20,
+      paddingHorizontal: 10,
+      width: "100%",
+      borderRadius: 8,
+      fontSize: 15,
     },
     infoIcon: {
       fontSize: 18,
@@ -884,6 +950,22 @@ const createStyles = (colours) => {
       justifyContent: "center",
       padding: 20,
       backgroundColor: colours.background,
+    },
+    navbarContainer: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      paddingVertical: 10,
+      borderTopWidth: 1,
+      borderColor: "#ddd",
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: colours.background,
+    },
+    navButton: {
+      flex: 1,
+      alignItems: "center",
     },
   }));
 };
