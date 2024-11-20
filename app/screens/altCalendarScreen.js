@@ -752,7 +752,7 @@ export default function BrokerCalendar({ navigation, user }) {
   /*-------------------------------------USER INTERFACE------------------------------------------ */
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Text style={styles.title}>CALENDAR</Text>
+      <Text style={styles.titleFont}>CALENDAR</Text>
       {/*-------------------------------------CALENDAR------------------------------------------ */}
       <View style={styles.calendarContainer}>
         <Agenda

@@ -61,7 +61,7 @@ export default function AccountScreen({ navigation, user }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.settingsTitle}>SETTINGS</Text>
+      <Text style={styles.titleFont}>SETTINGS</Text>
       <Image
         
         style={styles.profileImage}

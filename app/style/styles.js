@@ -1,56 +1,85 @@
 import {StyleSheet} from "react-native";
 import { Dimensions } from "react-native";
+import { useCustomFonts } from "../../constants/fonts";
 
 
 const createStyles = (colours) => {
+    const fontsLoaded = useCustomFonts();
     return styles = StyleSheet.create(
     {
+        titleFont: {
+            fontFamily: "Graduate_400Regular",
+            fontSize: 40,
+            textAlign: "center",
+            color: colours.text, // Change this color to suit your app
+        },
         container: {
             flex: 1,
+            backgroundColor: colours.background,
             justifyContent: "flex-start",
             alignItems: "center",
-            paddingTop: 50,
+            paddingTop: 40,
             paddingHorizontal: 20,
-        },
-        settingsTitle: {
-            fontSize: 20,
-            fontWeight: "bold",
-            color: colours.text,
-            marginBottom: 20,
-        },
-        profileImage: {
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            backgroundColor: "#D3A5A5",
-            marginBottom: 35,
-        },
-        usernameInput: {
+          },
+          profileImage: {
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            backgroundColor: colours.paleBlue,
+            marginBottom: 25,
+            borderWidth: 2,
+            borderColor: colours.paleBlue,
+          },
+          usernameInput: {
             borderWidth: 1,
-            borderColor: "#333",
-            padding: 8,
-            width: "80%",
-            marginBottom: 35,
+            borderColor: colours.darkBlue,
+            padding: 10,
+            width: "90%",
+            marginBottom: 25,
             textAlign: "center",
-        },
-        options: {
-            width: "80%",
-            marginBottom: 20,
-            marginTop: 50,
-        },
-        optionText: {
+            backgroundColor: colours.paleBlue,
+            borderRadius: 8,
+            color: colours.text,
+            fontSize: 16,
+          },
+          options: {
+            width: "100%",
+            marginTop: 30,
+          },
+          optionText: {
             fontSize: 18,
             color: colours.text,
             paddingVertical: 10,
             borderBottomWidth: 1,
-            borderBottomColor: "#ddd",
-            textAlign: "left",
-        },
-        logoutButton: {
-            flexDirection: "flex-end",
-            marginTop: 50,
-            width: "60%",
-        },
+            borderBottomColor: colours.paleBlue,
+            marginBottom: 10,
+          },
+          buttonsContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 10,
+            marginBottom: 20,
+          },
+          button: {
+            flex: 1,
+            marginHorizontal: 5,
+            padding: 12,
+            borderRadius: 8,
+            alignItems: "center",
+            backgroundColor: colours.paleBlue,
+          },
+          selectedButton: {
+            backgroundColor: colours.lightPink,
+          },
+          buttonText: {
+            color: colours.text,
+            fontWeight: "bold",
+            fontSize: 16,
+          },
+          logoutButton: {
+            marginTop: 40,
+            width: "70%",
+          },
         container: {
             flex: 1,
             padding: 20,
@@ -341,7 +370,7 @@ const createStyles = (colours) => {
                 right: 17,
                 height: 60,
                 width: 60,
-                backgroundColor: "#1f2c8f",
+                backgroundColor: "#007BFF",
                 borderRadius: 30,
                 justifyContent: "center",
                 alignItems: "center",
@@ -477,6 +506,13 @@ const createStyles = (colours) => {
                 width: '80%',
                 alignSelf: "center"
             },
+            containerQuiz: {
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 20,
+                backgroundColor: colours.background,
+              },  
             quizContainer: {
                 height: "60%",
                 width: "90%",
@@ -486,7 +522,7 @@ const createStyles = (colours) => {
                 justifyContent: "center",
             },
             card: {
-                backgroundColor: colours.beige, // Light tan/beige color
+                backgroundColor: colours.paleBlue, // Light tan/beige color
                 padding: 20,
                 marginVertical: 10,
                 borderRadius: 10,
@@ -872,13 +908,13 @@ const createStyles = (colours) => {
             },
             infoIcon: {
                 fontSize: 18,
-                right: -255,
+                right: -235,
                 color: "blue",
                 bottom: 77,
             },
             eyeIcon: {
                 //padding: 5, // Spacing around the eye icon
-                right: -215,
+                right: -205,
                 bottom: 53,
             },
             errorText: {
@@ -897,6 +933,22 @@ const createStyles = (colours) => {
                 fontSize: 15,
             },
             containerFlashcards: { flex: 1, justifyContent: "center", padding: 20, backgroundColor: colours.background },
+            navbarContainer: {
+                flexDirection: "row",
+                justifyContent: "space-around",
+                paddingVertical: 10,
+                borderTopWidth: 1,
+                borderColor: "#ddd",
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: colours.background
+              },
+              navButton: {
+                flex: 1,
+                alignItems: "center",
+              },
     }
     );
 }

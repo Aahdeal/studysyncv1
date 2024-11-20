@@ -95,7 +95,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={style.container}>
       <View style={styles.header}>
-        <Text style={titleFont}>
+        <Text style={styles.titleFont}>
           Welcome Back {"\n"}to {"\n"}STUDYSYNC
         </Text>
       </View>

@@ -104,7 +104,7 @@ const currentCard = randomizedList[currentIndex];
   }
 
   return (
-    <View style={style.container}>
+    <View style={styles.containerQuiz}>
       {/* Quit button */}
       <TouchableOpacity style={styles.exitButton} onPress={endQuiz}>
         <Ionicons name="close" size={40} color={colours.darkBlue} />
@@ -164,7 +164,7 @@ const currentCard = randomizedList[currentIndex];
             size={40}
             color={"#A3D9A5"}
           />
-          <Text style={styles.buttonText}>I Know</Text>
+          <Text style={styles.optionText}>I Know</Text>
         </TouchableOpacity>
         <TouchableOpacity
           //   style={styles.button}
@@ -176,7 +176,7 @@ const currentCard = randomizedList[currentIndex];
             color={"#FF7F7F"}
             fontSize={"64px"}
           />
-          <Text style={styles.buttonText}>I Don't Know</Text>
+          <Text style={styles.optionText}>I Don't Know</Text>
         </TouchableOpacity>
       </View>
       {/* Reset Button */}
@@ -186,12 +186,3 @@ const currentCard = randomizedList[currentIndex];
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },  
-});

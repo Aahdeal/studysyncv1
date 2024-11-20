@@ -256,7 +256,7 @@ const HomeScreen = ({ navigation, user }) => {
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
 
-      <Text style={styles.title}>Progress Tracker</Text>
+      <Text style={styles.titleFont}>Progress Tracker</Text>
         <View style={styles.motivationalMessage}>
           <Text style={styles.motivation}>
             {motivationalMessage.Quote ? `${motivationalMessage.Quote} - ${motivationalMessage.Author}` : 'Loading...'}
@@ -354,7 +354,7 @@ const HomeScreen = ({ navigation, user }) => {
       
     </View>
     </ScrollView>
-    <NavBar />
+    <NavBar  />
     </View>
   );
 }

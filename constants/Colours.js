@@ -13,9 +13,9 @@ const colours = [{
   text: "#ffffff",
   darkBlue: "#1f2c8f",
   paleBlue: "#aac3e8",
-  lightPink: "#f5cdce",
+  lightPink: "#a05151",
   beige: "#D2B48C",
-  blushPink: "#de8c8c",
+  blushPink: "#7f4242",
 },
 {
   background: "ffffff",
