@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: { 
     top: 40,
-    backgroundColor: "#ccbe89",
+    backgroundColor: "#D2B48C",
     borderRadius: 15,       // Adds rounded corners
     padding: 15,            // Adds internal padding for spacing
     shadowColor: "#000",    // Adds shadow for a more polished look
