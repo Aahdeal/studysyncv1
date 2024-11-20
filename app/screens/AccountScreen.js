@@ -9,6 +9,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import NavBar from "../../components/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
@@ -24,8 +25,26 @@ export default function AccountScreen({ navigation, user }) {
   const styles = createStyles(themeColours); // Pass colours into styles
   const [themePreference, setThemePreference] = useState(null); // Temporary local state for button feedback
 
-  const handleThemeChange = (preference) => {
-    const themeRef = ref(database, `users/${user.uid}/Preferences`); // Reference to the themePreference node
+  // const handleThemeChange = (preference) => {
+  //   const themeRef = ref(database, `users/${user.uid}/Preferences`); // Reference to the themePreference node
+
+  //   update(themeRef, { themePreference: preference })
+  //     .then(() => {
+  //       setThemePreference(preference); // Update local state temporarily
+  //       console.log(
+  //         `Theme preference updated to: ${preference === 0 ? "Light" : "Dark"}`
+  //       );
+  //       themeColours = useUserTheme(user.uid);
+  //       styles = createStyles(themeColours);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error updating theme preference:", error);
+  //     });
+  // };
+
+  const handleThemeChange = (value) => {
+    const preference = value ? 1 : 0; // Dark theme if true, Light theme if false
+    const themeRef = ref(database, `users/${user.uid}/Preferences`);
 
     update(themeRef, { themePreference: preference })
       .then(() => {
@@ -113,7 +132,17 @@ export default function AccountScreen({ navigation, user }) {
       <View style={styles.options}>
         <Text style={styles.optionText}>Theme</Text>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity
+          <Text style={styles.optionText}>
+            {themePreference === 0 ? "Light Mode" : "Dark Mode"}
+          </Text>
+          <Switch
+            value={themePreference === 1} // true for Dark theme
+            onValueChange={handleThemeChange}
+            trackColor={{ false: "#ccc", true: "#555" }}
+            thumbColor={themePreference === 1 ? "#000" : "#fff"}
+            style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }} // Increase size
+          />
+          {/* <TouchableOpacity
             style={[
               styles.button,
               themePreference === 0 ? styles.selectedButton : null,
@@ -130,7 +159,7 @@ export default function AccountScreen({ navigation, user }) {
             onPress={() => handleThemeChange(1)} // Dark theme
           >
             <Text style={styles.buttonText}>Dark</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <Text style={styles.optionText}>Accessibility</Text>
         <Text style={styles.optionText}>Notifications</Text>
