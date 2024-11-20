@@ -841,7 +841,7 @@ export default function BrokerCalendar({ navigation, user }) {
         transparent={true}
         visible={isModalVisible}
         animationType="none"
-        style={styles.modalBackgroundA}
+        //style={styles.modalBackgroundA}
       >
         <View style={styles.modalBackgroundA}>
           <View>

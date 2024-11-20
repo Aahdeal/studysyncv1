@@ -528,16 +528,6 @@ const createStyles = (colours) => {
       elevation: 3,
       alignItems: "center",
     },
-    exitButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingVertical: 8,
-      paddingHorizontal: 5,
-      borderRadius: 5,
-      position: "absolute",
-      top: 20,
-      left: 20,
-    },
     startQuizButton: {
       backgroundColor: colours.darkBlue, // Use the dark blue color from your theme
       paddingVertical: 15, // Adjust padding for a more pronounced button
