@@ -17,7 +17,7 @@ import colors from "../../constants/Colours";
 import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
-import { scheduleNotificationsForEvents } from "../ScheduleNotifications";
+import TestNotification from "../TestNoti";
 
 const HomeScreen = ({ navigation, user }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -274,30 +274,7 @@ const HomeScreen = ({ navigation, user }) => {
     return <Text>Loading...</Text>;
   }
 
-  // //get Permission for push notifications
-  // async function registerForPushNotificationsAsync() {
-  //   // Check if permissions are already granted
-  //   const { status: existingStatus } =
-  //     await Notifications.getPermissionsAsync();
-  //   let finalStatus = existingStatus;
-  //   console.log(existingStatus);
-  //   // If not granted, ask for permission
-  //   if (existingStatus !== "granted") {
-  //     const { status } = await Notifications.requestPermissionsAsync();
-  //     finalStatus = status;
-  //   }
-
-  //   // Check the final status
-  //   if (finalStatus !== "granted") {
-  //     alert("You need to enable notifications permissions in settings");
-  //     return;
-  //   }
-
-  //   // If granted, get the token
-  //   const token = (await Notifications.getExpoPushTokenAsync()).data;
-  //   console.log("Push Notification Token:", token);
-  //   return token;
-  // }
+  TestNotification();
 
   return (
     <View>
@@ -396,6 +373,10 @@ const HomeScreen = ({ navigation, user }) => {
                 keyExtractor={(item) => item["eventId"]}
               />
             </ScrollView>
+          </View>
+          <View style={{ flex: 1 }}>
+            {/* Other Settings Components */}
+            <TestNotification />
           </View>
         </View>
       </ScrollView>

@@ -28,9 +28,9 @@ export default function App() {
     console.log("perm status: ", status);
     if (status === "granted") {
       const token = (
-        await Notifications.getExpoPushTokenAsync({
+        await Notifications.getExpoPushTokenAsync(/*{
           projectId: "your-project-id",
-        })
+        }*/)
       ).data;
       console.log("Expo Push Token:", token);
 
@@ -42,6 +42,9 @@ export default function App() {
       alert("Notification permissions required!");
     }
   };
+
+  // Call the function to get permissions and register the token
+  registerForPushNotificationsAsync();
 
   // Use the custom hook to schedule notifications
   useUpcomingNotifications(user);
