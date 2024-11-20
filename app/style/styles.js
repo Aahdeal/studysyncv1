@@ -249,6 +249,13 @@ const createStyles = (colours) => {
     exitButton: {
       marginBottom: 10,
     },
+    exitButtonT: {
+      marginBottom: 10,
+      position: "absolute", // Make it absolute
+      top: 25, // Distance from the top
+      left: 35, // Distance from the left
+      zIndex: 999,
+    },
     modalContent: {
       padding: 20,
       justifyContent: "center",
@@ -533,6 +540,7 @@ const createStyles = (colours) => {
     },
     containerQuiz: {
       flex: 1,
+      flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
       padding: 20,
@@ -542,14 +550,20 @@ const createStyles = (colours) => {
       height: "60%",
       width: "90%",
       margin: 10,
-      marginTop: 0,
+      //marginTop: 0,
       alignItems: "center",
       justifyContent: "center",
+      borderColor: colours.darkBlue,
+      borderWidth: 5,
+      padding: 5,
+      border: "5px",
+      backgroundColor: colours.background,
+      borderRadius: 10,
     },
     card: {
       backgroundColor: colours.paleBlue, // Light tan/beige color
-      padding: 20,
-      marginVertical: 10,
+      //padding: 20,
+      //marginVertical: 10,
       borderRadius: 10,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
@@ -559,7 +573,8 @@ const createStyles = (colours) => {
       flex: 1, // Make the card fill the available space
       alignItems: "center",
       justifyContent: "center",
-      width: "85%",
+      width: "100%",
+      height: "100%",
     },
     cardText: {
       fontSize: 20,

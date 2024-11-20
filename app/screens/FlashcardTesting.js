@@ -8,6 +8,7 @@ import { useCustomFonts } from "../../constants/fonts";
 import colours from "../../constants/Colours";
 import useUserTheme from "../../hooks/useuserTheme";
 import createStyles from "../style/styles";
+import Icon from "../../components/Icon";
 
 export default function FlashcardTesting({ navigation, route, user }) {
   const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
@@ -58,7 +59,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
     let newScore = score; // Local variable to track score changes immediately
 
     // Update score if the answer is correct
-    if (isCorrect) {
+    if (isCorrect && !currentIndex < item.questionList.length - 1) {
       newScore += 1; // Increment the local score variable
       setScore(newScore); // Update the state
       console.log("Current score:", newScore); // Log the updated score immediately
@@ -108,8 +109,8 @@ export default function FlashcardTesting({ navigation, route, user }) {
   return (
     <View style={styles.containerQuiz}>
       {/* Quit button */}
-      <TouchableOpacity style={styles.exitButton} onPress={endQuiz}>
-        <Ionicons name="close" size={40} color={colours.darkBlue} />
+      <TouchableOpacity style={[styles.exitButtonT]} onPress={endQuiz}>
+        <Icon name="close" size={40} color={"pink"} family="FontAwesome" />
       </TouchableOpacity>
       {/* Progress bar */}
       {showCard && (
@@ -128,7 +129,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
         {showInstructions && (
           <View>
             <TouchableOpacity
-              style={styles.startQuizButton}
+              style={styles.button}
               onPress={toggleCardVisibility}
             >
               <Text style={styles.startQuizButtonText}>start quiz</Text>
@@ -156,43 +157,47 @@ export default function FlashcardTesting({ navigation, route, user }) {
           </View>
         )}
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          padding: 10,
-          justifyContent: "space-around",
-          width: "100%",
-        }}
-      >
-        <TouchableOpacity
-          //   style={styles.button}
-          onPress={() => handleNextCard(true)}
+      {showCard && (
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            justifyContent: "space-around",
+            width: "100%",
+          }}
         >
-          <Ionicons
-            name={"checkmark"} // Change icon based on password visibility
-            size={40}
-            color={"#A3D9A5"}
-          />
-          <Text style={styles.optionText}>I Know</Text>
+          <TouchableOpacity
+            //   style={styles.button}
+            onPress={() => handleNextCard(true)}
+          >
+            <Ionicons
+              name={"checkmark"} // Change icon based on password visibility
+              size={40}
+              color={"#A3D9A5"}
+            />
+            <Text style={styles.optionText}>I Know</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            //style={styles.button}
+            onPress={() => handleNextCard(false)}
+          >
+            <Icon name="close" size={40} color={"red"} family="FontAwesome" />
+            {/* <Ionicons
+              name={"close"} // Change icon based on password visibility
+              size={40}
+              color={"#FF7F7F"}
+              fontSize={"64px"}
+              style={{ justifySelf: "center" }}
+            /> */}
+            <Text style={styles.optionText}>I Don't Know</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {showCard && (
+        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+          <Text style={styles.buttonText}>Reset Deck</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => handleNextCard(false)}
-        >
-          <Ionicons
-            name={"close"} // Change icon based on password visibility
-            size={40}
-            color={"#FF7F7F"}
-            fontSize={"64px"}
-            style={{ justifySelf: "center" }}
-          />
-          <Text style={styles.optionText}>I Don't Know</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Reset Button */}
-      <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-        <Text style={styles.buttonText}>Reset Deck</Text>
-      </TouchableOpacity>
+      )}
     </View>
   );
 }
