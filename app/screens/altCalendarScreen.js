@@ -552,13 +552,15 @@ export default function BrokerCalendar({ navigation, user }) {
                 <View
                   style={[
                     styles.StatusStrip,
-                    { backgroundColor: colours.beige }, // Using predefined color
+                    // { backgroundColor: colours.beige }, // Using predefined color
                   ]}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.timeText}>
-                    {item?.StartTime} - {item?.EndTime}
-                  </Text>
+                  <View style={styles.Time}>
+                    <Text style={styles.timeText}>
+                      {item?.StartTime} - {item?.EndTime}
+                    </Text>
+                  </View>
                   <Text style={styles.BookingNameText}>{item.title}</Text>
                   <Text style={styles.BookingDescriptionText}>
                     {item.description}

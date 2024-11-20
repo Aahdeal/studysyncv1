@@ -325,7 +325,7 @@ const createStyles = (colours) => {
     // },
     StatusStrip: {
       width: 6,
-      height: "80%",
+      height: "95%",
       marginRight: 15,
       borderRadius: 3,
       backgroundColor: colours.beige,
