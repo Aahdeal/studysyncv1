@@ -792,7 +792,7 @@ export default function BrokerCalendar({ navigation, user }) {
         />
       </View>
       {/*-------------------------------------TO DO LIST------------------------------------------ */}
-      <Text style={titleFont}>TO DO LIST</Text>
+      <Text style={styles.titleFont}>TO DO LIST</Text>
       {/* <ScrollView style={styles.toDoListContainer}> */}
       <View style={styles.toDoListContainer}>
         <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>

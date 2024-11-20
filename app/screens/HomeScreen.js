@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation, user }) => {
     }
     //registerForPushNotificationsAsync();
     //scheduleNotificationsForEvents(eventData);
-  }, [taskData, completeTaskData, eventData]);
+  }, [taskData, completeTaskData]);
 
   /*-------------------------DATA ACCESSOR METHODS---------------------- */
 
@@ -146,7 +146,6 @@ const HomeScreen = ({ navigation, user }) => {
         });
 
         setEventData(eData);
-
         setPastEventData(oData);
         //setEventsThisWeek(weekData);
       } else {
@@ -275,13 +274,11 @@ const HomeScreen = ({ navigation, user }) => {
     return <Text>Loading...</Text>;
   }
 
-  //TestNotification();
-
   return (
     <View>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
-          <Text style={styles.title}>Progress Tracker</Text>
+          <Text style={styles.titleFont}>Progress Tracker</Text>
           <View style={styles.motivationalMessage}>
             <Text style={styles.motivation}>
               {motivationalMessage.Quote
@@ -381,95 +378,5 @@ const HomeScreen = ({ navigation, user }) => {
     </View>
   );
 };
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "white", // Set the background color to white
-  },
-  scrollContainer: {
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: "Graduate",
-    marginBottom: 15,
-    textAlign: "center",
-    color: colors.darkBlue,
-  },
-  motivationalMessage: {
-    marginVertical: 20,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: colors.lightgrey,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
-  },
-  motivation: {
-    fontSize: 16,
-    textAlign: "center",
-    color: colors.darkBlue,
-  },
-  chartsContainer: {
-    marginBottom: 20,
-    borderRadius: 16,
-    backgroundColor: "white",
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
-  },
-  chartWrapper: {
-    width: Dimensions.get("window").width * 0.85,
-    marginVertical: 10, // Space between charts
-  },
-  chartSpacing: {
-    height: 20, // Additional space between charts
-  },
-  chartTitle: {
-    textAlign: "center",
-    fontSize: 16,
-    color: colors.darkBlue,
-    fontFamily: "Graduate",
-  },
-  chartStyle: {
-    marginVertical: 8,
-    borderRadius: 16,
-  },
-  listContainer: {
-    marginTop: 20,
-  },
-  listView: {
-    height: 150,
-  },
-  sectionHeading: {
-    fontSize: 18,
-    fontFamily: "Graduate",
-    color: colors.darkBlue,
-    marginBottom: 10,
-  },
-  taskItem: {
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 8,
-    backgroundColor: colors.lightPink,
-  },
-  taskTitle: {
-    fontSize: 16,
-    fontFamily: "Graduate",
-    color: colors.darkBlue,
-  },
-  taskDueDate: {
-    fontSize: 14,
-    color: colors.darkBlue,
-  },
-});
 
 export default HomeScreen;
