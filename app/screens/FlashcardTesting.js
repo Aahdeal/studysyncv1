@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
-import colours from "../../constants/Colours";
 import { Ionicons } from "@expo/vector-icons";
 import { update, ref, get } from "firebase/database";
 import { database } from "../firebase";
 import { useCustomFonts } from "../../constants/fonts";
+import colours from "../../constants/Colours";
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 export default function FlashcardTesting({ navigation, route, user }) {
+  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const { item } = route.params;
   const [currentIndex, setCurrentIndex] = useState(0); // Track current flashcard
   const [showAnswer, setShowAnswer] = useState(false); // Toggle between question and answer
@@ -102,7 +106,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
       {/* Quit button */}
       <TouchableOpacity style={styles.exitButton} onPress={endQuiz}>
         <Ionicons name="close" size={40} color={colours.darkBlue} />
@@ -120,7 +124,7 @@ export default function FlashcardTesting({ navigation, route, user }) {
           animated={true}
         />
       )}
-      <View style={styles.calendarContainer}>
+      <View style={styles.quizContainer}>
         {showInstructions && (
           <View>
             <TouchableOpacity
@@ -193,106 +197,11 @@ export default function FlashcardTesting({ navigation, route, user }) {
   );
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-  },
-  calendarContainer: {
-    height: "60%",
-    width: "90%",
-    margin: 10,
-    marginTop: 0,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  card: {
-    backgroundColor: colours.beige, // Light tan/beige color
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
-    flex: 1, // Make the card fill the available space
-    alignItems: "center",
-    justifyContent: "center",
-    width: "85%",
-  },
-  cardText: {
-    fontSize: 20,
-    color: "#4B4B4B", // Darker gray for text
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  button: {
-    // marginTop: 20,
-    //backgroundColor: colours.darkBlue, // Darker gray button
-    //paddingVertical: 10,
-    //paddingHorizontal: 20,
-    //borderRadius: 5,
-    //margin: 10,
-    justifyContent: "center",
-    borderWidth: 1,
-    justifySelf: "center",
-  },
-  buttonText: {
-    color: "black",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  progressBar: {
-    width: "90%",
-    height: 10,
-    marginVertical: 10,
-    color: colours.paleBlue,
-  },
-  resetButton: {
-    marginTop: 20,
-    backgroundColor: colours.paleBlue, // Pastel blue theme color
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-    alignItems: "center",
-  },
-  exitButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 5,
-    borderRadius: 5,
-    position: "absolute",
-    top: 20,
-    left: 20,
-  },
-  startQuizButton: {
-    backgroundColor: colours.darkBlue, // Use the dark blue color from your theme
-    paddingVertical: 15, // Adjust padding for a more pronounced button
-    paddingHorizontal: 25, // Adjust padding for a more pronounced button
-    borderRadius: 10, // Slightly larger border radius for rounded corners
-    marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000", // Add shadow for a raised effect
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  startQuizButtonText: {
-    color: "white", // Change to white for contrast
-    fontSize: 18,
-    fontWeight: "bold",
-    fontFamily: "Graduate_400Regular", // Use the Graduate font
-    textAlign: "center",
   },
 });

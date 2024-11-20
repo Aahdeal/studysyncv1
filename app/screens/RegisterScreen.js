@@ -15,8 +15,12 @@ import { auth } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { useCustomFonts, titleFont } from "../../constants/fonts";
 import colours from "../../constants/Colours";
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 export default function RegisterScreen({ navigation }) {
+  const themeColours = useUserTheme(""); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
@@ -90,7 +94,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
       <View style={styles.header}>
         <Text style={titleFont}>Sign Up</Text>
         <Text style={styles.heading}>Create your account</Text>
@@ -180,70 +184,6 @@ export default function RegisterScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colours.lightPink,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    alignItems: "center",
-    width: "50%",
-    alignSelf: "center",
-  },
-  buttonText: {
-    color: "black", // Set text color here
-    fontSize: 20,
-    //fontWeight: "bold",
-  },
+const style = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
-  heading: {
-    fontSize: 37,
-    marginBottom: 20,
-    textAlign: "center",
-    color: colours.blushPink,
-  },
-  header: { top: -50, width: "100%", padding: 5 },
-  inputContainer: {
-    flexDirection: "column",
-    position: "relative",
-    width: "70%",
-    alignSelf: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    width: "100%",
-    borderRadius: 8,
-    fontSize: 15,
-  },
-  infoIcon: {
-    fontSize: 18,
-    right: -255,
-    color: "blue",
-    bottom: 77,
-  },
-  eyeIcon: {
-    //padding: 5, // Spacing around the eye icon
-    right: -215,
-    bottom: 53,
-  },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  linkContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  linkText: {
-    color: colours.paleBlue,
-    textDecorationLine: "underline",
-    fontSize: 15,
-  },
 });

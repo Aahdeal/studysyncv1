@@ -11,15 +11,16 @@ import {
 import { LineChart, ProgressChart } from "react-native-chart-kit";
 import NavBar from "../../components/NavBar";
 import { ref, get } from "firebase/database";
-import { database } from "../firebase";
-import moment from "moment";
-import colors from "../../constants/Colours";
-import * as Font from "expo-font";
-import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
-import TestNotification from "../TestNoti";
+import { database } from '../firebase';
+import moment from 'moment';
+import colors from '../../constants/Colours';
+import * as Font from 'expo-font';
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 const HomeScreen = ({ navigation, user }) => {
+  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [motivationalMessage, setMotivationalMessage] = useState({
     message: "",
@@ -354,33 +355,33 @@ const HomeScreen = ({ navigation, user }) => {
             />
           </View>
 
-          <View style={styles.listContainer}>
-            <Text style={styles.sectionHeading}>Tasks Due</Text>
-            <ScrollView style={styles.listView} nestedScrollEnabled={true}>
-              <FlatList
-                data={taskData}
-                renderItem={renderTaskItem}
-                keyExtractor={(item) => item["taskId"]}
-              />
-            </ScrollView>
-          </View>
-          <View style={styles.listContainer}>
-            <Text style={styles.sectionHeading}>Upcoming Events</Text>
-            <ScrollView style={styles.listView} nestedScrollEnabled={true}>
-              <FlatList
-                data={eventData}
-                renderItem={renderEventItem}
-                keyExtractor={(item) => item["eventId"]}
-              />
-            </ScrollView>
-          </View>
-          <View style={{ flex: 1 }}>
-            {/* Other Settings Components */}
-            <TestNotification />
-          </View>
+      <View style={styles.listContainer}>
+          <Text style={styles.sectionHeading}>Task(s) Due</Text>
+        <ScrollView style={styles.listView}
+        nestedScrollEnabled = {true}>
+          <FlatList
+            data={taskData}
+            renderItem={renderTaskItem}
+            keyExtractor={(item) => item['taskId']}
+          />
+        </ScrollView>
         </View>
-      </ScrollView>
-      <NavBar />
+        <View style={styles.listContainer}>
+          <Text style={styles.sectionHeading}>Upcoming Events</Text>
+        <ScrollView style={styles.listView}
+        nestedScrollEnabled = {true}>
+          <FlatList
+            data={eventData}
+            renderItem={renderEventItem}
+            keyExtractor={(item)=> item['eventId']}
+          />
+        </ScrollView>
+      </View>
+  
+      
+    </View>
+    </ScrollView>
+    <NavBar />
     </View>
   );
 };
@@ -474,5 +475,6 @@ const styles = StyleSheet.create({
     color: colors.darkBlue,
   },
 });
+}
 
 export default HomeScreen;

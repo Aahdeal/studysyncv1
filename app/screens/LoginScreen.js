@@ -15,8 +15,12 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useCustomFonts, titleFont } from "../../constants/fonts";
 import colours from "../../constants/Colours";
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 export default function LoginScreen({ navigation }) {
+  const themeColours = useUserTheme(""); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -89,13 +93,12 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.containerLogin}>
-        <View style={styles.header}>
-          <Text style={titleFont}>
-            Welcome Back {"\n"}to {"\n"}STUDYSYNC
-          </Text>
-        </View>
+    <View style={style.container}>
+      <View style={styles.header}>
+        <Text style={titleFont}>
+          Welcome Back {"\n"}to {"\n"}STUDYSYNC
+        </Text>
+      </View>
 
         <Text
           style={{
@@ -184,96 +187,6 @@ export default function LoginScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colours.paleBlue,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    alignItems: "center",
-    width: "50%",
-  },
-  buttonText: {
-    color: "black", // Set text color here
-    fontSize: 20,
-    //fontWeight: "bold",
-  },
+const style = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  containerLogin: {
-    //top: -50,
-    flex: 1,
-    justifyContent: "center",
-    //padding: 20,
-    //alignContent: "center",
-    //width: "80%",
-    //left: 40,
-    alignItems: "center",
-  },
-  inputContainer: {
-    flexDirection: "column",
-    width: "70%",
-    alignSelf: "center",
-    position: "relative",
-  },
-  header: { top: -90, width: "100%", padding: 15 },
-  title: {
-    fontSize: 34,
-    textAlign: "center",
-    fontWeight: "",
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    width: "100%",
-    borderRadius: 8,
-    fontSize: 15,
-  },
-  eyeIcon: {
-    padding: 5, // Spacing around the eye icon
-    left: 205,
-    bottom: 48,
-  },
-  errorText: {
-    color: colours.blushPink,
-    margin: 10,
-    textAlign: "center",
-    fontSize: 15,
-  },
-  linkContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    margin: 10,
-  },
-  linkText: {
-    color: colours.blushPink,
-    textDecorationLine: "underline",
-    fontSize: 15,
-  },
-  forgotPassword: {
-    margin: 10,
-    color: colours.darkBlue,
-    textAlign: "center",
-    textDecorationLine: "underline",
-    fontSize: 15,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContainer: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
 });

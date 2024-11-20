@@ -17,14 +17,12 @@ import { useCustomFonts, titleFont } from "../../constants/fonts";
 import Icon from "../../components/Icon";
 import { ref, get, set, remove, update } from "firebase/database";
 import { database } from "../firebase";
-import colours from "../../constants/Colours";
-import {
-  FontAwesome,
-  MaterialIcons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import useUserTheme from "../../hooks/useuserTheme";
+import createStyles from "../style/styles";
 
 export default function FlashcardsScreen({ navigation, user }) {
+  const themeColours = useUserTheme(user.uid); // Get the dynamic colours based on theme preference
+  const styles = createStyles(themeColours); // Pass colours into styles
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility for creating/editing deck
   const [questionModalVisible, setQuestionModalVisible] = useState(false);
   const [testModalVisible, setTestModalVisible] = useState(false);
@@ -286,8 +284,8 @@ export default function FlashcardsScreen({ navigation, user }) {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={titleFont}>Flashcards</Text>
+    <View style={styles.containerFlashcards}>
+      <Text style={styles.title}>Flashcards</Text>
 
       {/* add deck button */}
       <TouchableOpacity style={styles.addDeckModal} onPress={openModel}>
@@ -418,162 +416,6 @@ export default function FlashcardsScreen({ navigation, user }) {
   );
 }
 
-const styles = StyleSheet.create({
-  optionsIcon: {
-    fontSize: 20,
-    color: "#4B4B4B",
-    position: "relative",
-    left: 315,
-    bottom: 20,
-    fontWeight: "600",
-    fontSize: 35,
-  },
-  addDeckModal: {
-    position: "absolute",
-    bottom: 90,
-    right: 17,
-    // height: 60,
-    // width: 60,
-    //backgroundColor: "#1f2c8f",
-    //borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    //shadowColor: "#009ad8",
-    //shadowOffset: { width: 0, height: 9 },
-    //shadowRadius: 30,
-    //shadowOpacity: 0.5,
-    // elevation: 5,
-    zIndex: 999,
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    borderRadius: 15, // Adds rounded corners
-    padding: 15, // Adds internal padding for spacing
-    shadowColor: "#000", // Adds shadow for a more polished look
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 5,
-    width: "90%", // Sets modal width to 80% of the screen
-    position: "absolute", // Positions the modal absolutely
-    top: "45%", // Moves the modal to the vertical center
-    transform: [{ translateY: -100 }], // Adjusts position to truly center the modal
-    alignSelf: "center", // Centers the modal horizontally
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  modalTitle: {
-    fontSize: 26, // Large font size for emphasis
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#4B4B4B", // Dark gray text color for contrast
-    marginBottom: 20, // Space below the title
-    letterSpacing: 1, // Adds slight spacing between letters
-    textTransform: "uppercase", // Converts text to uppercase for a clean look
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15, // Soft shadow for subtle depth
-    shadowRadius: 1,
-  },
+const style = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#000",
-    marginBottom: 20,
-  },
-  navbarContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  deckContainer: {
-    backgroundColor: colours.beige,
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5, // Android shadow
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  deckTitle: {
-    position: "relative",
-    top: 10,
-    fontSize: 18,
-    color: "#4B4B4B", // Darker gray for text
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  saveButton: {
-    backgroundColor: "#aac3e8",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    alignItems: "center",
-  },
-  saveButtonText: {
-    color: "#fff",
-  },
-  closeButton: {
-    backgroundColor: "#aac3e8",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
-    width: "80%",
-    alignSelf: "center",
-  },
-  closeButtonText: {
-    color: "#fff",
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: "gray",
-  },
-  addQuestionButton: {
-    backgroundColor: colours.beige,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    alignItems: "center",
-    borderWidth: 1,
-  },
-  addQuestionButtonText: {
-    color: "#fff",
-  },
-
-  addButton: {
-    backgroundColor: "#aac3e8",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
-    width: "80%",
-    alignSelf: "center",
-  },
 });
